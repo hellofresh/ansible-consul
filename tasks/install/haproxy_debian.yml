@@ -1,0 +1,11 @@
+---
+
+- name: install | haproxy_debian | Add the HAproxy repository
+  apt_repository:
+    repo="{{ consul_haproxy_ppa_url }}"
+    update_cache="yes"
+  when: "{{ consul_haproxy_ppa_install }} == True"
+
+- name: install | haproxy_debian | Install the HAProxy packages 
+  apt: 
+      name="haproxy"

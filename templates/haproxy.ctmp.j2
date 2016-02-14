@@ -1,0 +1,57 @@
+# First template  : {{ ansible_managed }}
+# Second template : consul template
+
+# Info on config http://www.haproxy.org/download/1.5/doc/configuration.txt
+{% macro flatten_value(key, value) -%}
+{%- if value is string -%}{# Value is a string #}
+    {{ key }}    {{ value }}
+{%- elif value is iterable -%}{# Value is a list #}
+{% for nested_value in value %}
+    {{ key }}    {{ nested_value }}
+{% endfor %}
+{%- endif -%}
+{%- endmacro %}
+
+global
+    daemon
+    spread-checks 2
+    user    {{ consul_haproxy_user }}
+    group   {{ consul_haproxy_user }}
+    maxconn {{ consul_haproxy_maxconn }}
+{{ flatten_value('log', consul_haproxy_log) }}
+    stats  {{ consul_haproxy_socekt }}
+{% for key, value in consul_haproxy_extra_global.iteritems() %}
+    {{ key }}  {{ value }}
+{% endfor %}
+
+defaults
+{{ flatten_value('log', consul_haproxy_default_log) }}
+{{ flatten_value('option', consul_haproxy_default_options) }}
+{{ flatten_value('maxconn', consul_haproxy_default_maxconn) }}
+{{ flatten_value('timeout', consul_haproxy_default_timeout) }}
+{{ flatten_value('retries', consul_haproxy_default_retries) }}
+{{ flatten_value('balance', consul_haproxy_default_balance) }}
+
+{% if consul_haproxy_stats_enable == True %}
+listen stats : {{ consul_haproxy_stats_port }}
+    mode {{ consul_haproxy_stats_mode }}
+    stats enable
+    stats uri {{ consul_haproxy_stats_uri }}
+{% endif %}
+
+{% for key, value in consule_service_selected.iteritems() %}
+frontend {{ service_name }}
+    mode {{ service_mode | default('http') }}
+    timeout  client  1h
+    bind localhost:{{ service_port }}
+    default_backend {{ service_name }}
+
+backend {{ service_name }}
+    mode {{ service_mode | default('http') }}
+    timeout  connect 10s
+    timeout  server  1h
+    {{'{{'}}range "{{ service_name}}" {{'}}'}}
+    servver {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{ service.haporxy_stuff | default('') }}{{'{{'}}end{{'}}'}}
+    # example check inter 10s fastinter 5s downinter 8s rise 3 fall 2
+
+{% endfor %}

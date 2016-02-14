@@ -1,0 +1,57 @@
+---
+
+consul_agent_version                : 0.6.3
+consul_template_version             : 0.12.2
+        
+consul_node_name                    : "{{ inventory_hostname }}"
+        
+# Consul dir structure      
+consul_home_dir                     : /opt/consul
+consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
+consul_data_dir                     : "{{ consul_home_dir }}/data"
+consul_config_dir                   : /etc/consul.d
+consul_config_file                  : /etc/consul.conf
+consul_log_file                     : /var/log/consul
+# Consul user/Group     
+consul_user                         : consul
+consul_group                        : consul
+        
+## HA Proxy     
+consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
+consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
+## Config global        
+consul_haproxy_user                 : "haproxy"
+consul_haproxy_group                : "haproxy"
+consul_haproxy_maxconn              : "8192"
+consul_haproxy_log                  : 
+                                      - "127.0.0.1 local1" 
+consul_haproxy_socekt               : "/var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
+## Extra global key, value      
+#consul_haproxy_extra_global         : 
+## Config defaults
+consul_haproxy_default_log          : "global"
+consul_haproxy_default_options      : 
+                                      - "dontlognull"
+                                      - "log-separate-errors"
+                                      - "redispatch"
+consul_haproxy_default_timeout      :
+                                      - "connect 5s"
+                                      - "check   5s"
+                                      - "client  120s"
+                                      - "server  120s"
+consul_haproxy_default_maxconn      : 2000
+consul_haproxy_default_retries      : 3
+consul_haproxy_default_balance      : "roundrobin"
+
+
+## Config Stats page by default HAproxy will have default stats
+consul_haproxy_stats_enable         : True
+consul_haproxy_stats_mode           : "http"
+consul_haproxy_stats_port           : 3212
+consul_haproxy_stats_uri            : "/"
+
+## Structure of Archive and URL 
+consul_agent_archive                : "consul_{{ consul_version }}_linux_amd64.zip"
+consul_agent_download               : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_agent_archive }}"
+consul_template_archive             : "consul-template{{ consul_version }}_linux_amd64.zip"
+consul_template_download            : "https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/{{ consul_template_archive }}"

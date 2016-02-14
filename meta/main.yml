@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  author: Adham Helal
+  description: 
+  company: Hellofresh
+
+  license: license (MIT)
+  min_ansible_version: 1.9
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+  categories:
+  - cloud
+  - monitoring
+  - networking
+  - system
+
+dependencies: []
+

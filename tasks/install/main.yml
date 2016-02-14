@@ -1,0 +1,7 @@
+---
+
+- inclued: consul_common.yml
+
+- inclued: consul_agent.yml
+
+- inclued: haproxy_debian.yml
