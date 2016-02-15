@@ -1,2 +1,10 @@
 ---
-# handlers file for consul
+
+- name: restart consul service
+  service: 
+    name="consul"
+    state="restarted"
+    enabled="yes"
+
+- name: reload consul service config
+  command: pkill -1 consul
