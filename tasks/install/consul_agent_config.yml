@@ -1,9 +1,18 @@
 ---
 
+- name: install | consul agent install | Ensure consul configure is deployed
+  template: 
+    src="{{ path_for_template }}consul_agent.json.j2"
+    dest="{{ consul_config_file }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0640"
+  notify:
+    - restart consul service
 
 - name: install | consul agent install | Ensure consul run script is deployed
   template: 
-    src="consul_agent_run.sh.j2"
+    src="{{ path_for_template }}consul_agent_run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_agent_run.sh"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -14,10 +23,12 @@
 # TODO Support runnit
 - name: install | consul agent install | Ensure consul init.d script is deployed
   template: 
-    src="consul-init.d.sh.j2"
+    src="{{ path_for_template }}consul-init.d.sh.j2"
     dest=/etc/init.d/consul
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"
   notify:
     - restart consul service
+
+

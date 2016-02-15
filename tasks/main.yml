@@ -1,4 +1,9 @@
 ---
+  # Maintain old path behaviour for v1 
+- name: Set path for V1
+  set_fact:
+    path_for_template: "../../templates/"
+  when: ansible_version.major == 1
 
 - name: Ensure prerequisites packages exists
   apt:
