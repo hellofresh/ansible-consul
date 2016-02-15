@@ -1,3 +1,5 @@
 ---
 
-color                : "#D80000"
+color                       : "#D80000"
+consul_server               : True
+consul_bootstrap_expect     : 1
