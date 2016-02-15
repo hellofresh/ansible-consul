@@ -34,14 +34,11 @@ Requirements
 
  - Developedon for Ansible 2.X but will be compatible with 1.9.x
  - Controller should have python-netaddr
- - 
 
 Role Variables
 --------------
 
 See defaults/main.yml
-
-
 
 License
 -------
