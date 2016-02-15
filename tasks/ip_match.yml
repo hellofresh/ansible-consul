@@ -1,0 +1,31 @@
+---
+# Sorry support V4 for now 
+
+- name: ip_match | (1) Match range address
+  set_fact:
+    consul_bind_tmp="{{ ansible_all_ipv4_addresses | ipaddr(consul_network_autobind_range) }}"
+    consul_autobind_type_set="Range"
+  when: "consul_network_autobind_range is defined"
+
+- name: ip_match | (2) Match private or public address
+  set_fact:
+    consul_bind_tmp="{{ ansible_all_ipv4_addresses | ipaddr(consul_network_autobind_type) }}"
+    consul_autobind_type_set="{{ consul_network_autobind_type }}"
+  when: "consul_network_autobind_type is defined and consul_autobind_type_set is not defined"
+
+- name: ip_match | WARNING More than one match found
+  debug: 
+    msg="Your rule matched more than one IP {{ consul_bind_tmp }}. Sorry will use the first IP '{{ consul_bind_tmp[0] }}'"
+  when: "{{ consul_bind_tmp | length }} > 1"
+
+- name: ip_match | Failed to match any rule
+  fail: msg="Could not find an IP in {{ ansible_all_ipv4_addresses }} that match your rules. Please check your rules."
+  when: "{{ consul_bind_tmp | length }} == 0"
+
+- name: ip_match |  Set consul bind address to match your rule
+  set_fact:
+    consul_network_bind="{{ consul_bind_tmp[0] }}"
+
+- name: ip_match | Matched service_ip 
+  debug: 
+    msg="Will use the following IP {{ consul_network_bind }}"
