@@ -31,6 +31,9 @@ defaults
 {{ flatten_value('timeout', consul_haproxy_default_timeout) }}
 {{ flatten_value('retries', consul_haproxy_default_retries) }}
 {{ flatten_value('balance', consul_haproxy_default_balance) }}
+{% for key, value in consul_haproxy_extra_default.iteritems() %}
+    {{ key }}  {{ value }}
+{% endfor %}
 
 {% if consul_haproxy_stats_enable == True %}
 listen stats : {{ consul_haproxy_stats_port }}
@@ -39,19 +42,20 @@ listen stats : {{ consul_haproxy_stats_port }}
     stats uri {{ consul_haproxy_stats_uri }}
 {% endif %}
 
-{% for key, value in consule_service_selected.iteritems() %}
+# consul_services
+{% for service_name in consul_services_selected %}
 frontend {{ service_name }}
-    mode {{ service_mode | default('http') }}
+    mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
     timeout  client  1h
-    bind localhost:{{ service_port }}
+    bind localhost:{{ consul_services[service_name].port }}
     default_backend {{ service_name }}
 
 backend {{ service_name }}
-    mode {{ service_mode | default('http') }}
+    mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
     timeout  connect 10s
     timeout  server  1h
-    {{'{{'}}range "{{ service_name}}" {{'}}'}}
-    servver {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{ service.haporxy_stuff | default('') }}{{'{{'}}end{{'}}'}}
+    {{'{{'}}range "{{ service_name }}" {{'}}'}}
+    servver {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{ service.haproxy.server_options | default('') }}{{'{{'}}end{{'}}'}}
     # example check inter 10s fastinter 5s downinter 8s rise 3 fall 2
 
 {% endfor %}
