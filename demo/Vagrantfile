@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+    # boxes at https://atlas.hashicorp.com/search.
+  config.vm.box = "ubuntu/trusty64"
+
+  ## Number of nodes
+  nodes = 1
+  rangeofips = 149
+  (1..nodes).each do |n|
+
+    vmip   = "192.168.56.#{rangeofips + n.to_i}"
+    name = "demo#{n}"
+    ##Node Conf
+    config.vm.provider "virtualbox" do |v|
+      v.customize ["modifyvm", :id, "--cpus", "1", "--memory", "512"]
+    end
+
+    config.vm.define name do |cfg|
+      cfg.vm.box = name
+      cfg.vm.host_name = name
+
+      #Comment public network to disable bridge
+      #cfg.vm.network :public_network
+      cfg.vm.network :private_network, ip: vmip
+
+        cfg.ssh.forward_agent = true
+
+        ##headless or non headless machine
+        cfg.vm.provider "virtualbox" do |vb|
+        vb.gui = false
+      end
+      ##Ansible Provisioning
+      cfg.vm.provision :ansible do |ansible|
+          ansible.playbook = "#{name}.yml"
+          ##Debugging
+          ansible.verbose =  true
+      end
+    end
+  end
+end  

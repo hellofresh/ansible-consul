@@ -1,0 +1,8 @@
+---
+
+localuser         : "{{ lookup('ENV','USER') }}"
+localhome         : "/home/{{ localuser }}"
+PS1               : '\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\u@\[\e[0;31m\]\h\[\e[m\]:\w\$ '
+
+
+consul_network_autobind_range       : "192.168.56.0/24"
