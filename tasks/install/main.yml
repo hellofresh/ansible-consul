@@ -1,7 +1,9 @@
 ---
 
-- inclued: consul_common.yml
+- name: install | main | Include consul agent install
+  include: consul_agent_install.yml
 
-- inclued: consul_agent.yml
+- name: install | main | Include consul agent config
+  include: consul_agent_config.yml
 
-- inclued: haproxy_debian.yml
+# - inclued: haproxy_debian.yml
