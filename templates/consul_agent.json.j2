@@ -1,0 +1,21 @@
+{
+  "node_name": "{{ consul_node_name }}",
+  "bind_addr": "{{ consul_network_bind }}",
+  "datacenter": "{{ consul_datacenter }}",
+  "client_addr": "{{ consul_client_addr }}",
+  "domain": "{{ consul_domain }}",
+  "data_dir": "{{ consul_data_dir }}",
+  "log_level": "{{ consul_log_level }}",
+  "enable_syslog": {{ consul_log_syslog | to_json  }},
+  "rejoin_after_leave": {{ consul_rejoin_after_leave | to_json }},
+  "server": {{ consul_server | to_json }},
+{% if consul_start_join is defined and consul_start_join %}
+  "start_join": {{ consul_start_join | to_json }},
+{% endif %}
+{% if consul_server %}
+{% if consul_bootstrap_expect is defined %}
+  "bootstrap_expect": {{ consul_bootstrap_expect }},
+{% endif %}
+{% endif %}
+  "leave_on_terminate": {{ consul_leave_on_terminate | to_json }}
+}
