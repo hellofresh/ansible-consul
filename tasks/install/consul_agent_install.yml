@@ -1,0 +1,58 @@
+---
+
+- name: install | consul agent install | Ensure consul group exists
+  group: 
+    name="{{ consul_group }}"
+    state=present
+
+- name: install | consul agent install | Ensure consul user exists
+  user: 
+    home="{{ consul_home_dir }}"
+    name="{{ consul_user }}"
+    group="{{ consul_group }}"
+    system="yes"
+
+- name: install | consul agent install | Ensure consul directory exists
+  file: 
+    state="directory"
+    path="{{ item }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+  with_items:
+    - "{{ consul_tmp_dir }}"
+    - "{{ consul_home_dir }}"
+    - "{{ consul_data_dir }}"
+    - "{{ consul_config_dir }}"
+    - "{{ consul_bin_dir }}"
+    # - "{{ consul_home_dir }}/cert"
+
+- name: install | consul agent install | Ensure log file is writable by consul user/grou
+  file: 
+    state="touch"
+    path="{{ consul_log_file }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+  changed_when: false
+
+- name: install | consul agent install | Check agent archive stat
+  stat: 
+    path="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
+  register: consul_agent_archive_stat
+
+- name: install | consul agent install | Download consul agent (if needed)
+  get_url:
+    url="{{ consul_agent_download_url }}"
+    dest="{{ consul_tmp_dir }}"
+  become_user: "{{ consul_user }}"
+  register: consul_agent_get
+  when: consul_agent_archive_stat.stat.exists == False
+
+- name: install | consul agent install | Unpack consul arcive (if needed)
+  unarchive:
+    src="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
+    dest="{{ consul_bin_dir }}"
+    copy="no"
+  become_user: "{{ consul_user }}"
+  when: consul_agent_get | changed
+  notify:
+    - restart consul service
