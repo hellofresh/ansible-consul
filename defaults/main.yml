@@ -15,15 +15,26 @@ consul_config_dir                   : /etc/consul.d
 consul_config_file                  : /etc/consul.conf
 consul_log_file                     : "/var/log/consul"
 # Consul user/Group     
-consul_user                         : consul
-consul_group                        : consul
+consul_user                         : "consul"
+consul_group                        : "consul"
+# Consul Domain 
+consul_datacenter                   : "default"
+consul_domain                       : "consul."
+consul_server                       : false
+
+consul_start_join                   : [ "127.0.0.1" ]
+consul_rejoin_after_leave           : true
+consul_leave_on_terminate           : false
+#Consul log
+consul_log_level                    : "INFO"
+consul_log_syslog                   : false
 
 # Consul Network                    : 
 consul_network_bind                 : "" # "0.0.0.0"
-consul_network_autobind             : True
+consul_network_autobind             : true
 #consul_network_autobind_range       : "192.168.56.0/24"
 consul_network_autobind_type        : "private" # "" or private or public
-
+consul_client_addr                  : "127.0.0.1"
 ## HA Proxy     
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
@@ -64,3 +75,7 @@ consul_agent_archive                : "consul_{{ consul_agent_version }}_linux_a
 consul_agent_download_url           : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_agent_archive }}"
 consul_template_archive             : "consul-template{{ consul_template_version }}_linux_amd64.zip"
 consul_template_download_url        : "https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/{{ consul_template_archive }}"
+
+## Compatibility issue with paths in v1 and v2 
+path_for_template                   : ""
+
