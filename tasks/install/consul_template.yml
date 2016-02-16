@@ -1,0 +1,24 @@
+---
+
+- name: install | consul template install | Check tempalate archive stat
+  stat: 
+    path="{{ consul_tmp_dir }}/{{ consul_template_archive }}"
+  register: consul_template_archive_stat
+
+- name: install | consul template | Download consul template (if needed)
+  get_url:
+    url="{{ consul_template_download_url }}"
+    dest="{{ consul_tmp_dir }}"
+  become_user: "{{ consul_user }}"
+  register: consul_template_get
+  when: consul_template_archive_stat.stat.exists == False
+
+- name: install | consul template | Unpack consul arcive (if needed)
+  unarchive:
+    src="{{ consul_tmp_dir }}/{{ consul_template_archive }}"
+    dest="{{ consul_bin_dir }}"
+    copy="no"
+  become_user: "{{ consul_user }}"
+  when: consul_template_get | changed
+  notify:
+    - restart consul service
