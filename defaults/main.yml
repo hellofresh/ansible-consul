@@ -5,23 +5,32 @@ consul_template_version             : 0.12.2
 
 consul_node_name                    : "{{ inventory_hostname }}"
 
+# Type of installation
+consul_server                       : false
+consul_consumer                     : false
+consul_producer                     : false
+
 # Consul dir structure      
 consul_home_dir                     : "/opt/consul"
 consul_bin_dir                      : "{{ consul_home_dir }}/bin"
 consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
 consul_data_dir                     : "{{ consul_home_dir }}/data"
+consul_log_dir                      : "/var/log/consul"
 consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
 # Consul files
 consul_config_file                  : "/etc/consul.conf"
-consul_log_file                     : "/var/log/consul"
+
+consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
+consul_template_log_file            : "{{ consul_ui_dir }}/consul-template.log"
+
 # Consul user/Group     
 consul_user                         : "consul"
 consul_group                        : "consul"
 # Consul Domain 
 consul_datacenter                   : "default"
 consul_domain                       : "consul."
-consul_server                       : false
+
 
 #consul_start_join                   : [ "127.0.0.1" ]
 consul_rejoin_after_leave           : true
@@ -41,7 +50,6 @@ consul_client_addr                  : "127.0.0.1"
 consul_ui                           : False
 
 ## HA Proxy
-consul_haproxy                      : false
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
 ## Config global        
@@ -79,7 +87,7 @@ consul_haproxy_stats_uri            : "/"
 ## Structure of Archive and URL 
 consul_agent_archive                : "consul_{{ consul_agent_version }}_linux_amd64.zip"
 consul_agent_download_url           : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_agent_archive }}"
-consul_template_archive             : "consul-template{{ consul_template_version }}_linux_amd64.zip"
+consul_template_archive             : "consul-template_{{ consul_template_version }}_linux_amd64.zip"
 consul_template_download_url        : "https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/{{ consul_template_archive }}"
 consul_ui_archive                   : "consul_{{ consul_agent_version }}_web_ui.zip"
 consul_ui_download_url              : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_ui_archive }}"
