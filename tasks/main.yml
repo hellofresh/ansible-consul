@@ -17,3 +17,11 @@
 
 - name: Include Install main file
   include: install/main.yml
+
+  # At this point we should flush handler
+- meta: flush_handlers
+
+- name: Ensure consul service is running
+  service:
+    name="consul"
+    state="started"

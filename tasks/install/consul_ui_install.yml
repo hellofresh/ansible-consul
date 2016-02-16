@@ -1,0 +1,34 @@
+---
+
+
+- name: install | consul ui install | Ensure consul directory exists
+  file: 
+    state="directory"
+    path="{{ item }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+  with_items:
+    - "{{ consul_ui_dir }}"
+
+- name: install | consul ui install | Check ui archive stat
+  stat: 
+    path="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
+  register: consul_ui_archive_stat
+
+- name: install | consul ui install | Download consul agent (if needed)
+  get_url:
+    url="{{ consul_ui_download_url }}"
+    dest="{{ consul_tmp_dir }}"
+  become_user: "{{ consul_user }}"
+  register: consul_ui_get
+  when: consul_ui_archive_stat.stat.exists == False
+
+- name: install | consul ui install | Unpack consul arcive (if needed)
+  unarchive:
+    src="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
+    dest="{{ consul_ui_dir }}"
+    copy="no"
+  become_user: "{{ consul_user }}"
+  when: consul_ui_get | changed
+  notify:
+    - restart consul service
