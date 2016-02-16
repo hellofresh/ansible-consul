@@ -7,12 +7,12 @@
   include: consul_agent.yml
 
 - name: install | main | include consul ui 
-  include: consul_template.yml
-  when: consul_consumer
+  include: consul_ui.yml
+  when: consul_ui
 
 - name: install | main | include consul template 
   include: consul_template.yml
-  when: consul_ui
+  when: consul_consumer
 
 - name: install | main | include HA-Proxy
   include: haproxy_debian.yml
