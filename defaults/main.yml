@@ -9,24 +9,8 @@ consul_node_name                    : "{{ inventory_hostname }}"
 consul_server                       : false
 consul_consumer                     : false
 consul_producer                     : false
+consul_ui                           : false
 
-# Consul dir structure      
-consul_home_dir                     : "/opt/consul"
-consul_bin_dir                      : "{{ consul_home_dir }}/bin"
-consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
-consul_data_dir                     : "{{ consul_home_dir }}/data"
-consul_log_dir                      : "/var/log/consul"
-consul_ui_dir                       : "{{ consul_home_dir }}/ui"
-consul_config_dir                   : "/etc/consul.d"
-# Consul files
-consul_config_file                  : "/etc/consul.conf"
-
-consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
-consul_template_log_file            : "{{ consul_log_dir }}/consul-template.log"
-
-# Consul user/Group     
-consul_user                         : "consul"
-consul_group                        : "consul"
 # Consul Domain 
 consul_datacenter                   : "default"
 consul_domain                       : "consul."
@@ -35,6 +19,8 @@ consul_domain                       : "consul."
 #consul_start_join                   : [ "127.0.0.1" ]
 consul_rejoin_after_leave           : true
 consul_leave_on_terminate           : false
+consul_ui                           : False
+
 #Consul log
 consul_log_level                    : "INFO"
 consul_log_syslog                   : false
@@ -46,8 +32,23 @@ consul_network_autobind             : true
 consul_network_autobind_type        : "private" # "" or private or public
 consul_client_addr                  : "127.0.0.1"
 
-#consul_bootstrap_expect             : 3 # default falls to 1
-consul_ui                           : False
+# Consul dir structure      
+consul_home_dir                     : "/opt/consul"
+consul_bin_dir                      : "{{ consul_home_dir }}/bin"
+consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
+consul_data_dir                     : "{{ consul_home_dir }}/data"
+consul_haproxy_template_dir         : "{{ consul_home_dir }}/haproxy"
+consul_log_dir                      : "/var/log/consul"
+consul_ui_dir                       : "{{ consul_home_dir }}/ui"
+consul_config_dir                   : "/etc/consul.d"
+# Consul files
+consul_config_file                  : "/etc/consul.conf"
+consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
+consul_template_log_file            : "{{ consul_log_dir }}/consul-template.log"
+
+# Consul user/Group     
+consul_user                         : "consul"
+consul_group                        : "consul"
 
 ## HA Proxy
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy

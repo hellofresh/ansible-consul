@@ -13,7 +13,7 @@
 - name: install | haproxy_debian | Ensure consul template
   template: 
     src="{{ path_for_template }}haproxy.ctmp.j2"
-    dest="/tmp/consul_template.cnf"
+    dest="{{consul_haproxy_template_dir }}/consul_template.cnf"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"

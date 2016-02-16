@@ -23,6 +23,7 @@
     - "{{ consul_home_dir }}"
     - "{{ consul_data_dir }}"
     - "{{ consul_config_dir }}"
+    - "{{ consul_haproxy_template_dir }}"
     - "{{ consul_bin_dir }}"
     - "{{ consul_log_dir }}"
 
