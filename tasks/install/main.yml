@@ -1,9 +1,13 @@
 ---
 
-- name: install | main | Include consul agent install
+- name: install | main | include consul agent install
   include: consul_agent_install.yml
 
-- name: install | main | Include consul agent config
+- name: install | main | include consul ui install
+  include: consul_ui_install.yml
+  when: consul_ui
+
+- name: install | main | include consul agent config
   include: consul_agent_config.yml
 
 # - inclued: haproxy_debian.yml
