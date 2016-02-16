@@ -1,0 +1,26 @@
+---
+
+- name: consul services | Get current services
+  shell: "ls sv* | sed 's/sv_//g;s/.json//g'"
+  changed_when: False
+  args:
+    chdir: "{{ consul_config_dir }}"
+  register: registered_consul_services
+
+- name: consul services | Check if any services are old
+  set_fact: 
+    old_services: "{{ registered_consul_services.stdout_lines | difference(consul_producer_services) }}"
+
+- name: consul services | Remove old services (if any)
+  file:
+    path="{{ consul_config_dir }}/sv_{{ item }}.json"
+    state="absent"
+  with_items: "{{ old_services }}"
+  #Need to notify
+
+- name: consul services | Ensure consul services are registered
+  template:
+    src="service.j2"
+    dest="{{ consul_config_dir }}/sv_{{ item.name }}.json"
+  with_items:  "{{ consul_producer_services }}"
+  #Need to notify
