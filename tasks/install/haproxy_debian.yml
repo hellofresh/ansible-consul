@@ -10,7 +10,7 @@
   apt: 
       name="haproxy"
 
-- name: install | haproxy_debian | Ensure consul template
+- name: install | haproxy_debian | Ensure consul-template HAproxy is deployed
   template: 
     src="{{ path_for_template }}haproxy.ctmp.j2"
     dest="{{consul_haproxy_template_dir }}/consul_template.cnf"
