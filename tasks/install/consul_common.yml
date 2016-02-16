@@ -1,0 +1,38 @@
+---
+
+- name: install | consul common | Ensure consul group exists
+  group: 
+    name="{{ consul_group }}"
+    state=present
+
+- name: install | consul common | Ensure consul user exists
+  user: 
+    home="{{ consul_home_dir }}"
+    name="{{ consul_user }}"
+    group="{{ consul_group }}"
+    system="yes"
+
+- name: install | consul common | Ensure consul directory exists
+  file: 
+    state="directory"
+    path="{{ item }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+  with_items:
+    - "{{ consul_tmp_dir }}"
+    - "{{ consul_home_dir }}"
+    - "{{ consul_data_dir }}"
+    - "{{ consul_config_dir }}"
+    - "{{ consul_bin_dir }}"
+    - "{{ consul_log_dir }}"
+
+- name: install | consul common | Ensure log file is writable by consul user/group
+  file: 
+    state="touch"
+    path="{{ item }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+  changed_when: false
+  with_items: 
+    - "{{ consul_agent_log_file }}"
+    - "{{ consul_template_log_file }}"
