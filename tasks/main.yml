@@ -11,11 +11,11 @@
   with_items: 
     - unzip
 
-- name: IP Match
+- name: Include IP match
   include: ip_match.yml
   when: consul_network_autobind is defined and consul_network_autobind
 
-- name: Include Install main file
+- name: Include install main file
   include: install/main.yml
 
   # At this point we should flush handler

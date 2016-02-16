@@ -40,7 +40,8 @@ consul_client_addr                  : "127.0.0.1"
 #consul_bootstrap_expect             : 3 # default falls to 1
 consul_ui                           : False
 
-## HA Proxy     
+## HA Proxy
+consul_haproxy                      : false
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
 ## Config global        
@@ -51,7 +52,7 @@ consul_haproxy_log                  :
                                       - "127.0.0.1 local1" 
 consul_haproxy_socekt               : "/var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
 ## Extra global key, value      
-#consul_haproxy_extra_global         : 
+#consul_haproxy_extra_global         : []
 ## Config defaults
 consul_haproxy_default_log          : "global"
 consul_haproxy_default_options      : 
