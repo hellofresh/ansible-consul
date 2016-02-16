@@ -5,7 +5,7 @@
 
 - name: install | main | include consul agent
   include: consul_agent.yml
-- debug: var=consul_consumer
+
 - name: install | main | include consul ui 
   include: consul_template.yml
   when: consul_consumer
