@@ -10,9 +10,10 @@ consul_home_dir                     : "/opt/consul"
 consul_bin_dir                      : "{{ consul_home_dir }}/bin"
 consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
 consul_data_dir                     : "{{ consul_home_dir }}/data"
-consul_config_dir                   : /etc/consul.d
+consul_ui_dir                       : "{{ consul_home_dir }}/ui"
+consul_config_dir                   : "/etc/consul.d"
 # Consul files
-consul_config_file                  : /etc/consul.conf
+consul_config_file                  : "/etc/consul.conf"
 consul_log_file                     : "/var/log/consul"
 # Consul user/Group     
 consul_user                         : "consul"
@@ -22,7 +23,7 @@ consul_datacenter                   : "default"
 consul_domain                       : "consul."
 consul_server                       : false
 
-consul_start_join                   : [ "127.0.0.1" ]
+#consul_start_join                   : [ "127.0.0.1" ]
 consul_rejoin_after_leave           : true
 consul_leave_on_terminate           : false
 #Consul log
@@ -35,6 +36,10 @@ consul_network_autobind             : true
 #consul_network_autobind_range       : "192.168.56.0/24"
 consul_network_autobind_type        : "private" # "" or private or public
 consul_client_addr                  : "127.0.0.1"
+
+#consul_bootstrap_expect             : 3 # default falls to 1
+consul_ui                           : False
+
 ## HA Proxy     
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
@@ -75,7 +80,8 @@ consul_agent_archive                : "consul_{{ consul_agent_version }}_linux_a
 consul_agent_download_url           : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_agent_archive }}"
 consul_template_archive             : "consul-template{{ consul_template_version }}_linux_amd64.zip"
 consul_template_download_url        : "https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/{{ consul_template_archive }}"
-
+consul_ui_archive                   : "consul_{{ consul_agent_version }}_web_ui.zip"
+consul_ui_download_url              : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_ui_archive }}"
 ## Compatibility issue with paths in v1 and v2 
 path_for_template                   : ""
 
