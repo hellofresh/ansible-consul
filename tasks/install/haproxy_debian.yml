@@ -9,3 +9,11 @@
 - name: install | haproxy_debian | Install the HAProxy packages 
   apt: 
       name="haproxy"
+
+- name: install | haproxy_debian | Ensure consul template
+  template: 
+    src="{{ path_for_template }}haproxy.ctmp.j2"
+    dest="/tmp/consul_template.cnf"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0755"

@@ -20,9 +20,11 @@ global
     maxconn {{ consul_haproxy_maxconn }}
 {{ flatten_value('log', consul_haproxy_log) }}
     stats  {{ consul_haproxy_socekt }}
+{% if consul_haproxy_extra_global is defined %}
 {% for key, value in consul_haproxy_extra_global.iteritems() %}
     {{ key }}  {{ value }}
 {% endfor %}
+{% endif %}
 
 defaults
 {{ flatten_value('log', consul_haproxy_default_log) }}
@@ -31,9 +33,11 @@ defaults
 {{ flatten_value('timeout', consul_haproxy_default_timeout) }}
 {{ flatten_value('retries', consul_haproxy_default_retries) }}
 {{ flatten_value('balance', consul_haproxy_default_balance) }}
+{% if consul_haproxy_extra_default is defined %}
 {% for key, value in consul_haproxy_extra_default.iteritems() %}
     {{ key }}  {{ value }}
 {% endfor %}
+{% endif %}
 
 {% if consul_haproxy_stats_enable == True %}
 listen stats : {{ consul_haproxy_stats_port }}
@@ -43,6 +47,7 @@ listen stats : {{ consul_haproxy_stats_port }}
 {% endif %}
 
 # consul_services
+{% if consul_services_selected is defined %}
 {% for service_name in consul_services_selected %}
 frontend {{ service_name }}
     mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
@@ -59,3 +64,4 @@ backend {{ service_name }}
     # example check inter 10s fastinter 5s downinter 8s rise 3 fall 2
 
 {% endfor %}
+{% endif %}
