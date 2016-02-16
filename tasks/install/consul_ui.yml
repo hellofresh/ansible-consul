@@ -1,7 +1,6 @@
 ---
 
-
-- name: install | consul ui install | Ensure consul directory exists
+- name: install | consul UI| Ensure consul UI directory exists
   file: 
     state="directory"
     path="{{ item }}"
@@ -10,12 +9,12 @@
   with_items:
     - "{{ consul_ui_dir }}"
 
-- name: install | consul ui install | Check ui archive stat
+- name: install | consul UI| Check ui archive stat
   stat: 
     path="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
   register: consul_ui_archive_stat
 
-- name: install | consul ui install | Download consul agent (if needed)
+- name: install | consul ui | Download consul agent (if needed)
   get_url:
     url="{{ consul_ui_download_url }}"
     dest="{{ consul_tmp_dir }}"
@@ -23,7 +22,7 @@
   register: consul_ui_get
   when: consul_ui_archive_stat.stat.exists == False
 
-- name: install | consul ui install | Unpack consul arcive (if needed)
+- name: install | consul ui | Unpack consul arcive (if needed)
   unarchive:
     src="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
     dest="{{ consul_ui_dir }}"
