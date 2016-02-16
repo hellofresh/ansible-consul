@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
   ## Number of nodes
-  nodes = 1
+  nodes = 2
   rangeofips = 149
   (1..nodes).each do |n|
 

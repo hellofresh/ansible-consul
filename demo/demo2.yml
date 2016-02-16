@@ -1,0 +1,39 @@
+---
+
+- name: Demo1 play
+  hosts: all
+  become: True
+  vars_files:
+    - common_var.yml
+    - "{{inventory_hostname}}_var.yml"
+  pre_tasks:
+
+    - name: Create your local user
+      user:
+        name="{{ localuser }}"
+        home="{{ localhome }}"
+        shell="/bin/bash"
+        append="true"
+        group="admin"
+        comment="{{localuser}}"
+
+    - name: Putting you authorized_key
+      authorized_key:
+        key="{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+        user="{{localuser}}"
+        manage_dir=yes
+      ignore_errors: yes
+
+    - name : Change PS1
+      lineinfile: 
+        dest="{{ localhome }}/.bashrc"
+        insertafter="EOF"
+        line="export PS1=\"{{ PS1 }}\""
+
+    - name: Update apt cache
+      apt:
+        update_cache=yes
+        cache_valid_time=360
+
+  roles :
+    - consul
