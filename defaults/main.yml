@@ -22,7 +22,7 @@ consul_config_dir                   : "/etc/consul.d"
 consul_config_file                  : "/etc/consul.conf"
 
 consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
-consul_template_log_file            : "{{ consul_ui_dir }}/consul-template.log"
+consul_template_log_file            : "{{ consul_log_dir }}/consul-template.log"
 
 # Consul user/Group     
 consul_user                         : "consul"
