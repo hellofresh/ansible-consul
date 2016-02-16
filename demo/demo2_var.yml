@@ -1,9 +1,5 @@
 ---
 
 color                       : "#808080"
-consul_server               : True
-consul_bootstrap_expect     : 1
-consul_ui                   : true
-
-
 consul_consumer             : True
+consul_start_join           : [ "192.168.56.150" ]
