@@ -1,15 +1,19 @@
 ---
 
-- name: install | main | include consul agent install
-  include: consul_agent_install.yml
+- name: install | main | include consul common
+  include: consul_common.yml
 
-- name: install | main | include consul ui install
-  include: consul_ui_install.yml
+- name: install | main | include consul agent
+  include: consul_agent.yml
+- debug: var=consul_consumer
+- name: install | main | include consul ui 
+  include: consul_template.yml
+  when: consul_consumer
+
+- name: install | main | include consul template 
+  include: consul_template.yml
   when: consul_ui
-
-- name: install | main | include consul agent config
-  include: consul_agent_config.yml
 
 - name: install | main | include HA-Proxy
   include: haproxy_debian.yml
-  when: consul_haproxy
+  when: consul_consumer
