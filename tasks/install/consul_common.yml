@@ -36,3 +36,11 @@
   with_items: 
     - "{{ consul_agent_log_file }}"
     - "{{ consul_template_log_file }}"
+
+- name: install | consul common | Ensure consul bin path is resolvable through profile.d
+  template: 
+    src="{{ path_for_template }}consul_profile_path.sh.j2"
+    dest="/etc/profile.d/consul.sh"
+    owner="root"
+    group="root"
+    mode="0755"
