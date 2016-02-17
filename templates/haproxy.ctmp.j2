@@ -61,8 +61,7 @@ backend {{ service_name }}
     timeout  connect 10s
     timeout  server  1h
     {{'{{'}}range service "{{ service_name }}" {{'}}'}}
-    server {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{haproxy_setting.server_options | default('') }}{{'{{'}}end{{'}}'}}
-    # example check inter 10s fastinter 5s downinter 8s rise 3 fall 2
+    server {{'{{'}}.ID{{'}}'}}_{{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{'{{'}}end{{'}}'}}
 
 {% endfor %}
 {% endif %}
