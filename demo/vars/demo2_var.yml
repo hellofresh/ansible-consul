@@ -1,0 +1,16 @@
+---
+
+color                       : "#808080"
+consul_producer             : True
+consul_producer_services    : [ 'superapp' ]
+consul_start_join           : [ "192.168.56.150" ]
+
+packages_to_install         : 
+                              - "python-psycopg2"
+                              - "vim"
+                              - "curl"
+
+superapp_user     : "{{ localuser }}"
+superapp_pwd      : "{{ localhome }}"
+superapp_bin      : "/usr/bin/python"
+superapp_opts     : "superapp.py"

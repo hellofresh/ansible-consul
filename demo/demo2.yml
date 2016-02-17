@@ -4,8 +4,8 @@
   hosts: all
   become: True
   vars_files:
-    - common_var.yml
-    - "{{inventory_hostname}}_var.yml"
+    - "vars/common_var.yml"
+    - "vars/{{inventory_hostname}}_var.yml"
   pre_tasks:
 
     - name: Create your local user
@@ -34,6 +34,29 @@
       apt:
         update_cache=yes
         cache_valid_time=360
+
+    # Install test super app service
+    - name: Install superapp
+      template:
+        src="templates/superapp.py.j2"
+        dest="{{superapp_pwd}}/superapp.py"
+
+    - name: Install superapp service
+      template:
+        src="templates/superapp.sh.j2"
+        dest="/etc/init.d/superapp"
+        mode=0755
+
+    - name: Install demo packages
+      apt:
+        name="{{item}}"
+      with_items: packages_to_install
+      when : packages_to_install is defined
+
+    - name: Enable superapp service
+      service: 
+        name=superapp
+        state=started
 
   roles :
     - consul

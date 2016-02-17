@@ -1,0 +1,47 @@
+#!/usr/bin/env python
+from wsgiref.simple_server import make_server
+import psycopg2
+
+def build_response():
+    conn_string = "host='localhost' dbname='superapp' user='superapp' password='superapp'"
+    print "Connecting to database\n ->%s" % (conn_string)
+ 
+    try:
+        conn = psycopg2.connect(conn_string)
+        postgres_status = " RUNNING "
+        print "RUNNING to psql"
+    except:
+        postgres_status = " NOT RUNNING :("
+        print not "RUNNING to psql"
+
+    machine = "{{ inventory_hostname }}"
+    my_color = "{{ color }}"
+    
+    body = ""
+    body += "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 3.0//EN\">\n"
+    body += "<HTML>"
+    body += "<HEAD>"
+    body += "<TITLE>A Small Hello</TITLE>"
+    body += "</HEAD>"
+    body += "<BODY bgcolor=\"" + my_color + "\">"
+    body += "<H1>Hi I am " + machine + "</H1>"
+    body += "<H2>Postgresql status " + postgres_status + "</H2>"
+    body += "</BODY>"
+    body += "</HTML>"
+    return body
+
+def hello_world_app(environ, start_response):
+    machine = "{{ inventory_hostname }}"
+    status = '200 OK' # HTTP Status
+    headers = [('Content-type', 'text/html'), ('x-server',machine)] # HTTP Headers
+    start_response(status, headers)
+
+    # The returned object is going to be printed
+    body = build_response()
+    return [body]
+
+httpd = make_server('', 8000, hello_world_app)
+print "Serving on port 8000..."
+
+# Serve until process is killed
+httpd.serve_forever()
