@@ -35,5 +35,41 @@
         update_cache=yes
         cache_valid_time=360
 
+    - name: Install demo packages
+      apt:
+        name="{{item}}"
+      with_items: packages_to_install
+
+    - name : Configure postgresql
+      lineinfile: 
+        dest=/etc/postgresql/9.1/main/postgresql.conf
+        regexp='^listen_addresses'
+        line="listen_addresses = '*'"
+      register: postgresql_conf
+
+    - name : Configure postgresql hba.conf
+      lineinfile: 
+        dest=/etc/postgresql/9.1/main/pg_hba.conf
+        insertafter="EOF"
+        line="host  all  all 0.0.0.0/0 md5"
+
+    - name: Create postgresql db
+      postgresql_db: 
+         name=superapp
+      become_user: postgres
+      when: "'postgresql' in packages_to_install"
+
+    - name : Create postgresql user 
+      postgresql_user: 
+        db=superapp
+        name=superapp
+        password=superapp
+      become_user: postgres
+
+    - name : Service postgresql
+      service: 
+        name=postgresql
+        state=restarted
+
   roles :
     - consul

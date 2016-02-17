@@ -1,5 +1,14 @@
 ---
 
 color                       : "#808080"
-consul_consumer             : True
 consul_start_join           : [ "192.168.56.150" ]
+
+consul_producer             : True
+consul_producer_services    : [ 'superdb' ]
+
+#Since this is a demo we will make a list of packages to install
+packages_to_install                     : 
+                                           - "postgresql"
+                                           - "python-psycopg2"
+                                           - "vim"
+                                           - "curl"
