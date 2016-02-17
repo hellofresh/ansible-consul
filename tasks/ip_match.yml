@@ -15,7 +15,7 @@
 - debug: msg="{{consul_bind_tmp[0] }}"
 - name: ip_match | WARNING More than one match found
   debug: 
-    msg="Your rule matched more than one IP {{ consul_bind_tmp }}. Sorry will use the first IP '{{ consul_bind_tmp[0] }}'"
+    msg="Your rule matched more than one IP {{ consul_bind_tmp }}. Sorry will use the first IP '{{ consul_bind_tmp | first }}'"
   when: "{{ consul_bind_tmp | length }} > 1"
 
 - name: ip_match | Failed to match any rule
@@ -24,7 +24,7 @@
 
 - name: ip_match |  Set consul bind address to match your rule
   set_fact:
-    consul_network_bind="{{ consul_bind_tmp[0] }}"
+    consul_network_bind="{{ consul_bind_tmp | first }}"
 
 - name: ip_match | Matched service_ip 
   debug: 
