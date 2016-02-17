@@ -20,8 +20,7 @@ consul_services       :
         script        : "curl localhost:8000 > /dev/null 2>&1"
         interval      : "10s"
     haproxy           :
-       x : 1
-       y : 2
+      server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
 
   superdb             :
     name              : "superdb"
@@ -32,3 +31,6 @@ consul_services       :
     check             : 
         script        : "netstat -ant | grep 5432 | grep -v grep > /dev/null 2>&1"
         interval      : "10s"
+    haproxy           :
+      server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+      service_mode    : "tcp"
