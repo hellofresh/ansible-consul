@@ -71,9 +71,3 @@
    group="root"
    mode="0440"
 
-- name: install | consul template | Ensure haproxy config file is writable by consul user
-  file: 
-   path="/etc/haproxy/haproxy.cfg"
-   owner="root"
-   group="{{ consul_user }}"
-   mode="0664"

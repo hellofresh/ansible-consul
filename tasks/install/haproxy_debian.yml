@@ -39,3 +39,17 @@
     name=haproxy
     enabled=True
     state=started
+
+- name: install | consul template | Ensure haproxy config file is writable by consul group
+  file: 
+   path="/etc/haproxy/haproxy.cfg"
+   owner="root"
+   group="{{ consul_user }}"
+   mode="0664"
+
+- name: install | consul template | Ensure haproxy config dir is writable by consul group
+  file: 
+   path="/etc/haproxy/"
+   owner="root"
+   group="{{ consul_user }}"
+   mode="0775"
