@@ -55,10 +55,6 @@ Contributors (sorted alphabetically on the first name)
 
 * [Adham Helal](https://github.com/ahelal)
 
-caveat
-------
-
-With ansible 1.9.x ipaddr used by ip_match will return strings instead of list. That will break the role if your using consul_network_autobind = true
 
 Snippets 
 -------
