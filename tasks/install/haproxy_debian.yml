@@ -10,10 +10,32 @@
   apt: 
       name="haproxy"
 
-- name: install | haproxy_debian | Ensure consul-template HAproxy is deployed
-  template: 
-    src="{{ path_for_template }}haproxy.ctmp.j2"
-    dest="{{consul_haproxy_template_dir }}/consul_template.cnf"
-    owner="{{ consul_user }}"
-    group="{{ consul_group }}"
-    mode="0755"
+- name: install | haproxy_debian | Make sure /var/haproxy/ exists
+  file: 
+    state="directory"
+    path="{{ item }}"
+    owner="root"
+    group="root"
+  with_items:
+     - /var/haproxy
+
+- name: install | haproxy_debian | Make sure /var/haproxy/ exists
+  file: 
+    state="directory"
+    path="{{ item }}"
+    owner="root"
+    group="root"
+  with_items:
+     - /var/haproxy
+
+- name: install | haproxy_debian | Enable haproxy initd
+  replace: 
+    dest='/etc/default/haproxy'
+    regexp='ENABLED=0'
+    replace='ENABLED=1'
+
+- name: install | haproxy_debian | Ensure service is Enable and Started
+  service: 
+    name=haproxy
+    enabled=True
+    state=started
