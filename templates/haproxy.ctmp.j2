@@ -49,18 +49,19 @@ listen stats : {{ consul_haproxy_stats_port }}
 # consul_services
 {% if consul_consumer_services is defined %}
 {% for service_name in consul_consumer_services %}
+{% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
 frontend {{ service_name }}
-    mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
+    mode {{ haproxy_setting.service_mode | default('http') }}
     timeout  client  1h
     bind localhost:{{ consul_services[service_name].port }}
     default_backend {{ service_name }}
 
 backend {{ service_name }}
-    mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
+    mode {{ haproxy_setting.service_mode | default('http') }}
     timeout  connect 10s
     timeout  server  1h
-    {{'{{'}}range "{{ service_name }}" {{'}}'}}
-    servver {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{ service.haproxy.server_options | default('') }}{{'{{'}}end{{'}}'}}
+    {{'{{'}}range service "{{ service_name }}" {{'}}'}}
+    server {{'{{'}}.ID{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}}{{haproxy_setting.server_options | default('') }}{{'{{'}}end{{'}}'}}
     # example check inter 10s fastinter 5s downinter 8s rise 3 fall 2
 
 {% endfor %}
