@@ -54,7 +54,6 @@
   notify:
     - restart consul-template service
 
-
 - name: install | consul template  | Ensure templates is deployed
   template: 
     src="{{ item.jtemplate }}"
