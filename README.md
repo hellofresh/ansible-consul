@@ -40,22 +40,29 @@ Role Variables
 
 See [defaults/main.yml](https://github.com/hellofresh/ansible-consul/blob/master/defaults/main.yml)
 
-caveat
+
+Road map
+-----
+- Support agent retery
+- Support template retery
+- serf Encryption
+- consul-template should not take things out of load balancers if services goes down let haproxy handle that.
+- Be docker friendly 
+
+Caveat
 ------
 - With ansible 1.9.x ipaddr used by ip_match will return strings instead of list. That will break the role if your using consul_network_autobind = true
 
 License
 -------
-
 MIT
 
 
 Contributors (sorted alphabetically on the first name)
 ------------------
-
 * [Adham Helal](https://github.com/ahelal)
 
 
 Snippets 
 -------
-Some snippets of code was taken from various sources. We will try our best to list them
+Some snippets of code was taken from various sources. We will try our best to list them.
