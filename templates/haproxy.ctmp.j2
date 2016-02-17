@@ -47,8 +47,8 @@ listen stats : {{ consul_haproxy_stats_port }}
 {% endif %}
 
 # consul_services
-{% if consul_services_selected is defined %}
-{% for service_name in consul_services_selected %}
+{% if consul_consumer_services is defined %}
+{% for service_name in consul_consumer_services %}
 frontend {{ service_name }}
     mode {{ consul_services[service_name].haproxy.service_mode | default('http') }}
     timeout  client  1h
