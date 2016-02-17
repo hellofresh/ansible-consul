@@ -1,0 +1,4 @@
+{ 
+{{ item.pop('haproxy', True) if None in item  }}
+    "service": {{ item | to_nice_json }}
+}
