@@ -59,7 +59,7 @@ consul_template_consul_port         : "8500"
 consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
-                                        command     : "haproxy -f /etc/haproxy/haproxy.cfg -sf $(pidof haproxy) &"
+                                        command     : "haproxy -f /etc/haproxy/haproxy.cfg -c && sudo service haproxy reload"
                                         jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
 ## HA Proxy
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
@@ -90,6 +90,7 @@ consul_haproxy_default_balance      : "roundrobin"
 ## Extra default key, value   
 #consul_haproxy_extra_default       : 
 
+consul_haproxy_default_server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
 ## Config Stats page by default HAproxy will have default stats
 consul_haproxy_stats_enable         : True
 consul_haproxy_stats_mode           : "http"
