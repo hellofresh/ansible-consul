@@ -54,7 +54,7 @@
   notify:
     - restart consul-template service
 
-- name: install | consul template  | Ensure templates is deployed
+- name: install | consul template | Ensure templates is deployed
   template: 
     src="{{ item.jtemplate }}"
     dest="{{ item.source }}"
@@ -62,3 +62,18 @@
     group="{{ consul_group }}"
     mode="0755"
   with_items: "{{ consul_template_templates }}"
+
+- name: install | consul template | Ensure sudoers file to allow consul template to reload haproxy
+  copy: 
+   content="{{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload\n"
+   dest="/etc/sudoers.d/{{ consul_user }}"
+   owner="root"
+   group="root"
+   mode="0440"
+
+- name: install | consul template | Ensure haproxy config file is writable by consul user
+  file: 
+   path="/etc/haproxy/haproxy.cfg"
+   owner="root"
+   group="{{ consul_user }}"
+   mode="0664"
