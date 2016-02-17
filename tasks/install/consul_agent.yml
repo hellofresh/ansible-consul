@@ -26,7 +26,7 @@
 - name: install | consul agent | Ensure consul configure is deployed
   template: 
     src="{{ path_for_template }}consul_agent.json.j2"
-    dest="{{ consul_config_file }}"
+    dest="{{ consul_config_agent_file }}"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0640"
