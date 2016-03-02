@@ -42,6 +42,9 @@ consul_template_dir                 : "{{ consul_home_dir }}/templates"
 consul_log_dir                      : "/var/log/consul"
 consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
+# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing, warning" or "all"
+consul_template_service_options     : ""
+
 # Consul files
 consul_config_agent_file            : "/etc/consul.conf"
 consul_config_template_file         : "/etc/consul-template.conf"
@@ -61,8 +64,9 @@ consul_template_templates           :
                                         destination : "/etc/haproxy/haproxy.cfg"
                                         command     : "haproxy -f /etc/haproxy/haproxy.cfg -c && sudo service haproxy reload"
                                         jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+consul_encrypt                      : "Tq/xU3fTPyBRoA4R4CxOKg=="
 ## HA Proxy
-consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
+consul_haproxy_ppa_install          : False # By default use packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
 ## Config global        
 consul_haproxy_user                 : "haproxy"

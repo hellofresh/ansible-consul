@@ -60,7 +60,7 @@ backend {{ service_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     timeout  connect 10s
     timeout  server  1h
-    {{'{{'}}range service "{{ service_name }}" {{'}}'}}
+    {{'{{'}}range service "{{ service_name }}" "{{ consul_template_service_options }}" {{'}}'}}
     server {{'{{'}}.ID{{'}}'}}_{{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{'{{'}}end{{'}}'}}
 
 {% endfor %}
