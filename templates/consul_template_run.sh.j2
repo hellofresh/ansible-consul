@@ -4,6 +4,10 @@ CONSUL_CONFIG_DIR="{{ consul_config_template_file }}"
 CONSUL_LOG_FILE="{{ consul_template_log_file }}"
 CONSUL_BIN="{{ consul_bin_dir }}"
 
+# Make sure to use all available proc
+# https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8 
+export GOMAXPROCS="$(nproc)"
+
 # Run 
 ${CONSUL_BIN}/${NAME} -config=/etc/consul-template.conf > $CONSUL_LOG_FILE 2>&1
 
