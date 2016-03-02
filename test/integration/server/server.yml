@@ -1,0 +1,18 @@
+---
+
+- name: Server
+  hosts: all
+  become: True
+  vars:
+    consul_server               : True
+    consul_bootstrap_expect     : 1
+    consul_ui                   : true
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache=yes
+        cache_valid_time=360
+
+  roles :
+    - consul
