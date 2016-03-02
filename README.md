@@ -1,4 +1,5 @@
 # Ansible Consul Role
+[![Build Status](https://travis-ci.org/hellofresh/ansible-consul.svg?branch=master)](https://travis-ci.org/hellofresh/ansible-consul)
 
 `consul` is an ansible role to install and manage consul services.
 
