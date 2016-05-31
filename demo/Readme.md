@@ -1,5 +1,5 @@
-Consul Demo
------------
+Consul simple Demo
+------------------
 
 This demo will create the three instances 
 
