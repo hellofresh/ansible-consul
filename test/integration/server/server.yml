@@ -15,4 +15,4 @@
         cache_valid_time=360
 
   roles :
-    - consul
+    - ansible-consul

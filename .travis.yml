@@ -3,8 +3,7 @@ language: python
 python: "2.7"
 
 env:
-  - KITCHEN_TEST="server-v1"
-  - KITCHEN_TEST="server-v2"
+  - KITCHEN_TEST="server-default"
 
 before_install:
   # Make sure everything's up to date.
@@ -17,10 +16,12 @@ before_install:
 install:
   - bash /tmp/travis-ansible-setup.sh
   - bundle install
+  - 
 
 script:
     - ansible --version
     - export TRAVIS=True
+    - ~/.venv_ansible/v2/venv/bin/pip install netaddr
     - bundle exec kitchen test $KITCHEN_TEST
 
 after_success:
