@@ -62,6 +62,9 @@
     group="{{ consul_group }}"
     mode="0755"
   with_items: "{{ consul_template_templates }}"
+  notify:
+    - restart consul-template service
+    - reload haproxy service
 
 - name: install | consul template | Ensure sudoers file to allow consul template to reload haproxy
   copy: 

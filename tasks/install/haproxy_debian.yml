@@ -8,7 +8,7 @@
 
 - name: install | haproxy_debian | Install the HAProxy packages 
   apt: 
-      name="haproxy"
+    name="haproxy"
 
 - name: install | haproxy_debian | Make sure /var/haproxy/ exists
   file: 
