@@ -19,31 +19,22 @@
   with_items:
      - /var/haproxy
 
-- name: install | haproxy_debian | Make sure /var/haproxy/ exists
-  file: 
-    state="directory"
-    path="{{ item }}"
-    owner="root"
-    group="root"
-  with_items:
-     - /var/haproxy
-
 - name: install | haproxy_debian | Enable haproxy initd
   replace: 
     dest='/etc/default/haproxy'
     regexp='ENABLED=0'
     replace='ENABLED=1'
 
-- name: install | consul template | Ensure haproxy config file is writable by consul group
+- name: install | haproxy_debian | Ensure haproxy config file is writable by consul group
   file: 
    path="/etc/haproxy/haproxy.cfg"
    owner="root"
-   group="{{ consul_user }}"
+   group="{{ consul_group }}"
    mode="0664"
 
-- name: install | consul template | Ensure haproxy config dir is writable by consul group
+- name: install | haproxy_debian | Ensure haproxy config dir is writable by consul group
   file: 
    path="/etc/haproxy/"
    owner="root"
-   group="{{ consul_user }}"
+   group="{{ consul_group }}"
    mode="0775"
