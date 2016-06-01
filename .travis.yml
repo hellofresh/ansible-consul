@@ -16,11 +16,13 @@ before_install:
 install:
   - bash /tmp/travis-ansible-setup.sh
   - bundle install
+  - 
 
 script:
     - ansible --version
     - export TRAVIS=True
     - bundle exec kitchen test $KITCHEN_TEST
+    - ~/.venv_ansible/v2/venv/bin/pip install python-netaddr
 
 after_success:
     - echo "Success"
