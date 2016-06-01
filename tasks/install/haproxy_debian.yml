@@ -34,12 +34,6 @@
     regexp='ENABLED=0'
     replace='ENABLED=1'
 
-- name: install | haproxy_debian | Ensure service is Enable and Started
-  service: 
-    name=haproxy
-    enabled=True
-    state=started
-
 - name: install | consul template | Ensure haproxy config file is writable by consul group
   file: 
    path="/etc/haproxy/haproxy.cfg"
