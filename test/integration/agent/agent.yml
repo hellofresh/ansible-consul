@@ -1,0 +1,50 @@
+---
+
+- name: agent
+  hosts: all
+  become: True
+  vars:
+    consul_server               : True
+    consul_bootstrap_expect     : 1
+    consul_ui                   : false
+
+    consul_services       :
+      superssh            :
+        name              : "superssh"
+        tags              : 
+                             - "test"
+        port              : 22
+        local_port        : 2222
+        check             : 
+            script        : "curl localhost:2222 > /dev/null 2>&1"
+            interval      : "10s"
+        haproxy           :
+          server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+          service_mode    : "tcp"
+
+      superdb             :
+        name              : "superdb"
+        tags              : 
+                             - "test"
+        port              : 5431
+        check             : 
+            script        : "curl localhost:5432 > /dev/null 2>&1"
+            interval      : "10s"
+        haproxy           :
+          server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+          service_mode    : "tcp"
+
+    consul_producer             : True
+    consul_producer_services    : [ 'superssh' ]
+
+    consul_consumer             : True
+    consul_consumer_services    : [ 'superdb','superssh'  ]
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache=yes
+        cache_valid_time=360
+
+  roles :
+    - ansible-consul

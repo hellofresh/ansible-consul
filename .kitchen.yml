@@ -23,3 +23,7 @@ suites:
   - name                  : server
     provisioner           :
         playbook          : "test/integration/server/server.yml"
+
+  - name                  : agent
+    provisioner           :
+        playbook          : "test/integration/agent/agent.yml"
