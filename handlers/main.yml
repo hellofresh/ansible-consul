@@ -15,7 +15,7 @@
 - name: reload haproxy service
   service: 
     name="haproxy"
-    state="reload"
+    state="reloaded"
     enabled="yes"
 
 - name: reload consul service config
