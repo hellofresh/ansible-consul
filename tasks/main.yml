@@ -31,14 +31,14 @@
     enabled=True
     state="started"
 
-- name: install | haproxy_debian | Ensure service is Enable and Started
+- name: Ensure consul-template service is Enable and Started
   service: 
     name="consul-template"
     enabled=True
     state=started
   when: consul_consumer
 
-- name: install | haproxy_debian | Ensure service is Enable and Started
+- name: Ensure haproxy service is Enable and Started
   service: 
     name=haproxy
     enabled=True
