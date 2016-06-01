@@ -1,9 +1,4 @@
 ---
-  # Maintain old path behaviour for v1 
-- name: Set path for V1
-  set_fact:
-    path_for_template: "../../templates/"
-  when: ansible_version.major == 1
 
 - name: Ensure prerequisites packages exists
   apt:
@@ -28,19 +23,16 @@
 - name: Ensure consul service is running
   service:
     name="consul"
-    enabled=True
     state="started"
 
 - name: Ensure consul-template service is Enable and Started
   service: 
     name="consul-template"
-    enabled=True
-    state=started
+    state="started"
   when: consul_consumer
 
 - name: Ensure haproxy service is Enable and Started
   service: 
-    name=haproxy
-    enabled=True
-    state=started
+    name="haproxy"
+    state="started"
   when: consul_consumer
