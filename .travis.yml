@@ -22,7 +22,7 @@ script:
     - ansible --version
     - export TRAVIS=True
     - bundle exec kitchen test $KITCHEN_TEST
-    - ~/.venv_ansible/v2/venv/bin/pip install python-netaddr
+    - ~/.venv_ansible/v2/venv/bin/pip install netaddr
 
 after_success:
     - echo "Success"
