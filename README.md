@@ -1,11 +1,9 @@
+--------
 # Ansible Consul Role
 [![Build Status](https://travis-ci.org/hellofresh/ansible-consul.svg?branch=master)](https://travis-ci.org/hellofresh/ansible-consul)
 
 `consul` is an ansible role to install and manage consul services.
 
-## Warning.
-
-This code is still in early development
 
 ## Overview
 
@@ -165,3 +163,14 @@ Contributors (sorted alphabetically on the first name)
 Snippets 
 -------
 Some snippets of code was taken from various sources. We will try our best to list them.
+
+--------
+
+<p align="center">
+  <a href="https://hellofresh.com">
+    <img  width="120" src="https://www.hellofresh.de/images/hellofresh/press/HelloFresh_Logo.png">
+  </a><br>
+  HelloFresh - More Than Food.
+</p>
+
+
