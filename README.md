@@ -1,8 +1,3 @@
-<p align="center">
-  <a href="https://hellofresh.com">
-    <img width="120" src="https://www.hellofresh.de/images/hellofresh/press/HelloFresh_Logo.png">
-  </a>
-</p>
 --------
 # Ansible Consul Role
 [![Build Status](https://travis-ci.org/hellofresh/ansible-consul.svg?branch=master)](https://travis-ci.org/hellofresh/ansible-consul)
@@ -171,6 +166,10 @@ Some snippets of code was taken from various sources. We will try our best to li
 
 --------
 
-
+<p align="center">
+  <a href="https://hellofresh.com">
+    <img  width="120" src="https://www.hellofresh.de/images/hellofresh/press/HelloFresh_Logo.png">
+  </a>
+</p>
 HelloFresh - More Than Food.
 
