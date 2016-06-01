@@ -3,8 +3,7 @@ language: python
 python: "2.7"
 
 env:
-  - KITCHEN_TEST="server-v1"
-  - KITCHEN_TEST="server-v2"
+  - KITCHEN_TEST="server"
 
 before_install:
   # Make sure everything's up to date.
