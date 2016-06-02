@@ -37,4 +37,4 @@
    path="/etc/haproxy/"
    owner="root"
    group="{{ consul_group }}"
-   mode="0755"
+   mode="0775"
