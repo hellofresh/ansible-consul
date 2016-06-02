@@ -30,7 +30,7 @@
    path="/etc/haproxy/haproxy.cfg"
    owner="{{ consul_user }}"
    group="{{ consul_group }}"
-   mode="0664"
+   mode="0644"
 
 - name: install | haproxy_debian | Ensure haproxy config dir is writable by consul group
   file: 
