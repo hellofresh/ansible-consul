@@ -8,16 +8,7 @@
 
 - name: install | haproxy_debian | Install the HAProxy packages 
   apt: 
-      name="haproxy"
-
-- name: install | haproxy_debian | Make sure /var/haproxy/ exists
-  file: 
-    state="directory"
-    path="{{ item }}"
-    owner="root"
-    group="root"
-  with_items:
-     - /var/haproxy
+    name="haproxy"
 
 - name: install | haproxy_debian | Make sure /var/haproxy/ exists
   file: 
@@ -34,16 +25,16 @@
     regexp='ENABLED=0'
     replace='ENABLED=1'
 
-- name: install | consul template | Ensure haproxy config file is writable by consul group
+- name: install | haproxy_debian | Ensure haproxy config file is writable by consul group
   file: 
    path="/etc/haproxy/haproxy.cfg"
-   owner="root"
-   group="{{ consul_user }}"
-   mode="0664"
+   owner="{{ consul_user }}"
+   group="{{ consul_group }}"
+   mode="0644"
 
-- name: install | consul template | Ensure haproxy config dir is writable by consul group
+- name: install | haproxy_debian | Ensure haproxy config dir is writable by consul group
   file: 
    path="/etc/haproxy/"
    owner="root"
-   group="{{ consul_user }}"
+   group="{{ consul_group }}"
    mode="0775"

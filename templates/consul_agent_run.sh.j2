@@ -17,6 +17,5 @@ export GOMAXPROCS="$(nproc)"
 # https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8 
 export GOMAXPROCS="$(nproc)"
 
-${CONSUL_BIN}/${NAME} agent -config-dir=$CONSUL_CONFIG_DIR -config-file=$CONSUL_CONFIG_FILE -data-dir=$CONSUL_DATA_DIR -bind=$CONSUL_BIND > $CONSUL_LOG_FILE 2>&1
-
+exec ${CONSUL_BIN}/${NAME} agent -config-dir=$CONSUL_CONFIG_DIR -config-file=$CONSUL_CONFIG_FILE -data-dir=$CONSUL_DATA_DIR -bind=$CONSUL_BIND > $CONSUL_LOG_FILE 2>&1
 exit $?

@@ -52,8 +52,8 @@ listen stats :{{ consul_haproxy_stats_port }}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
 frontend {{ service_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout  client  1h
-    bind localhost:{{ consul_services[service_name].port }}
+    timeout client  1h
+    bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
     default_backend {{ service_name }}
 
 backend {{ service_name }}
@@ -62,6 +62,5 @@ backend {{ service_name }}
     timeout  server  1h
     {{'{{'}}range service "{{ service_name }}" "{{ consul_template_service_options }}" {{'}}'}}
     server {{'{{'}}.ID{{'}}'}}_{{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{'{{'}}.Address{{'}}'}}:{{'{{'}}.Port{{'}}'}} {{haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{'{{'}}end{{'}}'}}
-
 {% endfor %}
 {% endif %}

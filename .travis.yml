@@ -4,6 +4,7 @@ python: "2.7"
 
 env:
   - KITCHEN_TEST="server-default"
+  - KITCHEN_TEST="agent-default"
 
 before_install:
   # Make sure everything's up to date.
@@ -16,7 +17,6 @@ before_install:
 install:
   - bash /tmp/travis-ansible-setup.sh
   - bundle install
-  - 
 
 script:
     - ansible --version

@@ -1,4 +1,8 @@
 #!/bin/sh
+#
+# THIS SCRIPT IS NOT intended to run directly. Use service instead
+#
+
 NAME="consul-template"
 CONSUL_CONFIG_DIR="{{ consul_config_template_file }}"
 CONSUL_LOG_FILE="{{ consul_template_log_file }}"
@@ -9,6 +13,5 @@ CONSUL_BIN="{{ consul_bin_dir }}"
 export GOMAXPROCS="$(nproc)"
 
 # Run 
-${CONSUL_BIN}/${NAME} -config=/etc/consul-template.conf > $CONSUL_LOG_FILE 2>&1
-
+exec ${CONSUL_BIN}/${NAME} -config=/etc/consul-template.conf > $CONSUL_LOG_FILE 2>&1
 exit $?
