@@ -31,7 +31,7 @@ This is an opinionated setup of consul. It deploys HAproxy with each consumer an
 Requirements
 ------------
 
- - Developed for Ansible 2.X but will be compatible with 1.9.x
+ - Developed for Ansible 2.X
  - Controller should have python-netaddr
 
 Role Variables
@@ -137,6 +137,9 @@ consul_haproxy_stats_mode           : "http"
 consul_haproxy_stats_port           : 3212
 consul_haproxy_stats_uri            : "/"
 ```
+service definition
+----
+https://www.consul.io/docs/agent/checks.html
 
 Road map
 -----
