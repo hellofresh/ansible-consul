@@ -9,6 +9,17 @@
     consul_ui                   : false
 
     consul_services       :
+      google              :
+        name              : "google"
+        port              : 80
+        address           : "www.google.com"
+        check             : 
+            script        : "curl http://www.google.com > /dev/null"
+            interval      : "120s"
+        haproxy           :
+          server_options  : "check inter 120s fastinter 5s downinter 8s rise 3 fall 2"
+          service_mode    : "http"
+
       superssh            :
         name              : "superssh"
         tags              : 
@@ -16,7 +27,7 @@
         port              : 22
         local_port        : 2222
         check             : 
-            script        : "curl localhost:2222 > /dev/null 2>&1"
+            script        : "netstat -ltnp | grep ':22 ' > /dev/null 2>&1"
             interval      : "10s"
         haproxy           :
           server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
@@ -35,10 +46,10 @@
           service_mode    : "tcp"
 
     consul_producer             : True
-    consul_producer_services    : [ 'superssh' ]
+    consul_producer_services    : [ 'superssh', 'google' ]
 
     consul_consumer             : True
-    consul_consumer_services    : [ 'superdb','superssh'  ]
+    consul_consumer_services    : [ 'superdb','superssh', "google" ]
 
   pre_tasks:
     - name: Update apt cache
