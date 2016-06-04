@@ -6,6 +6,12 @@
     state="restarted"
     enabled="yes"
 
+  #TODO: At the moment restart and reload do same thing until we fix kill -HUP option
+- name: reload consul service
+  service: 
+    name="consul"
+    state="restarted"
+
 - name: restart consul-template service
   service: 
     name="consul-template"
