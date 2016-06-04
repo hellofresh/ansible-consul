@@ -77,7 +77,8 @@ describe 'superdb service (A failing service)' do
   describe "health is failing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/superdb -v" do 
         its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Name":"Service \'superdb\' check","Status":"warning"' }
+        its(:stdout) { should contain '"Name":"Service \'superdb\'' }
+        its(:stdout) { should contain 'check","Status":"warning"' }
     end
   end
 
