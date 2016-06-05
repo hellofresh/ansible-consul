@@ -45,7 +45,8 @@ describe 'google service (normal port option)' do
   describe "health is passing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/google -v" do 
         its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Name":"Service \'google\' check","Status":"passing"' }
+        its(:stdout) { should contain '"Service":"google"'}
+        its(:stdout) { should contain '"Status":"passing"' }
     end
   end
 
@@ -77,8 +78,8 @@ describe 'superdb service (A failing service)' do
   describe "health is failing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/superdb -v" do 
         its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Name":"Service \'superdb\'' }
-        its(:stdout) { should contain 'check","Status":"warning"' }
+        its(:stdout) { should contain '"Service":"superdb"' }
+        its(:stdout) { should contain '"Status":"warning"' }
     end
   end
 
