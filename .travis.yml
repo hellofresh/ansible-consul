@@ -24,6 +24,7 @@ script:
     - ~/.venv_ansible/v2/venv/bin/pip install netaddr
     - sudo netstat -ntlp
     - bundle exec kitchen test $KITCHEN_TEST
+    - sudo netstat -ntlp
 
 after_success:
     - echo "Success"
