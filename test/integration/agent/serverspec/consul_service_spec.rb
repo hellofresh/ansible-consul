@@ -25,9 +25,8 @@ describe 'superssh service (localport option)' do
   end
 
   describe "ssh is working on 2222" do
-    describe command "ssh-keyscan -p 2222 localhost" do 
+    describe command "echo X | nc -v  127.0.0.1 2222 2>&1 | grep SSH" do 
       its(:exit_status) { should eq 0 }
-      its(:stderr) { should contain '# localhost SSH-2.0-OpenSSH' }
     end
   end
 end
