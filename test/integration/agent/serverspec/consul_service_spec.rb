@@ -13,7 +13,8 @@ describe 'superssh service (localport option)' do
   describe "health is passing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/superssh -v" do 
         its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Name":"Service \'superssh\' check","Status":"passing"' }
+        its(:stdout) { should contain '"Service":"superssh"'}
+        its(:stdout) { should contain '"Status":"passing"'}
     end
   end
 
