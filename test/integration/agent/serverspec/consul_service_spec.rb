@@ -59,7 +59,7 @@ describe 'google service (normal port option)' do
   describe "curling to google is working on 80" do
     describe command "curl -I -s http://127.0.0.1" do 
       its(:exit_status) { should eq 0 }
-      its(:stdout) { should contain 'HTTP/1.1 302 Found' }
+      its(:stdout) { should contain 'HTTP/1.1 301 Moved Permanently' }
     end
   end
 end
