@@ -9,13 +9,13 @@
     consul_ui                   : false
 
     consul_services       :
-      # External service i.e. google 
-      google              :
-        name              : "google"
+      # External service i.e. hellofresh 
+      hellofresh          :
+        name              : "hellofresh"
         port              : 80
-        address           : "www.google.com"
+        address           : "www.hellofresh.com"
         check             : 
-            script        : "curl http://www.google.com > /dev/null"
+            script        : "curl http://www.hellofresh.com > /dev/null"
             interval      : "120s"
         haproxy           :
           server_options  : "check inter 120s fastinter 5s downinter 8s rise 3 fall 2"
@@ -60,10 +60,10 @@
           service_mode    : "tcp"
 
     consul_producer             : True
-    consul_producer_services    : [ 'superssh', 'google', "superdb" ]
+    consul_producer_services    : [ 'superssh', 'hellofresh', "superdb" ]
 
     consul_consumer             : True
-    consul_consumer_services    : [ 'superdb','superssh', "google", "superapp" ]
+    consul_consumer_services    : [ 'superdb','superssh', "hellofresh", "superapp" ]
 
   pre_tasks:
     - name: Update apt cache
