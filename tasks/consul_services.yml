@@ -16,11 +16,13 @@
     path="{{ consul_config_dir }}/sv_{{ item }}.json"
     state="absent"
   with_items: "{{ old_services }}"
-  #Need to notify
+  notify:
+    - reload consul service
 
 - name: consul services | Ensure consul services JSON are registered
   template:
     src="consul_service.j2"
     dest="{{ consul_config_dir }}/sv_{{ consul_services[item].name }}.json"
   with_items:  "{{ consul_producer_services }}"
-  #Need to notify
+  notify:
+    - reload consul service
