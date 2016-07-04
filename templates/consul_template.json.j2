@@ -3,13 +3,16 @@ consul = "{{ consul_template_consul_server }}:{{ consul_template_consul_port }}"
 {% if consul_template_templates %}
 {% for template in consul_template_templates %}
 
+#  log level
+log_level = "{{ consul_template_log_level }}"
+
 template {
   source = "{{ template.source }}"
   destination = "{{ template.destination }}"
   {% if template.command is defined %}command = "{{ template.command }}"{% endif %}
-  
+
   {% if template.perms is defined %}perms = {{ template.perms }}{% endif %}
-  
+
   {% if template.backup is defined %}backup = {{ template.backup|lower }}{% endif %}
 
 }{% endfor %}
