@@ -1,5 +1,4 @@
 ---
-# Sorry no support V4 for now 
 
 - name: ip_match | (1) Match range address
   set_fact:
@@ -12,9 +11,11 @@
     consul_bind_tmp="{{ ansible_all_ipv4_addresses | ipaddr(consul_network_autobind_type) }}"
     consul_autobind_type_set="{{ consul_network_autobind_type }}"
   when: "consul_network_autobind_type is defined and consul_autobind_type_set is not defined"
-- debug: msg="{{consul_bind_tmp[0] }}"
+  connection: local
+  delegate_to: localhost
+
 - name: ip_match | WARNING More than one match found
-  debug: 
+  debug:
     msg="Your rule matched more than one IP {{ consul_bind_tmp }}. Sorry will use the first IP '{{ consul_bind_tmp | first }}'"
   when: "{{ consul_bind_tmp | length }} > 1"
 
@@ -26,6 +27,6 @@
   set_fact:
     consul_network_bind="{{ consul_bind_tmp | first }}"
 
-- name: ip_match | Matched service_ip 
-  debug: 
+- name: ip_match | Matched service_ip
+  debug:
     msg="Will use the following IP {{ consul_network_bind }} because of rule '{{ consul_autobind_type_set }}'"
