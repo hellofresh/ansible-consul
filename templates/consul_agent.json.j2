@@ -14,9 +14,6 @@
 {% if consul_start_join is defined and consul_start_join %}
   "start_join": {{ consul_start_join | to_json }},
 {% endif %}
-{% if consul_start_join is defined and consul_start_join %}
-  "start_join": {{ consul_start_join | to_json }},
-{% endif %}
 {% if consul_encrypt is defined %}
   "encrypt": "{{ consul_encrypt }}",
 {% endif %}
