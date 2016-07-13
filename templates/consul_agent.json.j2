@@ -13,7 +13,7 @@
   "ui_dir": "{{ consul_ui_dir }}",
 {% endif %}
 {# Either use consul_start_join or consul_retry_join #}
-{% if consul_retry_join|default(false) %}
+{% if consul_retry_join is defined and consul_retry_join %}
   "retry_join": {{ consul_servers_list | to_json }},
   "retry_interval": "{{ consul_retry_interval }}",
   "retry_max": {{ consul_retry_max }},

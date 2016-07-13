@@ -3,7 +3,7 @@
 - name: Ensure prerequisites packages exists
   apt:
     name="{{ item }}"
-  with_items: 
+  with_items:
     - unzip
 
 - name: Include IP match
@@ -26,13 +26,13 @@
     state="started"
 
 - name: Ensure consul-template service is Enable and Started
-  service: 
+  service:
     name="consul-template"
     state="started"
   when: consul_consumer
 
 - name: Ensure haproxy service is Enable and Started
-  service: 
+  service:
     name="haproxy"
     state="started"
   when: consul_consumer
