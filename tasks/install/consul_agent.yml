@@ -1,7 +1,7 @@
 ---
 
 - name: install | consul agent | Check agent archive stat
-  stat: 
+  stat:
     path="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
   register: consul_agent_archive_stat
 
@@ -23,8 +23,8 @@
   notify:
     - restart consul service
 
-- name: install | consul agent | Ensure consul configure is deployed
-  template: 
+- name: install | consul agent | Ensure consul configuration is deployed
+  template:
     src="{{ path_for_template }}consul_agent.json.j2"
     dest="{{ consul_config_agent_file }}"
     owner="{{ consul_user }}"
@@ -34,7 +34,7 @@
     - restart consul service
 
 - name: install | consul agent | Ensure consul run script is deployed
-  template: 
+  template:
     src="{{ path_for_template }}consul_agent_run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_agent_run.sh"
     owner="{{ consul_user }}"
@@ -45,7 +45,7 @@
 
 # TODO Support runnit
 - name: install | consul agent | Ensure consul init.d script is deployed
-  template: 
+  template:
     src="{{ path_for_template }}consul-init.d.sh.j2"
     dest=/etc/init.d/consul
     owner="{{ consul_user }}"

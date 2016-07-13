@@ -8,12 +8,19 @@
   "log_level": "{{ consul_log_level }}",
   "enable_syslog": {{ consul_log_syslog | to_json  }},
   "rejoin_after_leave": {{ consul_rejoin_after_leave | to_json }},
+  "datacenter": "{{ consul_datacenter }}",
 {% if consul_ui == true %}
   "ui_dir": "{{ consul_ui_dir }}",
 {% endif %}
+{# Either use consul_start_join or consul_retry_join #}
 {% if consul_start_join is defined and consul_start_join %}
   "start_join": {{ consul_start_join | to_json }},
+{% elif consul_retry_join|default(false) %}
+  "retry_join": {{ consul_servers_list | to_json }},
+  "retry_interval": "{{ consul_retry_interval }}",
+  "retry_max": {{ consul_retry_max }},
 {% endif %}
+
 {% if consul_encrypt is defined %}
   "encrypt": "{{ consul_encrypt }}",
 {% endif %}
