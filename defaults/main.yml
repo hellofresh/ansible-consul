@@ -19,9 +19,13 @@ consul_datacenter                   : "default"
 consul_domain                       : "consul."
 
 #consul_start_join                   : [ "127.0.0.1" ]
+consul_servers_list                 : [ "127.0.0.1" ] # you can use ansible groups "{{ groups['consul_servers'] }}"
 consul_rejoin_after_leave           : true
 consul_leave_on_terminate           : false
-
+#
+consul_retry_join                   : false
+consul_retry_interval               : 30s
+consul_retry_max                    : 0
 #Consul log
 consul_log_level                    : "INFO"
 consul_log_syslog                   : false
