@@ -8,7 +8,7 @@
   register: registered_consul_services
 
 - name: consul services | Check if any services are old
-  set_fact: 
+  set_fact:
     old_services: "{{ registered_consul_services.stdout_lines | difference(consul_producer_services) }}"
 
 - name: consul services | Ensure old consul services JSON (if any) are deregister
@@ -22,7 +22,7 @@
 - name: consul services | Ensure consul services JSON are registered
   template:
     src="consul_service.j2"
-    dest="{{ consul_config_dir }}/sv_{{ consul_services[item].name }}.json"
+    dest="{{ consul_config_dir }}/sv_{{ item }}.json"
   with_items:  "{{ consul_producer_services }}"
   notify:
     - reload consul service
