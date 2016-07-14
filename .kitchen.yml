@@ -1,10 +1,8 @@
 ---
 driver                    :
-    name                  : <%= if ENV['TRAVIS'] then 'localhost' else 'vagrant' end  %>
-    box                   : "ubuntu/trusty64"
-    customize             :
-         cpus             : 2
-         memory           : 2048
+    name                  : docker
+    socket                : unix:///var/run/docker.sock
+    use_sudo              : false
 
 provisioner:
     name                  : ansible_push
@@ -12,18 +10,23 @@ provisioner:
     ansible_config        : "test/ansible.cfg"
     idempotency_test      : True
     diff                  : True
-    sudo                  : <%= if ENV['TRAVIS'] then 'True' else 'False' end  %>
-    raw_arguments         : <%= if ENV['TRAVIS'] then '-c local' else '' end %>
-    extra_vars            : { 'kitchen_connection': '<%= if ENV["TRAVIS"] then "local" else "smart" end %>', 'kitchen_hosts': '<%= if ENV["TRAVIS"] then "localhost" else "all" end %>' }
+    sudo                  : True
 
 platforms:
- - name                   : "default"
+ - name                   : "ubuntu1404"
+   driver_config          :
+     image                : quay.io/hellofresh/kitchen-base
+     platform             : ubuntu
 
 suites:
   - name                  : server
     provisioner           :
         playbook          : "test/integration/server/server.yml"
+    # verifier              :
+    #       patterns            : [ test/integration/standalone/serverspec/*_spec.rb ]
 
   - name                  : agent
     provisioner           :
         playbook          : "test/integration/agent/agent.yml"
+    # verifier              :
+    #       patterns            : [ test/integration/standalone/serverspec/*_spec.rb ]
