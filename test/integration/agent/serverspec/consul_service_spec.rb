@@ -40,40 +40,6 @@ describe 'superssh service (localport option)' do
   end
 end
 
-
-describe 'hellofresh service (normal port option)' do
-  describe "definition" do
-    describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/hellofresh" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"ServiceName":"hellofresh"' }
-        its(:stdout) { should contain '"ServiceAddress":"hellofresh.com"' }
-        its(:stdout) { should contain '"ServicePort":80' }
-    end
-  end
-
-  describe "health is passing" do
-    describe command "curl -s http://127.0.0.1:8500/v1/health/service/hellofresh -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Service":"hellofresh"'}
-        its(:stdout) { should contain '"Status":"passing"' }
-    end
-  end
-
-  describe "localport 80 is open by haproxy" do
-    describe port(80) do
-      it { should be_listening.on('127.0.0.1').with('tcp') }
-    end
-  end
-
-  describe "curling to hellofresh is working on 80" do
-    describe command "curl -I --resolve hellofresh.com:80:127.0.0.1 -H 'Host: hellofresh.com' http://hellofresh.com" do
-      its(:exit_status) { should eq 0 }
-      its(:stdout) { should contain 'HTTP/1.1 301 Moved Permanently' }
-    end
-  end
-end
-
-
 describe 'superdb service (A failing service)' do
   describe "definition" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superdb -v" do
@@ -116,4 +82,36 @@ describe 'superapp service (a non advertised service)' do
     end
   end
 
+end
+
+describe 'hellofresh service (normal port option)' do
+  describe "definition" do
+    describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/hellofresh" do
+        its(:exit_status) { should eq 0 }
+        its(:stdout) { should contain '"ServiceName":"hellofresh"' }
+        its(:stdout) { should contain '"ServiceAddress":"hellofresh.com"' }
+        its(:stdout) { should contain '"ServicePort":80' }
+    end
+  end
+
+  describe "health is passing" do
+    describe command "curl -s http://127.0.0.1:8500/v1/health/service/hellofresh -v" do
+        its(:exit_status) { should eq 0 }
+        its(:stdout) { should contain '"Service":"hellofresh"'}
+        its(:stdout) { should contain '"Status":"passing"' }
+    end
+  end
+
+  describe "localport 80 is open by haproxy" do
+    describe port(80) do
+      it { should be_listening.on('127.0.0.1').with('tcp') }
+    end
+  end
+
+  describe "curling to hellofresh is working on 80" do
+    describe command "curl -I --resolve hellofresh.com:80:127.0.0.1 -H 'Host: hellofresh.com' http://hellofresh.com" do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain 'HTTP/1.1 301 Moved Permanently' }
+    end
+  end
 end
