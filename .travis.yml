@@ -1,6 +1,43 @@
 ---
-language: python
-python: "2.7"
+language: ruby
+rvm:
+  - 2.2
+
+sudo: required
+services:
+  - docker
+
+env:
+  - KITCHEN_TEST="server-default"
+  - KITCHEN_TEST="agent-default"
+
+before_install:
+  # Make sure everything's up to date.
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev build-essential autoconf
+  - gem install bundler
+  # Get ansible install
+  - curl -s https://raw.githubusercontent.com/AutomationWithAnsible/ansible-setup/master/example/travis-install -o /tmp/travis-ansible-setup.sh
+  - ruby --version
+  - python --version
+  - pip --version
+  - bundler --version
+
+install:
+  - bash /tmp/travis-ansible-setup.sh
+  - ansible --version
+  - bundle install
+
+script:
+    - ansible --version
+    - export TRAVIS=True
+    - ~/.venv_ansible/v2/venv/bin/pip install netaddr
+    - sudo netstat -ntlp
+    - bundle exec kitchen test $KITCHEN_TEST
+    - sudo netstat -ntlp
+
+after_success:
+    - echo "Success"
 
 env:
   - KITCHEN_TEST="server-default"
