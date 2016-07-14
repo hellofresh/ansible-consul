@@ -9,6 +9,7 @@ env:
 before_install:
   - curl --version
   - curl --help
+  - rvm list
   # Make sure everything's up to date.
   - sudo apt-get update -qq
   - sudo apt-get install -qq python-apt python-pycurl git python-pip ruby ruby-dev build-essential autoconf
