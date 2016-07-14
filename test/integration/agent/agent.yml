@@ -13,7 +13,7 @@
       hellofresh          :
         name              : "hellofresh"
         port              : 80
-        address           : "www.hellofresh.com"
+        address           : "hellofresh.com"
         check             :
             script        : "curl http://www.hellofresh.com > /dev/null"
             interval      : "120s"

@@ -41,7 +41,7 @@ end
 
 describe 'hellofresh service (normal port option)' do
   describe "definition" do
-    describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/hellofresh -L" do
+    describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/hellofresh" do
         its(:exit_status) { should eq 0 }
         its(:stdout) { should contain '"ServiceName":"hellofresh"' }
         its(:stdout) { should contain '"ServiceAddress":"hellofresh.com"' }
