@@ -13,7 +13,6 @@ before_install:
   - gem install bundler
   # Get ansible install
   - curl -s https://raw.githubusercontent.com/AutomationWithAnsible/ansible-setup/master/example/travis-install -o /tmp/travis-ansible-setup.sh
-  - ansible --version
   - ruby --version
   - python --version
   - pip --version
@@ -21,6 +20,7 @@ before_install:
 
 install:
   - bash /tmp/travis-ansible-setup.sh
+  - ansible --version
   - bundle install
 
 script:
