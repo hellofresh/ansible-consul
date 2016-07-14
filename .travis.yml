@@ -8,8 +8,8 @@ services:
   - docker
 
 env:
-  - KITCHEN_TEST="server-default"
-  - KITCHEN_TEST="agent-default"
+  - KITCHEN_TEST="server-ubuntu1404"
+  - KITCHEN_TEST="agent-ubuntu1404"
 
 before_install:
   # Make sure everything's up to date.
@@ -29,12 +29,8 @@ install:
   - bundle install
 
 script:
-    - ansible --version
-    - export TRAVIS=True
     - ~/.venv_ansible/v2/venv/bin/pip install netaddr
-    - sudo netstat -ntlp
     - bundle exec kitchen test $KITCHEN_TEST
-    - sudo netstat -ntlp
 
 after_success:
     - echo "Success"
