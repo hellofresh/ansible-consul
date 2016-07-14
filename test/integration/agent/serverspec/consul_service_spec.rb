@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+sleep(2)
+
 describe 'superssh service (localport option)' do
   describe "definition by name" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superssh-different-name -v" do
