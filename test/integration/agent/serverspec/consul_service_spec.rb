@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-sleep(2)
+# Just wait till every thing is up and runnning
+sleep(10)
 
 describe 'superssh service (localport option)' do
   describe "definition by name" do
