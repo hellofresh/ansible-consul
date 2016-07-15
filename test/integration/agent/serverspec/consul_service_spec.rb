@@ -106,6 +106,13 @@ describe 'hellofresh service (normal port option)' do
     end
   end
 
+  describe "HAProxy server backend should be on active" do
+    describe command "echo 'show stat' | socat unix-connect:/var/haproxy/stats.sock stdio | grep hellofresh,hellofresh" do
+      its(:exit_status) { should eq 0 }
+    end
+  end
+
+
   describe "curling to hellofresh is working on 80" do
     describe command "curl -I --resolve hellofresh.com:80:127.0.0.1 -H 'Host: hellofresh.com' http://hellofresh.com" do
       its(:exit_status) { should eq 0 }

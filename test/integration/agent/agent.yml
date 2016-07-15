@@ -75,7 +75,11 @@
     - ansible-consul
 
   post_tasks:
+    - name: Install socat
+      apt:
+        name="socat"
+
     - name: Pause till every thing is update_cache
       pause:
         prompt="Make sure that helth checks pass and our services are part of the game"
-        seconds=15
+        seconds=20
