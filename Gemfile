@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'test-kitchen'
-  gem 'kitchen-vagrant'
+  gem 'kitchen-verifier-serverspec'
+  gem 'kitchen-docker'
   gem 'kitchen-ansiblepush'
-  gem 'kitchen-localhost'
-  gem 'net-ssh', '~> 2.0'
+  gem 'net-ssh', '~> 3.0'
+  gem 'serverspec'
 end
