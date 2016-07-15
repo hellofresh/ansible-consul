@@ -73,3 +73,9 @@
 
   roles :
     - ansible-consul
+
+  post_tasks:
+    - name: Pause till every thing is update_cache
+      pause:
+        prompt="Make sure that helth checks pass and our services are part of the game"
+        seconds=15

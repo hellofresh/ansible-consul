@@ -1,8 +1,5 @@
 require 'spec_helper'
 
-# Just wait till every thing is up and runnning
-sleep(10)
-
 describe 'superssh service (localport option)' do
   describe "definition by name" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superssh-different-name -v" do
@@ -108,9 +105,6 @@ describe 'hellofresh service (normal port option)' do
       it { should be_listening.on('127.0.0.1').with('tcp') }
     end
   end
-
-  # Just wait till every thing is up and runnning again
-  sleep(10)
 
   describe "curling to hellofresh is working on 80" do
     describe command "curl -I --resolve hellofresh.com:80:127.0.0.1 -H 'Host: hellofresh.com' http://hellofresh.com" do
