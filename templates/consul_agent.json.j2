@@ -21,6 +21,14 @@
   "start_join": {{ consul_start_join | to_json }},
 {% endif %}
 
+{# Ports #}
+  "ports": {
+    "rpc": {{ consul_rpc_port }},
+    "http": {{ consul_ui_http_port }},
+    "https": {{ consul_ui_https_port }},
+    "server": {{ consul_server_port_server }}
+  },
+
 {% if consul_encrypt is defined %}
   "encrypt": "{{ consul_encrypt }}",
 {% endif %}

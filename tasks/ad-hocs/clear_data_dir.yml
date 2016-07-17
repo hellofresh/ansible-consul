@@ -1,0 +1,25 @@
+---
+
+- name: adhoc | clear data dir | stop consul
+  service:
+    name="consul"
+    state="stopped"
+
+- name: adhoc | clear data dir | remove consul data dir
+  file:
+    state="absent"
+    path="{{ consul_data_dir }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+
+- name: adhoc | clear data dir | Create consul data dir
+  file:
+    state="directory"
+    path="{{ consul_data_dir }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+
+- name: adhoc | clear data dir | start consul
+  service:
+    name="consul"
+    state="started"

@@ -1,0 +1,42 @@
+---
+
+- name: adhoc | rebuild peers | Group by consul server
+  group_by:
+    key="consul_server"
+
+- name: adhoc | rebuild peers | Construct IPs
+  set_fact:
+    consul_list_of_servers_variables:  "{{ [hostvars[item]['ansible_eth0']['ipv4']['address'] ] | union(consul_list_of_servers_variables) }}"
+  with_items: "{{ groups['consul_server'] }}"
+
+- name: adhoc | rebuild peers | Construct IPs with Ports
+  set_fact:
+    list_of_servers: "{{ consul_list_of_servers_variables | join(':' +  consul_server_port_server | string + ',') }}:{{ consul_server_port_server  | string }}"
+
+- name: adhoc | rebuild peers | stop consul
+  service:
+    name="consul"
+    state="stopped"
+  run_once: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['consul_server'] }}"
+
+- name: adhoc | rebuild peers | copy new peer
+  copy:
+    content="{{ list_of_servers.split(',') | to_json }}"
+    dest="{{ consul_raft_file }}"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0755"
+    backup=yes
+  run_once: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['consul_server'] }}"
+
+- name: adhoc | rebuild peers | start consul
+  service:
+    name="consul"
+    state="started"
+  run_once: true
+  delegate_to: "{{ item }}"
+  with_items: "{{ groups['consul_server'] }}"

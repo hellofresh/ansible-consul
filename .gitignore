@@ -1,3 +1,4 @@
 .vagrant
 .kitchen
 .galaxy_install_info
+*.retry

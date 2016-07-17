@@ -1,0 +1,9 @@
+---
+
+- name: adhocs | include build raft peers
+  include: build-raft-peers.yml
+  when: consul_adhoc_build_raft_peers
+
+- name: adhocs | include clear data dir
+  include: clear_data_dir.yml
+  when: consul_adhoc_clear_data_dir

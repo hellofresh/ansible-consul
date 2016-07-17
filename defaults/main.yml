@@ -22,13 +22,18 @@ consul_domain                       : "consul."
 consul_servers_list                 : [ "127.0.0.1" ] # you can use ansible groups "{{ groups['consul_servers'] }}"
 consul_rejoin_after_leave           : true
 consul_leave_on_terminate           : false
-#
+# Retry Options
 consul_retry_join                   : false
 consul_retry_interval               : 30s
 consul_retry_max                    : 0
-#Consul log
+# Consul log
 consul_log_level                    : "INFO"
 consul_log_syslog                   : false
+
+consul_server_port_server           : 8300
+consul_rpc_port                     : 8400
+consul_ui_http_port                 : 8500
+consul_ui_https_port                : -1
 
 # Consul Network                    :
 consul_network_bind                 : "" # "0.0.0.0"
@@ -108,3 +113,7 @@ consul_haproxy_stats_enable         : True
 consul_haproxy_stats_mode           : "http"
 consul_haproxy_stats_port           : 3212
 consul_haproxy_stats_uri            : "/"
+
+# Ad-hoc commands RUN WITH CARE
+consul_adhoc_build_raft_peers       : False
+
