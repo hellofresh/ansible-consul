@@ -1,5 +1,9 @@
 ---
 
+- name: Include Ad-hoc
+  include: ad-hocs/main.yml
+  when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear_data_dir is defined and consul_adhoc_clear_data_dir
+
 - name: Ensure prerequisites packages exists
   apt:
     name="{{ item }}"
