@@ -78,6 +78,14 @@ consul_template_templates           :
 consul_template_log_level           : "warn"
 
 consul_encrypt                      : "Tq/xU3fTPyBRoA4R4CxOKg=="
+
+## Telemetry
+consul_telemetry                    : False
+consul_statsd_address               : ""
+consul_statsite_address             : ""
+consul_statsite_prefix              : "consul"
+consul_disable_hostname             : True
+
 ## HA Proxy
 consul_haproxy_ppa_install          : False # By default use packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"

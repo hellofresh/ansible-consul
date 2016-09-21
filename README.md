@@ -101,6 +101,19 @@ consul_template_templates           :
                                         destination : "/etc/haproxy/haproxy.cfg"
                                         command     : "haproxy -f /etc/haproxy/haproxy.cfg -c && sudo service haproxy reload"
                                         jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+
+## Telemetry
+# Enable telemetry
+consul_telemetry                    : False
+# StatsD server address and port (address:port)
+consul_statsd_address               : ""
+# Statsite server address and port (address:port)
+consul_statsite_address             : ""
+# StatsD/Statsite prefix
+consul_statsite_prefix              : "consul"
+# Don't send hostname for go stats
+consul_disable_hostname             : True
+
 ## HA Proxy
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
