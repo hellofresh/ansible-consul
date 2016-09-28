@@ -1,5 +1,12 @@
 ---
 
+- name: python2 check
+  hosts: all
+  become: True
+  gather_facts: false
+  tasks:
+    - include: ../ubuntu16.04.yml
+
 - name: Server
   hosts: all
   become: True
@@ -7,15 +14,5 @@
     consul_server               : True
     consul_bootstrap_expect     : 1
     consul_ui                   : true
-
-  pre_tasks:
-    - name: install python 2
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-
-    - name: Update apt cache
-      apt:
-        update_cache=yes
-        cache_valid_time=360
-
   roles :
     - ansible-consul

@@ -1,12 +1,11 @@
 ---
 
-- name: Agent python2 check
+- name: python2 check
   hosts: all
   become: True
   gather_facts: false
   tasks:
     - include: ../ubuntu16.04.yml
-
 
 - name: agent
   hosts: all
@@ -14,8 +13,6 @@
   gather_facts: true
   vars_files:
     - agent_vars.yml
-
-
   roles :
     - ansible-consul
 
