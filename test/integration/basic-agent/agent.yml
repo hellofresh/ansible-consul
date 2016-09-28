@@ -1,0 +1,23 @@
+---
+
+- name: python2 check
+  hosts: all
+  become: True
+  gather_facts: false
+  tasks:
+    - include: ../ubuntu-test-tools.yml
+
+- name: agent
+  hosts: all
+  become: True
+  gather_facts: true
+  vars_files:
+    - agent_vars.yml
+  roles :
+    - ansible-consul
+
+  post_tasks:
+    - name: Pause till every thing is update_cache
+      pause:
+        prompt="Make sure that helth checks pass and our services are part of the game"
+        seconds=20

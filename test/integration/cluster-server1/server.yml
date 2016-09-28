@@ -1,0 +1,26 @@
+---
+
+- name: Server
+  hosts: all
+  become: True
+  vars:
+    consul_server               : True
+    consul_bootstrap_expect     : 1
+    consul_ui                   : true
+    consul_node_name            : "cluster_server1"
+    consul_datacenter           : "cluster"
+    consul_domain               : "cluster.example.com"
+    consul_encrypt              : "ZiDakXKv9D3MvL1UKkO1ew=="
+
+
+    consul_server_port_server   : 8300
+    consul_rpc_port             : 8400
+    consul_ui_http_port         : 8500
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache=yes
+        cache_valid_time=360
+
+  roles :
+    - ansible-consul

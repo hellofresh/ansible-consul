@@ -4,29 +4,65 @@ driver                    :
     socket                : unix:///var/run/docker.sock
     use_sudo              : false
 
+verifier                  :
+  name                    : serverspec
+  remote_exec             : false
+  default_pattern         : true
+
 provisioner:
     name                  : ansible_push
-    verbose               : "vvvv"
     ansible_config        : "test/ansible.cfg"
+    chef_bootstrap_url    : ""
     idempotency_test      : True
     diff                  : True
     sudo                  : True
+    #extra_vars              : "@kitchen_vars.yml"
+    verbose               : "vvvv"
 
 platforms:
  - name                   : "ubuntu1404"
    driver_config          :
-     image                : quay.io/hellofresh/kitchen-base
+     image                : ubuntu:14.04
      platform             : ubuntu
+   provisioner            :
+      ansible_playbook_bin: "`avm path 2.0.2.0`ansible-playbook"
+
+ - name                   : "ubuntu1604"
+   driver_config          :
+     image                : ubuntu:16.04
+     platform             : ubuntu
+   provisioner            :
+      ansible_playbook_bin: "`avm path v2`ansible-playbook"
 
 suites:
-  - name                  : server
+  - name                  : basic-server
     provisioner           :
-        playbook          : "test/integration/server/server.yml"
-    # verifier              :
-    #       patterns            : [ test/integration/standalone/serverspec/*_spec.rb ]
+        playbook          : "test/integration/basic-server/server.yml"
 
-  - name                  : agent
+  - name                  : basic-agent
     provisioner           :
-        playbook          : "test/integration/agent/agent.yml"
-    # verifier              :
-    #       patterns            : [ test/integration/standalone/serverspec/*_spec.rb ]
+        playbook          : "test/integration/basic-agent/agent.yml"
+
+  # - name                  : cluster-agent1
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-agent1/agent.yml"
+
+  # - name                  : cluster-agent2
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-agent2/agent.yml"
+
+  # - name                  : cluster-agent3
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-agent3/agent.yml"
+
+  # - name                  : cluster-server1
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-server1/server.yml"
+
+  # - name                  : cluster-server2
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-server2/server.yml"
+
+  # - name                  : cluster-server3
+  #   provisioner           :
+  #       playbook          : "test/integration/cluster-server3/server.yml"

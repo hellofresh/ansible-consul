@@ -1,9 +1,11 @@
 source 'https://rubygems.org'
 
 group :development do
-  gem 'kitchen-verifier-serverspec'
-  gem 'kitchen-docker'
+  gem 'test-kitchen'
   gem 'kitchen-ansiblepush'
-  gem 'net-ssh', '~> 3.0'
+  gem 'kitchen-docker'
+  gem 'kitchen-verifier-serverspec', :git => 'https://github.com/ahelal/kitchen-verifier-serverspec.git', :branch => 'feature/default_pattern'
+  #gem 'kitchen-verifier-serverspec', '~> 0.5.2'
+  gem 'net-ssh'
   gem 'serverspec'
 end

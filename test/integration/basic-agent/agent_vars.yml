@@ -1,0 +1,61 @@
+---
+consul_server               : True
+consul_bootstrap_expect     : 1
+consul_ui                   : false
+
+consul_services       :
+  # External service i.e. hellofresh
+  hellofresh          :
+    name              : "hellofresh"
+    port              : 80
+    address           : "hellofresh.com"
+    check             :
+        script        : "curl https://www.hellofresh.com > /dev/null"
+        interval      : "120s"
+    haproxy           :
+      server_options  : "check inter 120s fastinter 5s downinter 8s rise 3 fall 2"
+      service_mode    : "http"
+  # A local service superssh that uses localport
+  superssh            :
+    name              : "superssh-different-name"
+    tags              :
+                         - "test"
+    port              : 22
+    local_port        : 2222
+    check             :
+        script        : "netstat -ltnp | grep ':22 ' > /dev/null 2>&1"
+        interval      : "60s"
+    haproxy           :
+      server_options  : "check inter 60s fastinter 5s downinter 8s rise 3 fall 2"
+      service_mode    : "tcp"
+  # A local service superdb that is failing
+  superdb             :
+    name              : "superdb"
+    tags              :
+                         - "userdb"
+                         - "v1.2"
+    port              : 2122 # failing port :)
+    check             :
+        script        : "netstat -ltnp | grep ':2123 ' > /dev/null 2>&1"
+        interval      : "60s"
+    haproxy           :
+      server_options  : "check inter 60s fastinter 5s downinter 8s rise 3 fall 2"
+      service_mode    : "tcp"
+  # A local service superdb that is failing
+  superapp           :
+    name              : "superapp"
+    tags              :
+                         - "v1"
+    port              : 9999
+    check             :
+        script        : "curl localhost:9999 > /dev/null 2>&1"
+        interval      : "60s"
+    haproxy           :
+      server_options  : "check inter 60s fastinter 5s downinter 8s rise 3 fall 2"
+      service_mode    : "tcp"
+
+consul_producer             : True
+consul_producer_services    : [ 'superssh', 'hellofresh', "superdb" ]
+
+consul_consumer             : True
+consul_consumer_services    : [ 'superdb','superssh', "hellofresh", "superapp" ]
