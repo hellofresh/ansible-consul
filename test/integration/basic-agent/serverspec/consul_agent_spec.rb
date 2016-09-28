@@ -1,6 +1,6 @@
-require 'spec_helper'
+require_relative '../../helper_spec.rb'
 
-describe 'consul server' do
+describe 'consul agent' do
   describe service('consul') do
     it { should be_enabled }
     it { should be_running }
@@ -45,7 +45,7 @@ describe 'consul server' do
   end
 
   describe 'UI should be disabled' do
-    describe command "curl -s -I http://127.0.0.1:8500/ui/" do 
+    describe command "curl -s -I http://127.0.0.1:8500/ui/" do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain 'HTTP/1.1 404 Not Found' }
     end

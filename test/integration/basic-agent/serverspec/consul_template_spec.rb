@@ -1,5 +1,4 @@
-require 'spec_helper'
-
+require_relative '../../helper_spec.rb'
 
 describe 'Consul template' do
 

@@ -1,14 +1,14 @@
-require 'spec_helper'
-require 'socket'
+require_relative '../../helper_spec.rb'
 
-server_address = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}.ip_address
+
+
 server_port = 8300
 
 describe 'consul server' do
 
   describe 'Ports' do
     describe port(server_port) do
-      it { should be_listening.on(server_address) }
+      it { should be_listening }
     end
     describe port(server_port) do
       it { should_not be_listening.on('127.0.0.1') }

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../../helper_spec.rb'
 
 describe 'consul UI' do
     ui_port = 8500

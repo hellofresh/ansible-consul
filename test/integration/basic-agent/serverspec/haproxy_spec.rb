@@ -1,4 +1,4 @@
-require 'spec_helper'
+require_relative '../../helper_spec.rb'
 
 
 describe 'HAPROXY' do
@@ -27,7 +27,7 @@ describe 'HAPROXY' do
             it { should be_listening.with('tcp') }
         end
 
-        describe command "curl -s http://127.0.0.1:3212" do 
+        describe command "curl -s http://127.0.0.1:3212" do
             its(:exit_status) { should eq 0 }
             its(:stdout) { should contain 'Statistics Report' }
         end
