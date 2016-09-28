@@ -1,16 +1,17 @@
 ---
-- name: ubuntu 16.04 | install python 2
+- name: ubuntu-test-tools | install python 2 (if not installed)
   raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
 
-- name: ubuntu 16.04 | apt cache update
+- name: ubuntu-test-tools | apt cache update
   apt:
     update_cache="yes"
     cache_valid_time="3600"
 
-- name: ubuntu 16.04 | install net packages for docker
+- name: ubuntu-test-tools | install net packages for docker
   apt:
     name="{{ item }}"
   with_items:
     - "iproute2"
     - "net-tools"
     - "netcat"
+    - "socat"

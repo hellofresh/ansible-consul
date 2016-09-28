@@ -5,7 +5,7 @@
   become: True
   gather_facts: false
   tasks:
-    - include: ../ubuntu16.04.yml
+    - include: ../ubuntu-test-tools.yml
 
 - name: agent
   hosts: all
@@ -17,10 +17,6 @@
     - ansible-consul
 
   post_tasks:
-    - name: Install socat
-      apt:
-        name="socat"
-
     - name: Pause till every thing is update_cache
       pause:
         prompt="Make sure that helth checks pass and our services are part of the game"

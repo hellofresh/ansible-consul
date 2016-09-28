@@ -5,7 +5,7 @@
   become: True
   gather_facts: false
   tasks:
-    - include: ../ubuntu16.04.yml
+    - include: ../ubuntu-test-tools.yml
 
 - name: Server
   hosts: all
