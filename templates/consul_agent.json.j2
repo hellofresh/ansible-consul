@@ -29,6 +29,22 @@
     "server": {{ consul_server_port_server }}
   },
 
+{# Telemetry #}
+{% if consul_telemetry is defined and consul_telemetry %}
+  "telemetry": {
+{% if consul_statsd_address is defined and consul_statsd_address %}
+    "statsd_address": {{ consul_statsd_address | to_json }},
+{% endif %}
+{% if consul_statsite_address is defined and consul_statsite_address %}
+    "statsite_address": {{ consul_statsite_address | to_json }},
+{% endif %}
+{% if consul_statsite_prefix is defined and consul_statsite_prefix %}
+    "statsite_prefix": {{ consul_statsite_prefix | to_json }},
+{% endif %}
+    "disable_hostname": {{ consul_disable_hostname | to_json }}
+  },
+{% endif %}
+
 {% if consul_encrypt is defined %}
   "encrypt": "{{ consul_encrypt }}",
 {% endif %}
