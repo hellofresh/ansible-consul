@@ -21,6 +21,8 @@ before_install:
 install:
   - bash test/ansible-setup.sh
   - bundle install
+  - ~/.venv_ansible/v2/venv/bin/pip install netaddr
+  - ~/.venv_ansible/devel/venv/bin/pip install netaddr
 
 script:
     - ansible --version
