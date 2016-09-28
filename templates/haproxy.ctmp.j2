@@ -40,7 +40,8 @@ defaults
 {% endif %}
 
 {% if consul_haproxy_stats_enable == True %}
-listen stats :{{ consul_haproxy_stats_port }}
+listen stats
+    bind {{ consul_haproxy_stats_add| default("127.0.0.1") }}:{{ consul_haproxy_stats_port }}
     mode {{ consul_haproxy_stats_mode }}
     stats enable
     stats uri {{ consul_haproxy_stats_uri }}
