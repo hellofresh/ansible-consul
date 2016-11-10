@@ -11,8 +11,8 @@ consul_consumer                     : false
 consul_producer                     : false
 consul_ui                           : false
 #
-#consul_consumer_services            : []
-#consul_producer_services            : []
+consul_consumer_services            : []
+consul_producer_services            : []
 
 # Consul Domain
 consul_datacenter                   : "default"

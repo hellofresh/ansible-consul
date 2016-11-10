@@ -31,20 +31,20 @@ platforms:
      platform             : ubuntu
 
 suites:
-  - name                  : basic-server-v2.1
+  - name                  : basic-server-v2.0
     provisioner           :
         playbook          : "test/integration/basic-server/server.yml"
-        ansible_playbook_bin: "`avm path v2.1`ansible-playbook"
+        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
 
   - name                  : basic-server-v2.2
     provisioner           :
         playbook          : "test/integration/basic-server/server.yml"
         ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
 
-  - name                  : basic-agent-v2.1
+  - name                  : basic-agent-v2.0
     provisioner           :
         playbook          : "test/integration/basic-agent/agent.yml"
-        ansible_playbook_bin: "`avm path v2.1`ansible-playbook"
+        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
 
   - name                  : basic-agent-v2.2
     provisioner           :
