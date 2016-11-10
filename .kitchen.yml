@@ -24,24 +24,32 @@ platforms:
    driver_config          :
      image                : ubuntu:14.04
      platform             : ubuntu
-   provisioner            :
-      ansible_playbook_bin: "`avm path 2.0.2.0`ansible-playbook"
 
  - name                   : "ubuntu1604"
    driver_config          :
      image                : ubuntu:16.04
      platform             : ubuntu
-   provisioner            :
-      ansible_playbook_bin: "`avm path v2`ansible-playbook"
 
 suites:
-  - name                  : basic-server
+  - name                  : basic-server-v2.1
     provisioner           :
         playbook          : "test/integration/basic-server/server.yml"
+        ansible_playbook_bin: "`avm path v2.1`ansible-playbook"
 
-  - name                  : basic-agent
+  - name                  : basic-server-v2.2
+    provisioner           :
+        playbook          : "test/integration/basic-server/server.yml"
+        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
+
+  - name                  : basic-agent-v2.1
     provisioner           :
         playbook          : "test/integration/basic-agent/agent.yml"
+        ansible_playbook_bin: "`avm path v2.1`ansible-playbook"
+
+  - name                  : basic-agent-v2.2
+    provisioner           :
+        playbook          : "test/integration/basic-agent/agent.yml"
+        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
 
   # - name                  : cluster-agent1
   #   provisioner           :
