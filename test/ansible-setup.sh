@@ -16,7 +16,7 @@ INSTALL_TYPE[1]="pip"
 ANSIBLE_LABEL[1]="v2.2"
 
 # Whats the default version
-ANSIBLE_DEFAULT_VERSION="v2"
+ANSIBLE_DEFAULT_VERSION="v2.2"
 
 ## Create a temp dir
 filename=$( echo ${0} | sed 's|/||g' )
