@@ -1,27 +1,27 @@
 require_relative '../../helper_spec.rb'
 
 describe 'superssh service (localport option)' do
-  describe "definition by name" do
-    describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superssh-different-name -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"ServiceName":"superssh-different-name"' }
-        its(:stdout) { should contain '"ServiceTags":\["test"]' }
-        its(:stdout) { should contain '"ServicePort":22' }
+  describe 'definition by name' do
+    describe command 'curl -s http://127.0.0.1:8500/v1/catalog/service/superssh-different-name -v' do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain '"ServiceName":"superssh-different-name"' }
+      its(:stdout) { should contain '"ServiceTags":\["test"]' }
+      its(:stdout) { should contain '"ServicePort":22' }
     end
   end
 
   describe "health is passing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/superssh-different-name -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Service":"superssh-different-name"'}
-        its(:stdout) { should contain '"Status":"passing"'}
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain '"Service":"superssh-different-name"'}
+      its(:stdout) { should contain '"Status":"passing"'}
     end
   end
 
   describe "definition by key should be empty" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superssh -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should match '\[\]' }
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match '\[\]' }
     end
   end
 
@@ -50,9 +50,9 @@ describe 'superdb service (A failing service)' do
 
   describe "health is failing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/superdb -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Service":"superdb"' }
-        its(:stdout) { should contain '"Status":"(warning|critical)"' }
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain '"Service":"superdb"' }
+      its(:stdout) { should contain '"Status":"(warning|critical)"' }
     end
   end
 
@@ -66,7 +66,6 @@ end
 
 
 describe 'superapp service (a non advertised service)' do
-
   describe "definition should not exist" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/superapp -v" do
       its(:exit_status) { should eq 0 }
@@ -85,18 +84,18 @@ end
 describe 'hellofresh service (normal port option)' do
   describe "definition" do
     describe command "curl -s http://127.0.0.1:8500/v1/catalog/service/hellofresh" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"ServiceName":"hellofresh"' }
-        its(:stdout) { should contain '"ServiceAddress":"hellofresh.com"' }
-        its(:stdout) { should contain '"ServicePort":80' }
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain '"ServiceName":"hellofresh"' }
+      its(:stdout) { should contain '"ServiceAddress":"hellofresh.com"' }
+      its(:stdout) { should contain '"ServicePort":80' }
     end
   end
 
   describe "health is passing" do
     describe command "curl -s http://127.0.0.1:8500/v1/health/service/hellofresh -v" do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should contain '"Service":"hellofresh"'}
-        its(:stdout) { should contain '"Status":"passing"' }
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain '"Service":"hellofresh"' }
+      its(:stdout) { should contain '"Status":"passing"' }
     end
   end
 
@@ -118,7 +117,6 @@ describe 'hellofresh service (normal port option)' do
       its(:exit_status) { should eq 0 }
     end
   end
-
 
   describe "curling to hellofresh is working on 80" do
     describe command "curl -I --resolve hellofresh.com:80:127.0.0.1 -H 'Host: hellofresh.com' http://hellofresh.com" do
