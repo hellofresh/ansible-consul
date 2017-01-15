@@ -1,0 +1,27 @@
+# {{ ansible_managed }}
+# This is a temp valid haproxy config used to bootup ha proxy till  consul template kicks in
+
+global
+	log /dev/log	local0
+	log /dev/log	local1 notice
+	chroot /var/lib/haproxy
+	user haproxy
+	group haproxy
+	daemon
+
+listen stats
+    bind 127.0.0.1:3212
+    mode  http
+    timeout connect 5000
+    timeout check 5000
+    timeout client 30000
+    timeout server 30000
+
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+    contimeout 5000
+    clitimeout 50000
+    srvtimeout 50000
