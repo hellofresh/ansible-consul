@@ -6,12 +6,24 @@
     update_cache="yes"
   when: "{{ consul_haproxy_ppa_install }} == True"
 
-- name: install | haproxy_debian | Install the HAProxy packages 
-  apt: 
+- name: install | haproxy_debian | Install the HAProxy packages
+  apt:
     name="haproxy"
+  register: haproxy_install
+
+# This is used to avoid haproxy failing to load if consul-template is delayed
+# This will ensure haproxy starts till consul template kicks in and changes the config and reload haproxy
+- name: install | haproxy_debian | Deploy a valid haproxy.cfg (if haproxy installation just changed)
+  template:
+    src="haproxy_initial.cfg.j2"
+    dest="/etc/haproxy/haproxy.cfg"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0640"
+  when: haproxy_install | changed
 
 - name: install | haproxy_debian | Make sure /var/haproxy/ exists
-  file: 
+  file:
     state="directory"
     path="{{ item }}"
     owner="root"
@@ -20,20 +32,20 @@
      - /var/haproxy
 
 - name: install | haproxy_debian | Enable haproxy initd
-  replace: 
+  replace:
     dest='/etc/default/haproxy'
     regexp='ENABLED=0'
     replace='ENABLED=1'
 
 - name: install | haproxy_debian | Ensure haproxy config file is writable by consul group
-  file: 
+  file:
    path="/etc/haproxy/haproxy.cfg"
    owner="{{ consul_user }}"
    group="{{ consul_group }}"
    mode="0644"
 
 - name: install | haproxy_debian | Ensure haproxy config dir is writable by consul group
-  file: 
+  file:
    path="/etc/haproxy/"
    owner="root"
    group="{{ consul_group }}"

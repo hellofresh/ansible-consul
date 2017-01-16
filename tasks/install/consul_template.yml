@@ -1,7 +1,7 @@
 ---
 
 - name: install | consul template install | Check tempalate archive stat
-  stat: 
+  stat:
     path="{{ consul_tmp_dir }}/{{ consul_template_archive }}"
   register: consul_template_archive_stat
 
@@ -24,7 +24,7 @@
     - restart consul service
 
 - name: install | consul template | Ensure consul-template configuration file is deployed
-  template: 
+  template:
     src="{{ path_for_template }}consul_template.json.j2"
     dest="{{ consul_config_template_file }}"
     owner="{{ consul_user }}"
@@ -34,7 +34,7 @@
     - restart consul-template service
 
 - name: install | consul template | Ensure consul run script is deployed
-  template: 
+  template:
     src="{{ path_for_template }}consul_template_run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_template_run.sh"
     owner="{{ consul_user }}"
@@ -45,7 +45,7 @@
 
 # TODO Support runnit
 - name: install | consul template | Ensure consul init.d script is deployed
-  template: 
+  template:
     src="{{ path_for_template }}consul-template-init.d.sh.j2"
     dest="/etc/init.d/consul-template"
     owner="{{ consul_user }}"
@@ -55,7 +55,7 @@
     - restart consul-template service
 
 - name: install | consul template | Ensure templates is deployed
-  template: 
+  template:
     src="{{ item.jtemplate }}"
     dest="{{ item.source }}"
     owner="{{ consul_user }}"
@@ -67,7 +67,7 @@
     - reload haproxy service
 
 - name: install | consul template | Ensure sudoers file to allow consul template to reload haproxy
-  copy: 
+  copy:
    content="{{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload\n"
    dest="/etc/sudoers.d/{{ consul_user }}"
    owner="root"
