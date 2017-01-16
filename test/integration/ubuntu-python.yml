@@ -1,0 +1,4 @@
+---
+- name: ubuntu-test-tools | install python 2 (if not installed)
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  changed_when: False
