@@ -12,8 +12,8 @@ verifier                  :
 provisioner:
     name                  : ansible_push
     ansible_config        : "test/ansible.cfg"
-    chef_bootstrap_url    : ""
-    idempotency_test      : True
+    chef_bootstrap_url    : nil
+    idempotency_test      : false
     diff                  : True
     sudo                  : True
     #extra_vars              : "@kitchen_vars.yml"
@@ -30,26 +30,34 @@ platforms:
      image                : ubuntu:16.04
      platform             : ubuntu
 
-suites:
-  - name                  : basic-server-v2.0
-    provisioner           :
-        playbook          : "test/integration/basic-server/server.yml"
-        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
+ - name                   : "alpine:3.4"
+   driver_config          :
+     image                : alpine:3.4
+     platform             : alpine
+     provision_command:
+      - apk add python iproute2
+      - mkdir -p /opt # needs to be in ansible
 
-  - name                  : basic-server-v2.2
-    provisioner           :
-        playbook          : "test/integration/basic-server/server.yml"
-        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
+suites                     :
+  - name                   : basic-server-v2.0
+    provisioner            :
+      playbook             : "test/integration/basic-server/server.yml"
+      ansible_playbook_bin : "`avm path v2.0`ansible-playbook"
 
-  - name                  : basic-agent-v2.0
-    provisioner           :
-        playbook          : "test/integration/basic-agent/agent.yml"
-        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
+  - name                   : basic-server-v2.2
+    provisioner            :
+      playbook             : "test/integration/basic-server/server.yml"
+      ansible_playbook_bin : "`avm path v2.2`ansible-playbook"
 
-  - name                  : basic-agent-v2.2
-    provisioner           :
-        playbook          : "test/integration/basic-agent/agent.yml"
-        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
+  - name                   : basic-agent-v2.0
+    provisioner            :
+      playbook             : "test/integration/basic-agent/agent.yml"
+      ansible_playbook_bin : "`avm path v2.0`ansible-playbook"
+
+  - name                   : basic-agent-v2.2
+    provisioner            :
+      playbook             : "test/integration/basic-agent/agent.yml"
+      ansible_playbook_bin : "`avm path v2.2`ansible-playbook"
 
   # - name                  : cluster-agent1
   #   provisioner           :
