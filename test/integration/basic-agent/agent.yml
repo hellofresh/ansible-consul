@@ -20,4 +20,4 @@
     - name: Pause till every thing is update_cache
       pause:
         prompt="Make sure that helth checks pass and our services are part of the game"
-        seconds=20
+        seconds=30
