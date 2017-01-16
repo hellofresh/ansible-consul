@@ -7,7 +7,7 @@
 - name: adhoc | rebuild peers | Construct IPs
   set_fact:
     consul_list_of_servers_variables:  "{{ [hostvars[item]['ansible_eth0']['ipv4']['address'] ] | union(consul_list_of_servers_variables) }}"
-  with_items: "{{ groups['consul_server'] }}"
+  with_items: "{{ groups['consul_server'] | default([]) }}"
 
 - name: adhoc | rebuild peers | Construct IPs with Ports
   set_fact:
@@ -19,7 +19,7 @@
     state="stopped"
   run_once: true
   delegate_to: "{{ item }}"
-  with_items: "{{ groups['consul_server'] }}"
+  with_items: "{{ groups['consul_server'] | default([]) }}"
 
 - name: adhoc | rebuild peers | copy new peer
   copy:
@@ -31,7 +31,7 @@
     backup=yes
   run_once: true
   delegate_to: "{{ item }}"
-  with_items: "{{ groups['consul_server'] }}"
+  with_items: "{{ groups['consul_server'] | default([]) }}"
 
 - name: adhoc | rebuild peers | start consul
   service:
@@ -39,4 +39,4 @@
     state="started"
   run_once: true
   delegate_to: "{{ item }}"
-  with_items: "{{ groups['consul_server'] }}"
+  with_items: "{{ groups['consul_server'] | default([]) }}"

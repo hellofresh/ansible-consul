@@ -14,3 +14,6 @@ consul_ui_download_url              : "https://releases.hashicorp.com/consul/{{ 
 # For adhoc
 consul_list_of_servers_variables    : []
 consul_raft_file                    : "{{ consul_data_dir }}/raft/peers.json"
+
+# empty old service
+old_services                        : []
