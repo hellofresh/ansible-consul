@@ -1,0 +1,8 @@
+---
+
+- name: packages | Ensure prerequisites packages exists
+  apt:
+    name="{{ item }}"
+  with_items:
+    - unzip
+  when: "{{ ansible_distribution == 'Ubuntu' }}"

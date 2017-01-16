@@ -5,7 +5,7 @@
   become: True
   gather_facts: false
   tasks:
-    - include: ../ubuntu-test-tools.yml
+    - include: ../ubuntu-python.yml
 
 - name: Server
   hosts: all
@@ -14,5 +14,10 @@
     consul_server               : True
     consul_bootstrap_expect     : 1
     consul_ui                   : true
+
+  post_tasks:
+    - name: tools
+      include: ../test-tools.yml
+
   roles :
     - ansible-consul

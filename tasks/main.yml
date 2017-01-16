@@ -4,11 +4,8 @@
   include: ad-hocs/main.yml
   when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear_data_dir is defined and consul_adhoc_clear_data_dir
 
-- name: Ensure prerequisites packages exists
-  apt:
-    name="{{ item }}"
-  with_items:
-    - unzip
+- name: Include Packages
+  include: install/packages.yml
 
 - name: Include IP match
   include: ip_match.yml
