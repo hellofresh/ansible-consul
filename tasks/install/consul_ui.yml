@@ -18,7 +18,7 @@
   get_url:
     url="{{ consul_ui_download_url }}"
     dest="{{ consul_tmp_dir }}"
-  become_user: "{{ consul_user }}"
+    owner="{{ consul_user }}"
   register: consul_ui_get
   when: consul_ui_archive_stat.stat.exists == False
 
@@ -27,7 +27,7 @@
     src="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
     dest="{{ consul_ui_dir }}"
     copy="no"
-  become_user: "{{ consul_user }}"
+    owner="{{ consul_user }}"
   when: consul_ui_get | changed
   notify:
     - restart consul service

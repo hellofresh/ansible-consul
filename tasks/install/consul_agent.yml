@@ -9,7 +9,7 @@
   get_url:
     url="{{ consul_agent_download_url }}"
     dest="{{ consul_tmp_dir }}"
-  become_user: "{{ consul_user }}"
+    owner="{{ consul_user }}"
   register: consul_agent_get
   when: consul_agent_archive_stat.stat.exists == False
 
@@ -18,7 +18,7 @@
     src="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
     dest="{{ consul_bin_dir }}"
     copy="no"
-  become_user: "{{ consul_user }}"
+    owner="{{ consul_user }}"
   when: consul_agent_get | changed
   notify:
     - restart consul service
