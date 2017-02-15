@@ -1,7 +1,7 @@
 ---
 
-consul_agent_version                : "0.7.2"
-consul_template_version             : "0.16.0"
+consul_agent_version                : "0.7.5"
+consul_template_version             : "0.18.1"
 
 consul_node_name                    : "{{ inventory_hostname }}"
 
