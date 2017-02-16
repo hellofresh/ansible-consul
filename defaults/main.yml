@@ -1,7 +1,7 @@
 ---
 
-consul_agent_version                : "0.7.2"
-consul_template_version             : "0.16.0"
+consul_agent_version                : "0.7.5"
+consul_template_version             : "0.18.1"
 
 consul_node_name                    : "{{ inventory_hostname }}"
 
@@ -51,7 +51,7 @@ consul_template_dir                 : "{{ consul_home_dir }}/templates"
 consul_log_dir                      : "/var/log/consul"
 consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
-# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing, warning" or "all"
+# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing,warning" or "all"
 # For more info check https://github.com/hashicorp/consul-template#service
 consul_template_service_options     : ""
 

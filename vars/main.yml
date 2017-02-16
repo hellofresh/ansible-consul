@@ -17,3 +17,7 @@ consul_raft_file                    : "{{ consul_data_dir }}/raft/peers.json"
 
 # empty old service
 old_services                        : []
+
+# Compile consul_template_service_options_str so if you define templatg service option  this condition will use the filter syntax "|"
+# https://github.com/hashicorp/consul-template#service
+consul_template_service_options_str : "{{ '' if consul_template_service_options == '' else '|' ~ consul_template_service_options }}"
