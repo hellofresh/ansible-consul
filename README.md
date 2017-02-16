@@ -157,7 +157,7 @@ Road map
 - Support tag filtering on consumer
 - Support agent retry
 - Support template retry
-- Be docker friendly (Alipine)
+- Be docker friendly (Alpine)
 
 
 License
