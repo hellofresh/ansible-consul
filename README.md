@@ -54,7 +54,7 @@ consul_ui                           : false
 consul_consumer_services            : []
 consul_producer_services            : []
 
-# Consul Domain 
+# Consul Domain
 consul_datacenter                   : "default"
 consul_domain                       : "consul."
 
@@ -66,14 +66,14 @@ consul_leave_on_terminate           : false
 consul_log_level                    : "INFO"
 consul_log_syslog                   : false
 
-# Consul Network                    : 
+# Consul Network                    :
 consul_network_bind                 : "" # "0.0.0.0"
 consul_network_autobind             : true
 #consul_network_autobind_range       : "192.168.56.0/24"
 consul_network_autobind_type        : "private" # "" or private or public
 consul_client_addr                  : "127.0.0.1"
 
-# Consul dir structure      
+# Consul dir structure
 consul_home_dir                     : "/opt/consul"
 consul_bin_dir                      : "{{ consul_home_dir }}/bin"
 consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
@@ -89,7 +89,7 @@ consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
 consul_template_log_file            : "{{ consul_log_dir }}/consul-template.log"
 consul_template_haproxy_file        : "{{ consul_template_dir }}/consul_template.cnf"
 
-# Consul user/Group     
+# Consul user/Group
 consul_user                         : "consul"
 consul_group                        : "consul"
 
@@ -117,18 +117,18 @@ consul_disable_hostname             : True
 ## HA Proxy
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
-## Config global        
+## Config global
 consul_haproxy_user                 : "haproxy"
 consul_haproxy_group                : "haproxy"
 consul_haproxy_maxconn              : "8192"
-consul_haproxy_log                  : 
-                                      - "127.0.0.1 local1" 
+consul_haproxy_log                  :
+                                      - "127.0.0.1 local1"
 consul_haproxy_stats_socket         : "socket /var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
-## Extra global key, value      
+## Extra global key, value
 #consul_haproxy_extra_global         : []
 ## Config defaults
 consul_haproxy_default_log          : "global"
-consul_haproxy_default_options      : 
+consul_haproxy_default_options      :
                                       - "dontlognull"
                                       - "log-separate-errors"
                                       - "redispatch"
@@ -140,8 +140,8 @@ consul_haproxy_default_timeout      :
 consul_haproxy_default_maxconn      : 2000
 consul_haproxy_default_retries      : 3
 consul_haproxy_default_balance      : "roundrobin"
-## Extra default key, value   
-#consul_haproxy_extra_default       : 
+## Extra default key, value
+#consul_haproxy_extra_default       :
 
 consul_haproxy_default_server_options  : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
 ## Config Stats page by default HAproxy will have default stats
@@ -156,11 +156,11 @@ https://www.consul.io/docs/agent/checks.html
 
 Road map
 -----
-- Support agent retery
-- Support template retery
+- Support agent retry
+- Support template retry
 - serf Encryption
 - consul-template should not take things out of load balancers if services goes down let haproxy handle that.
-- Be docker friendly 
+- Be docker friendly
 
 
 License
@@ -173,7 +173,7 @@ Contributors (sorted alphabetically on the first name)
 * [Adham Helal](https://github.com/ahelal)
 
 
-Snippets 
+Snippets
 -------
 Some snippets of code was taken from various sources. We will try our best to list them.
 
