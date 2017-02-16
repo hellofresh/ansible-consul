@@ -54,12 +54,6 @@ listen stats
 {# Support new style of config #}
 {% set service_name = consumer_service.name %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
-frontend {{ consul_services[service_name].name }}
-    mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout client  1h
-    bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
-    default_backend {{ consul_services[service_name].name }}
-
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     timeout  connect 10s
@@ -70,12 +64,6 @@ backend {{ consul_services[service_name].name }}
 {# Support old style config using service_name as a string #}
 {% set service_name = consumer_service %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
-frontend {{ consul_services[service_name].name }}
-    mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout client  1h
-    bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
-    default_backend {{ consul_services[service_name].name }}
-
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     timeout  connect 10s
@@ -83,5 +71,11 @@ backend {{ consul_services[service_name].name }}
     {{ '{{range service' }} "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" {{ '}}' }}
     {{'server {{.ID}}_{{.Address}}:{{.Port}} {{.Address}}:{{.Port}}' }} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{ '{{end}}' }}
 {%  endif %}
+
+frontend {{ consul_services[service_name].name }}
+    mode {{ haproxy_setting.service_mode | default('http') }}
+    timeout client  1h
+    bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
+    default_backend {{ consul_services[service_name].name }}
 {% endfor %}
 {% endif %}
