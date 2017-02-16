@@ -2,12 +2,12 @@
 # Ansible Consul Role
 [![Build Status](https://travis-ci.org/hellofresh/ansible-consul.svg?branch=master)](https://travis-ci.org/hellofresh/ansible-consul)
 
-`consul` is an ansible role to install and manage consul services.
+`consul` is an ansible role to install and manage consul services and client side load balancing.
 
 
 ## Overview
 
-This is an opinionated setup of consul. It deploys HAproxy with each consumer and use consul template.
+This is an opinionated setup of consul. That manages services discovery and client side load balancing. It deploys HAproxy with each consumer and use consul template.
 
 ```
                   +--------------+
@@ -39,9 +39,6 @@ Role Variables
 
 ```yaml
 ---
-
-consul_agent_version                : 0.6.3
-consul_template_version             : 0.12.2
 
 consul_node_name                    : "{{ inventory_hostname }}"
 
@@ -114,10 +111,10 @@ consul_statsite_prefix              : "consul"
 # Don't send hostname for go stats
 consul_disable_hostname             : True
 
-## HA Proxy
+## HAProxy
 consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
-## Config global
+## HAproxy Config global
 consul_haproxy_user                 : "haproxy"
 consul_haproxy_group                : "haproxy"
 consul_haproxy_maxconn              : "8192"
@@ -126,6 +123,7 @@ consul_haproxy_log                  :
 consul_haproxy_stats_socket         : "socket /var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
 ## Extra global key, value
 #consul_haproxy_extra_global         : []
+
 ## Config defaults
 consul_haproxy_default_log          : "global"
 consul_haproxy_default_options      :
@@ -156,11 +154,10 @@ https://www.consul.io/docs/agent/checks.html
 
 Road map
 -----
+- Support tag filtering on consumer
 - Support agent retry
 - Support template retry
-- serf Encryption
-- consul-template should not take things out of load balancers if services goes down let haproxy handle that.
-- Be docker friendly
+- Be docker friendly (Alipine)
 
 
 License
