@@ -58,4 +58,8 @@ consul_producer             : True
 consul_producer_services    : [ 'superssh', 'hellofresh', "superdb" ]
 
 consul_consumer             : True
-consul_consumer_services    : [ 'superdb','superssh', "hellofresh", "superapp" ]
+consul_consumer_services    :
+                              - 'superdb'
+                              - name: 'superssh'
+                              - "hellofresh"
+                              - name: "superapp"

@@ -10,6 +10,7 @@ consul_server                       : false
 consul_consumer                     : false
 consul_producer                     : false
 consul_ui                           : false
+
 #
 consul_consumer_services            : []
 consul_producer_services            : []
@@ -124,4 +125,3 @@ consul_haproxy_stats_uri            : "/"
 
 # Ad-hoc commands RUN WITH CARE
 consul_adhoc_build_raft_peers       : False
-
