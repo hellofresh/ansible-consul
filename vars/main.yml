@@ -17,3 +17,6 @@ consul_raft_file                    : "{{ consul_data_dir }}/raft/peers.json"
 
 # empty old service
 old_services                        : []
+
+# Compile consul_template_service_options_str
+consul_template_service_options_str : '{{ "" if consul_template_service_options == '' else "|" ~ consul_template_service_options }}'
