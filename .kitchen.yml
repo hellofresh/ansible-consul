@@ -17,7 +17,7 @@ provisioner:
     idempotency_test      : True
     diff                  : True
     sudo                  : True
-    verbose               : "vvvv"
+    #verbose               : "vvvv"
 
 platforms                 :
  - name                   : "ubuntu1404-v2.0"
