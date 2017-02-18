@@ -14,6 +14,8 @@ template {
   {% if template.perms is defined %}perms = {{ template.perms }}{% endif %}
 
   {% if template.backup is defined %}backup = {{ template.backup|lower }}{% endif %}
-
+  left_delimiter  = "<%"
+  right_delimiter = "%>"
 }{% endfor %}
 {% endif %}
+
