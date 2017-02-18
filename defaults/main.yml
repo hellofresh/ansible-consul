@@ -94,11 +94,12 @@ consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
 consul_haproxy_user                 : "haproxy"
 consul_haproxy_group                : "haproxy"
 consul_haproxy_maxconn              : "8192"
-consul_haproxy_log                  :
-                                      - "127.0.0.1 local1"
-consul_haproxy_stats_socket         : "socket /var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
+consul_haproxy_log                  : [ "/dev/log	local0", "/dev/log	local1 info" ]
+
+consul_haproxy_stats_socket         : "socket /var/lib/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
 ## Extra global key, value
-#consul_haproxy_extra_global         : []
+consul_haproxy_extra_global         :
+                                       chroot: "/var/lib/haproxy"
 ## Config defaults
 consul_haproxy_default_log          : "global"
 consul_haproxy_default_options      :
