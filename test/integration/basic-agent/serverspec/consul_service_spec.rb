@@ -106,14 +106,14 @@ describe 'hellofresh service (normal port option)' do
   end
 
   describe "HAProxy stats unix-connect working" do
-    describe command "echo 'show stat' | socat unix-connect:/var/haproxy/stats.sock stdio" do
+    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock  stdio" do
       its(:exit_status) { should eq 0 }
     end
   end
 
   describe "HAProxy server backend should be on active" do
     let(:pre_command) { 'sleep 2' }
-    describe command "echo 'show stat' | socat unix-connect:/var/haproxy/stats.sock stdio | grep hellofresh,hellofresh" do
+    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock  stdio | grep hellofresh,hellofresh" do
       its(:exit_status) { should eq 0 }
     end
   end
