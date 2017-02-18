@@ -43,7 +43,7 @@
   notify:
     - restart consul-template service
 
-# TODO Support runnit
+# TODO Support runit and/or systemd
 - name: install | consul template | Ensure consul init.d script is deployed
   template:
     src="{{ path_for_template }}consul-template-init.d.sh.j2"
@@ -62,6 +62,17 @@
     group="{{ consul_group }}"
     mode="0755"
   with_items: "{{ consul_template_templates }}"
+  notify:
+    - restart consul-template service
+    - reload haproxy service
+
+- name: install | consul template | Ensure HAproxy reload scrip is deployed
+  template:
+    src="haproxy_reload.j2"
+    dest="{{ consul_bin_dir }}/haproxy_reload"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0755"
   notify:
     - restart consul-template service
     - reload haproxy service

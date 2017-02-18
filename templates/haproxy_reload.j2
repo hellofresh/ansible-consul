@@ -1,0 +1,29 @@
+#!/bin/sh
+
+LOG_FILE="{{ consul_template_log_file }}"
+
+## Log to consul template
+log(){
+    echo "$(date) ${1}" >> "${LOG_FILE}"
+}
+
+## Check HA Proxy conig
+HA_PROXY_CONFIG_ERROR=$( haproxy -f /etc/haproxy/haproxy.cfg -c 2>&1 )
+HA_PROXY_RC="$?"
+if [ "${HA_PROXY_RC}" != "0" ]; then
+    log "HAProxy configtest failure"
+    log "${HA_PROXY_CONFIG_ERROR}"
+    exit 1
+fi
+
+## Reload HA Porxy
+HA_PROXY_ERROR=$( sudo /usr/sbin/service haproxy reload 2>&1 )
+HA_PROXY_RC="$?"
+if [ "${HA_PROXY_RC}" != "0" ]; then
+    log "HAProxy configtest failure"
+    log "${HA_PROXY_ERROR}"
+    exit 1
+fi
+
+log "HAProxy reloaded successfully"
+exit 0
