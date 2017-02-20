@@ -42,6 +42,3 @@ script:
     - bundler --version
     - bundle show
     - $TEST_COMMAND
-
-after_success:
-    - echo "Success"
