@@ -9,9 +9,10 @@ consul_services             :
   hellofresh                :
     name                    : "hellofresh"
     port                    : 80
-    address                 : "hellofresh.com"
+    local_port              : 8080
+    address                 : "127.0.01"
     check                   :
-        script              : "curl https://www.hellofresh.com > /dev/null"
+        script              : "curl http://127.0.0.1:8080 > /dev/null"
         interval            : "120s"
     haproxy                 :
       server_options        : "check inter 120s fastinter 5s downinter 8s rise 3 fall 2"
