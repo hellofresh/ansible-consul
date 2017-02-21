@@ -20,7 +20,7 @@ fi
 HA_PROXY_ERROR=$( sudo /usr/sbin/service haproxy reload 2>&1 )
 HA_PROXY_RC="$?"
 if [ "${HA_PROXY_RC}" != "0" ]; then
-    log "HAProxy configtest failure"
+    log "HAProxy reload failure"
     log "${HA_PROXY_ERROR}"
     exit 1
 fi
