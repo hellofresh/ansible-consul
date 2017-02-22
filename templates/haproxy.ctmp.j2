@@ -59,8 +59,6 @@ listen stats
 # Service Config for {{ service_name  }}
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout  connect 10s
-    timeout  server  1h
     <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
 
@@ -77,15 +75,12 @@ backend {{ consul_services[service_name].name }}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout  connect 10s
-    timeout  server  1h
     <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
     server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}<%end%>
 {%  endif %}
 
 frontend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout client  1h
     bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
     default_backend {{ consul_services[service_name].name }}
 
