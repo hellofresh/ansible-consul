@@ -10,12 +10,12 @@ consul_services             :
     name                    : "hellofresh"
     port                    : 80
     local_port              : 8080
-    address                 : "127.0.01"
+    address                 : "127.0.0.1"
     check                   :
         script              : "curl http://127.0.0.1:8080 > /dev/null"
-        interval            : "120s"
+        interval            : "10s"
     haproxy                 :
-      server_options        : "check inter 120s fastinter 5s downinter 8s rise 3 fall 2"
+      server_options        : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
       service_mode          : "http"
   # A local service superssh that uses localport
   superssh                  :
@@ -43,7 +43,7 @@ consul_services             :
     haproxy                 :
       server_options        : "check inter 60s fastinter 5s downinter 8s rise 3 fall 2"
       service_mode          : "tcp"
-  # A local service superdb that is failing
+  # A local service superapp that is failing (not installed)
   superapp                  :
     name                    : "superapp"
     tags                    :
