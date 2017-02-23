@@ -115,8 +115,15 @@ describe 'hellofresh service (normal port option)' do
     end
   end
 
+  describe 'Curl hellofresh upstream service is working on 80' do
+    describe command 'curl http://127.0.0.1:80' do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should contain 'Thank you for using nginx' }
+    end
+  end
+
   describe 'Curl hellofresh service is working on 8080' do
-    describe command "curl http://127.0.0.1:8080" do
+    describe command 'curl http://127.0.0.1:8080' do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain 'Thank you for using nginx' }
     end
