@@ -103,26 +103,108 @@ consul_template_templates           :
 consul_telemetry                    : False
 # StatsD server address and port (address:port)
 consul_statsd_address               : ""
-# Statsite server address and port (address:port)
+---
+
+consul_agent_version                : "0.7.5"
+consul_template_version             : "0.18.1"
+
+consul_node_name                    : "{{ inventory_hostname }}"
+
+# Type of installation
+consul_server                       : false
+consul_consumer                     : false
+consul_producer                     : false
+consul_ui                           : false
+
+#
+consul_consumer_services            : []
+consul_producer_services            : []
+
+# Consul Domain
+consul_datacenter                   : "default"
+consul_domain                       : "consul."
+
+#consul_start_join                   : [ "127.0.0.1" ]
+consul_servers_list                 : [ "127.0.0.1" ] # you can use ansible groups "{{ groups['consul_servers'] }}"
+consul_rejoin_after_leave           : true
+consul_leave_on_terminate           : false
+# Retry Options
+consul_retry_join                   : false
+consul_retry_interval               : 30s
+consul_retry_max                    : 0
+# Consul log
+consul_log_level                    : "INFO"
+consul_log_syslog                   : false
+
+consul_server_port_server           : 8300
+consul_rpc_port                     : 8400
+consul_ui_http_port                 : 8500
+consul_ui_https_port                : -1
+
+# Consul Network                    :
+consul_network_bind                 : "" # "0.0.0.0"
+consul_network_autobind             : true
+#consul_network_autobind_range       : "192.168.56.0/24"
+consul_network_autobind_type        : "private" # "" or private or public
+consul_client_addr                  : "127.0.0.1"
+
+# Consul dir structure
+consul_home_dir                     : "/opt/consul"
+consul_bin_dir                      : "{{ consul_home_dir }}/bin"
+consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
+consul_data_dir                     : "{{ consul_home_dir }}/data"
+consul_template_dir                 : "{{ consul_home_dir }}/templates"
+consul_log_dir                      : "/var/log/consul"
+consul_ui_dir                       : "{{ consul_home_dir }}/ui"
+consul_config_dir                   : "/etc/consul.d"
+# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing,warning" or "all"
+# For more info check https://github.com/hashicorp/consul-template#service
+consul_template_service_options     : ""
+
+# Consul files
+consul_config_agent_file            : "/etc/consul.conf"
+consul_config_template_file         : "/etc/consul-template.conf"
+consul_agent_log_file               : "{{ consul_log_dir }}/consul-agent.log"
+consul_template_log_file            : "{{ consul_log_dir }}/consul-template.log"
+consul_template_haproxy_file        : "{{ consul_template_dir }}/consul_template.cnf"
+
+# Consul user/Group
+consul_user                         : "consul"
+consul_group                        : "consul"
+
+# Consul template
+consul_template_consul_server       : "127.0.0.1"
+consul_template_consul_port         : "8500"
+consul_template_templates           :
+                                      - source      : "{{ consul_template_haproxy_file }}"
+                                        destination : "/etc/haproxy/haproxy.cfg"
+                                        command     : "{{ consul_bin_dir }}/haproxy_reload"
+                                        jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+
+consul_template_log_level           : "warn"
+
+consul_encrypt                      : "Tq/xU3fTPyBRoA4R4CxOKg=="
+
+## Telemetry
+consul_telemetry                    : False
+consul_statsd_address               : ""
 consul_statsite_address             : ""
-# StatsD/Statsite prefix
 consul_statsite_prefix              : "consul"
-# Don't send hostname for go stats
 consul_disable_hostname             : True
 
-## HAProxy
-consul_haproxy_ppa_install          : False # By default used packaged version of Haproxy
+## HA Proxy
+consul_haproxy_ppa_install          : False # By default use packaged version of Haproxy
 consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
-## HAproxy Config global
+## Config global
 consul_haproxy_user                 : "haproxy"
 consul_haproxy_group                : "haproxy"
 consul_haproxy_maxconn              : "8192"
-consul_haproxy_log                  :
-                                      - "127.0.0.1 local1"
-consul_haproxy_stats_socket         : "socket /var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
-## Extra global key, value
-#consul_haproxy_extra_global         : []
+consul_haproxy_log                  : [ "/dev/log	local0", "/dev/log	local1 info" ]
 
+consul_haproxy_stats_socket         : "socket /var/lib/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
+## Extra global key, value
+consul_haproxy_extra_global         :
+                                       chroot: "/var/lib/haproxy"
 ## Config defaults
 consul_haproxy_default_log          : "global"
 consul_haproxy_default_options      :
@@ -146,6 +228,9 @@ consul_haproxy_stats_enable         : True
 consul_haproxy_stats_mode           : "http"
 consul_haproxy_stats_port           : 3212
 consul_haproxy_stats_uri            : "/"
+
+# Ad-hoc commands RUN WITH CARE
+consul_adhoc_build_raft_peers       : False
 ```
 service definition
 ----
