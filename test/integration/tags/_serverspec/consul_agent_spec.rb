@@ -50,5 +50,4 @@ describe 'consul agent' do
       its(:stdout) { should contain 'HTTP/1.1 404 Not Found' }
     end
   end
-
 end

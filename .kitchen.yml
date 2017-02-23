@@ -1,4 +1,5 @@
 ---
+
 driver                    :
     name                  : docker
     socket                : unix:///var/run/docker.sock
@@ -12,65 +13,50 @@ verifier                  :
 provisioner:
     name                  : ansible_push
     ansible_config        : "test/ansible.cfg"
-    chef_bootstrap_url    : ""
+    chef_bootstrap_url    : "nil"
     idempotency_test      : True
     diff                  : True
     sudo                  : True
-    #extra_vars              : "@kitchen_vars.yml"
-    verbose               : "vvvv"
+    #verbose               : "vvvv"
 
-platforms:
- - name                   : "ubuntu1404"
+platforms                 :
+ - name                   : "ubuntu1404-v2.0"
    driver_config          :
      image                : ubuntu:14.04
      platform             : ubuntu
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
 
- - name                   : "ubuntu1604"
+ - name                   : "ubuntu1604-v2.0"
    driver_config          :
      image                : ubuntu:16.04
      platform             : ubuntu
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
 
-suites:
-  - name                  : basic-server-v2.0
+ - name                   : "ubuntu1404-v2.2"
+   driver_config          :
+     image                : ubuntu:14.04
+     platform             : ubuntu
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+
+ - name                   : "ubuntu1604-v2.2"
+   driver_config          :
+     image                : ubuntu:16.04
+     platform             : ubuntu
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+
+suites                    :
+  - name                  : basic-server
     provisioner           :
         playbook          : "test/integration/basic-server/server.yml"
-        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
 
-  - name                  : basic-server-v2.2
-    provisioner           :
-        playbook          : "test/integration/basic-server/server.yml"
-        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
-
-  - name                  : basic-agent-v2.0
+  - name                  : basic-agent
     provisioner           :
         playbook          : "test/integration/basic-agent/agent.yml"
-        ansible_playbook_bin: "`avm path v2.0`ansible-playbook"
 
-  - name                  : basic-agent-v2.2
+  - name                  : tags
     provisioner           :
-        playbook          : "test/integration/basic-agent/agent.yml"
-        ansible_playbook_bin: "`avm path v2.2`ansible-playbook"
-
-  # - name                  : cluster-agent1
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-agent1/agent.yml"
-
-  # - name                  : cluster-agent2
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-agent2/agent.yml"
-
-  # - name                  : cluster-agent3
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-agent3/agent.yml"
-
-  # - name                  : cluster-server1
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-server1/server.yml"
-
-  # - name                  : cluster-server2
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-server2/server.yml"
-
-  # - name                  : cluster-server3
-  #   provisioner           :
-  #       playbook          : "test/integration/cluster-server3/server.yml"
+        playbook          : "test/integration/tags/tags.yml"

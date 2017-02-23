@@ -53,29 +53,36 @@ listen stats
 {%  if consumer_service is mapping %}
 {# Support new style of config #}
 {% set service_name = consumer_service.name %}
+{% set tags_contains = consumer_service.tags_contains | default(false) %}
+{% set tag_regex = consumer_service.tag_regex | default(false) %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
+# Service Config for {{ service_name  }}
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout  connect 10s
-    timeout  server  1h
-    {{ '{{range service' }} "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" {{ '}}' }}
-    {{'server {{.ID}}_{{.Address}}:{{.Port}} {{.Address}}:{{.Port}}' }} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{ '{{end}}' }}
+    <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
+{% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
+
+{% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
+
+    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
+{% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
+{% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
+
+    <%end%>
 {%  else %}
 {# Support old style config using service_name as a string #}
 {% set service_name = consumer_service %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout  connect 10s
-    timeout  server  1h
-    {{ '{{range service' }} "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" {{ '}}' }}
-    {{'server {{.ID}}_{{.Address}}:{{.Port}} {{.Address}}:{{.Port}}' }} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}{{ '{{end}}' }}
+    <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
+    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}<%end%>
 {%  endif %}
 
 frontend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    timeout client  1h
     bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
     default_backend {{ consul_services[service_name].name }}
+
 {% endfor %}
 {% endif %}

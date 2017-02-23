@@ -1,0 +1,12 @@
+---
+- name: nginx | install nginx
+  apt:
+    name="{{ item }}"
+  with_items:
+    - "nginx"
+
+
+- name: nginx | start nginx
+  service:
+    name="nginx"
+    state="started"
