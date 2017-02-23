@@ -19,3 +19,4 @@ describe 'Consul template' do
 end
 
 # TODO: check consul template logs for keywords
+# TODO: check haproxy logs that it was reloaded
