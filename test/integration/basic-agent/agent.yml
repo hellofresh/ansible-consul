@@ -14,10 +14,6 @@
   vars_files:
     - agent_vars.yml
 
-  pre_tasks:
-    - name: Install nginx
-      include: ../nginx.yml
-
   roles :
     - ansible-consul
 
@@ -25,4 +21,7 @@
     - name: Pause till every thing is update_cache
       pause:
         prompt="Make sure that helth checks pass and our services are part of the game"
-        seconds=30
+        seconds=20
+
+    - name: Install nginx
+      include: ../nginx.yml
