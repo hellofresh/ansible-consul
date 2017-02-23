@@ -17,7 +17,6 @@ This is an opinionated setup of consul. That manages services discovery and clie
                   +--------------+
                    (Consul Server)
 
-
 +----------------+            +--------------+
 |HAproxy         |            | Consul(Agent)|
 |Consul(Agent)   |            | App(Producer)|
