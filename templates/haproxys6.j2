@@ -1,0 +1,3 @@
+#!/usr/bin/with-contenv sh
+
+exec haproxy -db -f /etc/haproxy/haproxy.cfg -sf $(pidof haproxy)

@@ -25,7 +25,7 @@
 
 - name: install | consul agent | Ensure consul configuration is deployed
   template:
-    src="{{ path_for_template }}consul_agent.json.j2"
+    src="consul_agent.json.j2"
     dest="{{ consul_config_agent_file }}"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -35,7 +35,7 @@
 
 - name: install | consul agent | Ensure consul run script is deployed
   template:
-    src="{{ path_for_template }}consul_agent_run.sh.j2"
+    src="consul_agent_run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_agent_run.sh"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -43,13 +43,31 @@
   notify:
     - restart consul service
 
-# TODO Support runnit
 - name: install | consul agent | Ensure consul init.d script is deployed
   template:
-    src="{{ path_for_template }}consul-init.d.sh.j2"
-    dest=/etc/init.d/consul
+    src="consul-init.d.sh.j2"
+    dest="/etc/init.d/consul"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"
+  when: "consul_service == 'service'"
+  notify:
+    - restart consul service
+
+- name: install | consul agent | Ensure consul s6 service directory exisit
+  file:
+    path="{{ consul_s6_servicedir }}/consul"
+    state="directory"
+    mode=0755
+  when: "consul_service == 's6'"
+
+- name: install | consul agent | Ensure consul s6 script is deployed
+  template:
+    src="consul-s6.j2"
+    dest="{{ consul_s6_servicedir }}/consul/run"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0755"
+  when: "consul_service == 's6'"
   notify:
     - restart consul service

@@ -10,3 +10,15 @@
     - "netcat"
     - "socat"
   when: "{{ ansible_distribution == 'Ubuntu' }}"
+
+
+- name: ubuntu-test-tools | install net packages for docker
+  apk:
+    name="{{ item }}"
+    update_cache="yes"
+  with_items:
+      - "net-tools"
+      - "socat"
+  when: "{{ ansible_distribution == 'Alpine' }}"
+
+#  sudo apk add socat netcat

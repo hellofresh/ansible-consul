@@ -8,8 +8,18 @@ services:
   - docker
 
 env:
-  - TEST_COMMAND="bundle exec kitchen test agent"
-  - TEST_COMMAND="bundle exec kitchen test server"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1404-v20"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1404-v22"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1604-v20"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1604-v22"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1404-v20"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1404-v22"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1604-v20"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1604-v22"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1404-v20"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1404-v22"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1604-v20"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1604-v22"
   #- TEST_COMMAND="./test/cluster_test.sh"
 
 before_install:
@@ -32,6 +42,3 @@ script:
     - bundler --version
     - bundle show
     - $TEST_COMMAND
-
-after_success:
-    - echo "Success"

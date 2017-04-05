@@ -12,6 +12,7 @@
     apt:
       name="haproxy"
     register: haproxy_install
+
   - name: install | haproxy | Enable haproxy initd
     replace:
       dest='/etc/default/haproxy'
@@ -19,8 +20,9 @@
       replace='ENABLED=1'
 
   when: "{{ ansible_distribution == 'Ubuntu' }}"
+  # End of Ubuntu Block
 
-  # alpine Block
+  # Alpine Block
 - block:
   - name: install | haproxy | Install the HAProxy packages (alpine)
     apk:
@@ -29,6 +31,7 @@
     register: haproxy_install
 
   when: "{{ ansible_distribution == 'Alpine' }}"
+  # End of Apline Block
 
 # This is used to avoid haproxy failing to load if consul-template is delayed
 # This will ensure haproxy starts till consul template kicks in and changes the config and reload haproxy
@@ -63,3 +66,55 @@
    owner="root"
    group="{{ consul_group }}"
    mode="0775"
+
+  # s6 service Block
+- block:
+  - name: install | haproxy | Ensure haproxy s6 service directory exisit
+    file:
+      path="{{ item }}"
+      state="directory"
+      owner="{{ consul_haproxy_user }}"
+      mode=0755
+    with_items:
+      - "{{ consul_s6_servicedir }}/haproxy1"
+      - "{{ consul_s6_servicedir }}/haproxy2"
+      - "{{ consul_s6_servicedir }}/haproxy1/log"
+      - "{{ consul_s6_servicedir }}/haproxy2/log"
+
+  - name: install | haproxy | Ensure haproxy s6 logs directory exisit
+    file:
+      path="{{ item }}"
+      state="directory"
+      owner="nobody"
+      group="nobody"
+      mode=0755
+    with_items:
+      - "/var/log/haproxy1/"
+      - "/var/log/haproxy2/"
+
+  - name: install | haproxy | Ensure haproxy s6 script is deployed
+    template:
+      src="{{ item.src }}"
+      dest="{{ item.dest }}"
+      owner="root"
+      group="root"
+      mode="0755"
+    with_items:
+      - { src: "haproxys6.j2", dest: "{{ consul_s6_servicedir }}/haproxy1/run" }
+      - { src: "haproxys6.j2", dest: "{{ consul_s6_servicedir }}/haproxy2/run" }
+      - { src: "s6-log.j2", dest: "{{ consul_s6_servicedir }}/haproxy1/log/run", log_dir: "/var/log/haproxy1" }
+      - { src: "s6-log.j2", dest: "{{ consul_s6_servicedir }}/haproxy2/log/run", log_dir: "/var/log/haproxy2" }
+
+  - name: install | haproxy | Ensure haproxy s6 service inital link (first time only)
+    file:
+      src="{{ item.src }}"
+      dest="{{ item.dest }}"
+      state="link"
+    with_items:
+    - src: "/var/run/s6/services/haproxy1"
+      dest: "/haproxy-current"
+    - src: "/var/run/s6/services/haproxy2"
+      dest: "/haproxy-alt"
+    when:  haproxy_install | changed
+
+  when: consul_service == 's6'

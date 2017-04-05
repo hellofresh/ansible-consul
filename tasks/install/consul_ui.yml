@@ -1,7 +1,7 @@
 ---
 
 - name: install | consul UI | Ensure consul UI directory exists
-  file: 
+  file:
     state="directory"
     path="{{ item }}"
     owner="{{ consul_user }}"
@@ -10,7 +10,7 @@
     - "{{ consul_ui_dir }}"
 
 - name: install | consul UI | Check ui archive stat
-  stat: 
+  stat:
     path="{{ consul_tmp_dir }}/{{ consul_ui_archive }}"
   register: consul_ui_archive_stat
 

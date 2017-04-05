@@ -1,23 +1,27 @@
 ---
 
-consul_agent_version                : "0.7.2"
-consul_template_version             : "0.16.0"
+## Versions to install
+consul_agent_version                : "0.7.5"
+consul_template_version             : "0.18.1"
 
+## Node name
 consul_node_name                    : "{{ inventory_hostname }}"
 
-# Type of installation
+## Type of installation
 consul_server                       : false
 consul_consumer                     : false
 consul_producer                     : false
 consul_ui                           : false
-#
+
+## Services
 consul_consumer_services            : []
 consul_producer_services            : []
 
-# Consul Domain
+## Consul Domain
 consul_datacenter                   : "default"
 consul_domain                       : "consul."
 
+## Consul agent configuration
 #consul_start_join                   : [ "127.0.0.1" ]
 consul_servers_list                 : [ "127.0.0.1" ] # you can use ansible groups "{{ groups['consul_servers'] }}"
 consul_rejoin_after_leave           : true
@@ -51,7 +55,7 @@ consul_template_dir                 : "{{ consul_home_dir }}/templates"
 consul_log_dir                      : "/var/log/consul"
 consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
-# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing, warning" or "all"
+# if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing,warning" or "all"
 # For more info check https://github.com/hashicorp/consul-template#service
 consul_template_service_options     : ""
 
@@ -72,8 +76,8 @@ consul_template_consul_port         : "8500"
 consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
-                                        command     : "haproxy -f /etc/haproxy/haproxy.cfg -c && sudo /usr/sbin/service haproxy reload"
-                                        jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+                                        command     : "{{ consul_bin_dir }}/haproxy_reload"
+                                        jtemplate   : "haproxy.ctmp.j2"
 
 consul_template_log_level           : "warn"
 
@@ -93,11 +97,12 @@ consul_haproxy_ppa_url              : "ppa:vbernat/haproxy-1.6"
 consul_haproxy_user                 : "haproxy"
 consul_haproxy_group                : "haproxy"
 consul_haproxy_maxconn              : "8192"
-consul_haproxy_log                  :
-                                      - "127.0.0.1 local1"
-consul_haproxy_stats_socket         : "socket /var/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
+consul_haproxy_log                  : [ "/dev/log	local0", "/dev/log	local1 info" ]
+
+consul_haproxy_stats_socket         : "socket /var/lib/haproxy/stats.sock group {{ consul_group }} mode 660 level admin"
 ## Extra global key, value
-#consul_haproxy_extra_global         : []
+consul_haproxy_extra_global         :
+                                       chroot: "/var/lib/haproxy"
 ## Config defaults
 consul_haproxy_default_log          : "global"
 consul_haproxy_default_options      :
@@ -125,3 +130,6 @@ consul_haproxy_stats_uri            : "/"
 # Ad-hoc commands RUN WITH CARE
 consul_adhoc_build_raft_peers       : False
 
+# Consul supervisor service (service, s6)
+consul_service                      : "service"
+consul_s6_servicedir                : "/var/run/s6/services"

@@ -2,8 +2,10 @@
 # This is a temp valid haproxy config used to bootup ha proxy till  consul template kicks in
 
 global
+{% if ansible_distribution == 'Ubuntu' %}
 	log /dev/log	local0
 	log /dev/log	local1 notice
+{% endif %}
 	chroot /var/lib/haproxy
 	user haproxy
 	group haproxy
@@ -22,6 +24,6 @@ defaults
 	mode	http
 	option	httplog
 	option	dontlognull
-    contimeout 5000
-    clitimeout 50000
-    srvtimeout 50000
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000

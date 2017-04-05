@@ -25,7 +25,7 @@
 
 - name: install | consul template | Ensure consul-template configuration file is deployed
   template:
-    src="{{ path_for_template }}consul_template.json.j2"
+    src="consul_template.json.j2"
     dest="{{ consul_config_template_file }}"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -35,7 +35,7 @@
 
 - name: install | consul template | Ensure consul run script is deployed
   template:
-    src="{{ path_for_template }}consul_template_run.sh.j2"
+    src="consul_template_run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_template_run.sh"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -43,16 +43,52 @@
   notify:
     - restart consul-template service
 
-# TODO Support runnit
 - name: install | consul template | Ensure consul init.d script is deployed
   template:
-    src="{{ path_for_template }}consul-template-init.d.sh.j2"
+    src="consul-template-init.d.sh.j2"
     dest="/etc/init.d/consul-template"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"
+  when: "consul_service == 'service'"
   notify:
     - restart consul-template service
+
+  # s6 service Block
+- block:
+  - name: install | consul template | Ensure consul-template s6 service directory exisit
+    file:
+      path="{{ item }}"
+      state="directory"
+      owner="{{ consul_user }}"
+      group="{{ consul_group }}"
+      mode=0755
+    with_items:
+     - "{{ consul_s6_servicedir }}/consul-template"
+     - "{{ consul_s6_servicedir }}/consul-template/log"
+
+  - name: install | consul template | Ensure consul-template s6 logs directory exisit
+    file:
+      path="/var/log/s6-consul-template"
+      state="directory"
+      owner="nobody"
+      group="nobody"
+      mode=0755
+
+  - name: install | consul template | Ensure consul s6 script is deployed
+    template:
+      src="{{ item.src }}"
+      dest="{{ item.dest }}"
+      owner="{{ consul_user }}"
+      group="{{ consul_group }}"
+      mode="0755"
+    with_items:
+        - { src: "consul-template-s6.j2", dest: "{{ consul_s6_servicedir }}/consul-template/run"}
+        - { src: "s6-log.j2", dest: "{{ consul_s6_servicedir }}/consul-template/log/run", log_dir: "/var/log/s6-consul-template", log_user: "consul"}
+    notify:
+      - restart consul service
+
+  when: "consul_service == 's6'"
 
 - name: install | consul template | Ensure templates is deployed
   template:
@@ -66,6 +102,17 @@
     - restart consul-template service
     - reload haproxy service
 
+- name: install | consul template | Ensure HAproxy reload script is deployed
+  template:
+    src="haproxy_reload.j2"
+    dest="{{ consul_bin_dir }}/haproxy_reload"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0755"
+  notify:
+    - restart consul-template service
+    - reload haproxy service
+
 - name: install | consul template | Ensure sudoers file to allow consul template to reload haproxy
   copy:
    content="{{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload\n"
@@ -73,4 +120,3 @@
    owner="root"
    group="root"
    mode="0440"
-

@@ -11,11 +11,10 @@ CONSUL_HOME="{{ consul_home_dir }}"
 CONSUL_CONFIG_FILE="{{ consul_config_agent_file }}"
 CONSUL_BIN="{{ consul_bin_dir }}"
 CONSUL_BIND="{{ consul_network_bind }}"
-export GOMAXPROCS="$(nproc)"
 
 # Make sure to use all available proc
-# https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8 
-export GOMAXPROCS="$(nproc)"
+# https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8
+export GOMAXPROCS="$(grep -c ^processor /proc/cpuinfo)"
 
 exec ${CONSUL_BIN}/${NAME} agent -config-dir=$CONSUL_CONFIG_DIR -config-file=$CONSUL_CONFIG_FILE -data-dir=$CONSUL_DATA_DIR -bind=$CONSUL_BIND > $CONSUL_LOG_FILE 2>&1
 exit $?
