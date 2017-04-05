@@ -1,9 +1,11 @@
 require_relative '../../helper_spec.rb'
 
 describe 'Consul template' do
-  describe service('consul-template') do
-    it { should be_enabled }
-    it { should be_running }
+  if %w(ubuntu).include? os[:family]
+    describe service('consul-template') do
+      it { should be_enabled }
+      it { should be_running }
+    end
   end
 
   describe file('/etc/consul-template.conf') do
