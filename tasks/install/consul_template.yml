@@ -104,8 +104,8 @@
 
 - name: install | consul template | Ensure HAproxy reload script is deployed
   template:
-    src="haproxy_reload.j2"
-    dest="{{ consul_bin_dir }}/haproxy_reload"
+    src="haproxy-reload.j2"
+    dest="{{ consul_bin_dir }}/haproxy-reload"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"
@@ -114,9 +114,10 @@
     - reload haproxy service
 
 - name: install | consul template | Ensure sudoers file to allow consul template to reload haproxy
-  copy:
-   content="{{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload\n"
+  template:
+   src="consul-template-sudo.j2"
    dest="/etc/sudoers.d/{{ consul_user }}"
    owner="root"
    group="root"
    mode="0440"
+   validate='visudo -cf %s'

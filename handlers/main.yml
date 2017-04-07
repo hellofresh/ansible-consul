@@ -85,11 +85,7 @@
   when: "consul_service == 'service'"
 
 - name: reload haproxy service (s6)
-  s6:
-    name="haproxy-current"
-    state="restarted"
-    service_src="/"
-    service_dir="/"
+  shell: "{{ consul_bin_dir }}/haproxy-reload"
   when: "consul_service == 's6'"
 
 - name: reload consul service config

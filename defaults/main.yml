@@ -76,7 +76,7 @@ consul_template_consul_port         : "8500"
 consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
-                                        command     : "{{ consul_bin_dir }}/haproxy_reload"
+                                        command     : "{{ consul_bin_dir }}/haproxy-reload"
                                         jtemplate   : "haproxy.ctmp.j2"
 
 consul_template_log_level           : "warn"

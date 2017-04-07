@@ -32,7 +32,7 @@ author: "James Sumners (@jsumners)"
 version_added: "2.3"
 short_description:  Manage runit services.
 description:
-    - Controls runit services on remote hosts using the sv utility.
+    - Controls s6 services on remote hosts using the sv utility.
 options:
     name:
         required: true
@@ -132,7 +132,7 @@ class Sv(object):
     #    return _load_dist_subclass(cls, args, kwargs)
 
     def __init__(self, module):
-        self.extra_paths = [ ]
+        self.extra_paths = []
         self.report_vars = ['state', 'enabled', 'svc_full', 'src_full', 'pid', 'duration', 'full_state']
 
         self.module         = module
@@ -316,27 +316,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-'''
-
--o : once. Equivalent to "-uO".
--d : down. If the supervised process is up, send it a SIGTERM and a SIGCONT. Do not restart it.
--u : up. If the supervised process is down, start it. Automatically restart it when it dies.
--x : exit. When the service is asked to be down and the supervised process dies, s6-supervise will exit too. This command should normally never be used on a working system.
--X : close fds and exit. Like -x, but s6-supervise will immediately close its stdin, stdout and stderr. This is useful when s6-supervise has descriptors open to the service it is supervising and the service is waiting for them to close before exiting. Note that if this option is used, the last execution of the service's finish script will be run with stdin, stdout and stderr redirected to /dev/null.
--O : Once at most. Do not restart the supervised process when it dies. If it is down when the command is received, do not even start it.
--T timeout : if the -wstate option has been given, -T specifies a timeout (in milliseconds) after which s6-svc will exit 1 with an error message if the service still hasn't reached the desired state. By default, the timeout is 0, which means that s6-svc will block indefinitely.
--wd : s6-svc will not exit until the service is down, i.e. until the run process has died.
--wD : s6-svc will not exit until the service is down and ready to be brought up, i.e. a possible finish script has exited.
--wu : s6-svc will not exit until the service is up, i.e. there is a process running the run executable.
--wU : s6-svc will not exit until the service is up and ready as notified by the daemon itself. If the service directory does not contain a notification-fd file to tell s6-supervise to accept readiness notification, s6-svc will print a warning and act as if the -wu option had been given instead.
--wr : s6-svc will not exit until the service has been started or restarted.
--wR : s6-svc will not exit until the service has been started or restarted and has notified readiness.
-'''
-
-'''
-wantedup: print true if s6-supervise is currently instructed to (re)start the service when it is down, and false if s6-supervise is currently instructed to leave the service alone.
-normallyup: print true if the service is supposed to start when s6-supervise starts (i.e. no ./down file), and false if it is not (i.e. there is a ./down file).
-paused: print true if the service is paused (i.e. the process is currently stopped) and false if it is not. It is a rare flag, you shouldn't normally need to use this option.
-
-'''

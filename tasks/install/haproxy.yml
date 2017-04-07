@@ -11,7 +11,7 @@
   - name: install | haproxy | Install the HAProxy packages (ubuntu)
     apt:
       name="haproxy"
-    register: haproxy_install
+    register: haproxy_install_ubuntu
 
   - name: install | haproxy | Enable haproxy initd
     replace:
@@ -28,10 +28,11 @@
     apk:
       name="haproxy"
       update_cache="yes"
-    register: haproxy_install
+    register: haproxy_install_alpine
 
   when: "{{ ansible_distribution == 'Alpine' }}"
   # End of Apline Block
+
 
 # This is used to avoid haproxy failing to load if consul-template is delayed
 # This will ensure haproxy starts till consul template kicks in and changes the config and reload haproxy
@@ -42,7 +43,7 @@
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0640"
-  when: haproxy_install | changed
+  when: haproxy_install_ubuntu | changed or haproxy_install_alpine | changed
 
 - name: install | haproxy | Make sure /var/haproxy/ exists
   file:
@@ -111,10 +112,10 @@
       dest="{{ item.dest }}"
       state="link"
     with_items:
-    - src: "/var/run/s6/services/haproxy1"
+    - src: "{{ consul_s6_servicedir }}/haproxy1"
       dest: "/haproxy-current"
-    - src: "/var/run/s6/services/haproxy2"
+    - src: "{{ consul_s6_servicedir }}/haproxy2"
       dest: "/haproxy-alt"
-    when:  haproxy_install | changed
+    when:  haproxy_install_alpine | changed
 
   when: consul_service == 's6'

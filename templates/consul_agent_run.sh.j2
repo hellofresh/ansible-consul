@@ -7,7 +7,6 @@ NAME="consul"
 CONSUL_CONFIG_DIR="{{ consul_config_dir }}"
 CONSUL_DATA_DIR="{{ consul_data_dir }}"
 CONSUL_LOG_FILE="{{ consul_agent_log_file }}"
-CONSUL_HOME="{{ consul_home_dir }}"
 CONSUL_CONFIG_FILE="{{ consul_config_agent_file }}"
 CONSUL_BIN="{{ consul_bin_dir }}"
 CONSUL_BIND="{{ consul_network_bind }}"
@@ -16,5 +15,8 @@ CONSUL_BIND="{{ consul_network_bind }}"
 # https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8
 export GOMAXPROCS="$(grep -c ^processor /proc/cpuinfo)"
 
-exec ${CONSUL_BIN}/${NAME} agent -config-dir=$CONSUL_CONFIG_DIR -config-file=$CONSUL_CONFIG_FILE -data-dir=$CONSUL_DATA_DIR -bind=$CONSUL_BIND > $CONSUL_LOG_FILE 2>&1
-exit $?
+echo "$(date) **** Consul agent start ****" >> "${CONSUL_LOG_FILE}"
+exec "${CONSUL_BIN}"/"${NAME}" agent -config-dir="${CONSUL_CONFIG_DIR}" -config-file="${CONSUL_CONFIG_FILE}" -data-dir="${CONSUL_DATA_DIR}" -bind="${CONSUL_BIND}" >> "${CONSUL_LOG_FILE}" 2>&1
+RC="$?"
+echo "$(date) **** Consul-agent ended with ${RC} ****" >> "${CONSUL_LOG_FILE}"
+exit "${RC}"

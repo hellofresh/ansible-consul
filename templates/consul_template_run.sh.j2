@@ -4,7 +4,6 @@
 #
 
 NAME="consul-template"
-CONSUL_CONFIG_DIR="{{ consul_config_template_file }}"
 CONSUL_LOG_FILE="{{ consul_template_log_file }}"
 CONSUL_BIN="{{ consul_bin_dir }}"
 
@@ -13,5 +12,8 @@ CONSUL_BIN="{{ consul_bin_dir }}"
 export GOMAXPROCS="$(grep -c ^processor /proc/cpuinfo)"
 
 # Run
-exec ${CONSUL_BIN}/${NAME} -config=/etc/consul-template.conf > $CONSUL_LOG_FILE 2>&1
-exit $?
+echo "$(date) **** Consul-template start" >> "${CONSUL_LOG_FILE}"
+exec "${CONSUL_BIN}"/"${NAME}" -config=/etc/consul-template.conf >> "${CONSUL_LOG_FILE}" 2>&1
+RC="$?"
+echo "$(date) **** Consul-template ended with ${RC}" >> "${CONSUL_LOG_FILE}"
+exit "${RC}"
