@@ -2,6 +2,7 @@
 {% if consul_service == 'service' %}
 {{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload
 {% elif consul_service == 's6' %}
+# TODO: Should probably use alaises. Keeping permission it open is not cool :(
 {{ consul_user }} ALL=NOPASSWD:/bin/s6-svc
 {{ consul_user }} ALL=NOPASSWD:/bin/s6-svok
 {{ consul_user }} ALL=NOPASSWD:/bin/ln
