@@ -25,7 +25,7 @@
 
 - name: install | consul agent | Ensure consul configuration is deployed
   template:
-    src="consul_agent.json.j2"
+    src="consul-agent.json.j2"
     dest="{{ consul_config_agent_file }}"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -35,7 +35,7 @@
 
 - name: install | consul agent | Ensure consul run script is deployed
   template:
-    src="consul_agent_run.sh.j2"
+    src="consul-agent-run.sh.j2"
     dest="{{ consul_bin_dir }}/consul_agent_run.sh"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"

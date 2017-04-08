@@ -38,7 +38,7 @@
 # This will ensure haproxy starts till consul template kicks in and changes the config and reload haproxy
 - name: install | haproxy | Deploy a valid haproxy.cfg (if haproxy installation just changed)
   template:
-    src="haproxy_initial.cfg.j2"
+    src="haproxy-initial.cfg.j2"
     dest="/etc/haproxy/haproxy.cfg"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"

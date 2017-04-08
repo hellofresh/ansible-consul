@@ -25,7 +25,7 @@
 
 - name: install | consul template | Ensure consul-template configuration file is deployed
   template:
-    src="consul_template.json.j2"
+    src="consul-template.json.j2"
     dest="{{ consul_config_template_file }}"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
@@ -35,8 +35,8 @@
 
 - name: install | consul template | Ensure consul run script is deployed
   template:
-    src="consul_template_run.sh.j2"
-    dest="{{ consul_bin_dir }}/consul_template_run.sh"
+    src="consul-template-run.sh.j2"
+    dest="{{ consul_bin_dir }}/consul-template-run.sh"
     owner="{{ consul_user }}"
     group="{{ consul_group }}"
     mode="0755"

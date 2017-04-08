@@ -2,20 +2,20 @@
 
 - name: Include Ad-hoc
   include: ad-hocs/main.yml
-  when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear_data_dir is defined and consul_adhoc_clear_data_dir
+  when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear-data-dir is defined and consul_adhoc_clear-data-dir
 
 - name: Include Packages
   include: install/packages.yml
 
 - name: Include IP match
-  include: ip_match.yml
+  include: ip-match.yml
   when: consul_network_autobind is defined and consul_network_autobind
 
 - name: Include install main file
   include: install/main.yml
 
 - name: Include consul service
-  include: consul_services.yml
+  include: consul-services.yml
   when: consul_producer
 
   # At this point we should flush handler

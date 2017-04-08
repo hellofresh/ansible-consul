@@ -2,8 +2,9 @@
 consul_server               : True
 consul_bootstrap_expect     : 1
 consul_ui                   : true # disable
-
+consul_client_addr          : "0.0.0.0"
 consul_services       :
+#curl -s -v http://127.0.0.1:8500/v1/health/service/hellofresh
   # External service i.e. hellofresh
   hellofresh          :
     name              : "hellofresh"

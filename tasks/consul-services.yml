@@ -21,7 +21,7 @@
 
 - name: consul services | Ensure consul services JSON are registered
   template:
-    src="consul_service.j2"
+    src="consul-service.j2"
     dest="{{ consul_config_dir }}/sv_{{ item }}.json"
   with_items:  "{{ consul_producer_services }}"
   notify:

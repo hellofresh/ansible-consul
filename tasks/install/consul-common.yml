@@ -40,7 +40,7 @@
 
 - name: install | consul common | Ensure consul bin path is resolvable through profile.d
   template:
-    src="consul_profile_path.sh.j2"
+    src="consul-profile-path.sh.j2"
     dest="/etc/profile.d/consul.sh"
     owner="root"
     group="root"
