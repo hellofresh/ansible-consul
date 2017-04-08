@@ -1,8 +1,4 @@
 ---
-- name: Pause till every thing is update_cache
-  pause:
-    prompt="Make sure that helth checks pass and our services are part of the game"
-    seconds=5
 
 - name: install nginx ubuntu
   apt:
@@ -43,7 +39,7 @@
 
   when: "{{ ansible_distribution == 'Alpine' }}"
 
-
-
-
-
+- name: Pause till every thing is update_cache
+  pause:
+    prompt="Make sure that helth checks pass and our services are part of the game"
+    seconds=20
