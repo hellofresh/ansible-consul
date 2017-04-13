@@ -1,0 +1,121 @@
+---
+
+  # Ubuntu Block
+- block:
+  - name: install | haproxy | Add the HAproxy repository (ubuntu)
+    apt_repository:
+      repo="{{ consul_haproxy_ppa_url }}"
+      update_cache="yes"
+    when: "{{ consul_haproxy_ppa_install }} == True"
+
+  - name: install | haproxy | Install the HAProxy packages (ubuntu)
+    apt:
+      name="haproxy"
+    register: haproxy_install_ubuntu
+
+  - name: install | haproxy | Enable haproxy initd
+    replace:
+      dest='/etc/default/haproxy'
+      regexp='ENABLED=0'
+      replace='ENABLED=1'
+
+  when: "{{ ansible_distribution == 'Ubuntu' }}"
+  # End of Ubuntu Block
+
+  # Alpine Block
+- block:
+  - name: install | haproxy | Install the HAProxy packages (alpine)
+    apk:
+      name="haproxy"
+      update_cache="yes"
+    register: haproxy_install_alpine
+
+  when: "{{ ansible_distribution == 'Alpine' }}"
+  # End of Apline Block
+
+
+# This is used to avoid haproxy failing to load if consul-template is delayed
+# This will ensure haproxy starts till consul template kicks in and changes the config and reload haproxy
+- name: install | haproxy | Deploy a valid haproxy.cfg (if haproxy installation just changed)
+  template:
+    src="haproxy-initial.cfg.j2"
+    dest="/etc/haproxy/haproxy.cfg"
+    owner="{{ consul_user }}"
+    group="{{ consul_group }}"
+    mode="0640"
+  when: haproxy_install_ubuntu | changed or haproxy_install_alpine | changed
+
+- name: install | haproxy | Make sure /var/haproxy/ exists
+  file:
+    state="directory"
+    path="{{ item }}"
+    owner="root"
+    group="root"
+  with_items:
+     - /var/haproxy
+
+- name: install | haproxy | Ensure haproxy config file is writable by consul group
+  file:
+   path="/etc/haproxy/haproxy.cfg"
+   owner="{{ consul_user }}"
+   group="{{ consul_group }}"
+   mode="0644"
+
+- name: install | haproxy | Ensure haproxy config dir is writable by consul group
+  file:
+   path="/etc/haproxy/"
+   owner="root"
+   group="{{ consul_group }}"
+   mode="0775"
+
+  # s6 service Block
+- block:
+  - name: install | haproxy | Ensure haproxy s6 service directory exisit
+    file:
+      path="{{ item }}"
+      state="directory"
+      owner="{{ consul_haproxy_user }}"
+      mode=0755
+    with_items:
+      - "{{ consul_s6_servicedir }}/haproxy1"
+      - "{{ consul_s6_servicedir }}/haproxy2"
+      - "{{ consul_s6_servicedir }}/haproxy1/log"
+      - "{{ consul_s6_servicedir }}/haproxy2/log"
+
+  - name: install | haproxy | Ensure haproxy s6 logs directory exisit
+    file:
+      path="{{ item }}"
+      state="directory"
+      owner="nobody"
+      group="nobody"
+      mode=0755
+    with_items:
+      - "/var/log/haproxy1/"
+      - "/var/log/haproxy2/"
+
+  - name: install | haproxy | Ensure haproxy s6 script is deployed
+    template:
+      src="{{ item.src }}"
+      dest="{{ item.dest }}"
+      owner="root"
+      group="root"
+      mode="0755"
+    with_items:
+      - { src: "haproxys6.j2", dest: "{{ consul_s6_servicedir }}/haproxy1/run" }
+      - { src: "haproxys6.j2", dest: "{{ consul_s6_servicedir }}/haproxy2/run" }
+      - { src: "s6-log.j2", dest: "{{ consul_s6_servicedir }}/haproxy1/log/run", log_dir: "/var/log/haproxy1" }
+      - { src: "s6-log.j2", dest: "{{ consul_s6_servicedir }}/haproxy2/log/run", log_dir: "/var/log/haproxy2" }
+
+  - name: install | haproxy | Ensure haproxy s6 service inital link (first time only)
+    file:
+      src="{{ item.src }}"
+      dest="{{ item.dest }}"
+      state="link"
+    with_items:
+    - src: "{{ consul_s6_servicedir }}/haproxy1"
+      dest: "/haproxy-current"
+    - src: "{{ consul_s6_servicedir }}/haproxy2"
+      dest: "/haproxy-alt"
+    when:  haproxy_install_alpine | changed
+
+  when: consul_service == 's6'

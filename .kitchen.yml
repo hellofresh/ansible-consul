@@ -4,6 +4,8 @@ driver                    :
     name                  : docker
     socket                : unix:///var/run/docker.sock
     use_sudo              : false
+    # forward:
+    #     - 3212:3212
 
 verifier                  :
   name                    : serverspec
@@ -13,17 +15,20 @@ verifier                  :
 provisioner:
     name                  : ansible_push
     ansible_config        : "test/ansible.cfg"
-    chef_bootstrap_url    : "nil"
+    chef_bootstrap_url    : nil
     idempotency_test      : True
     diff                  : True
     sudo                  : True
-    #verbose               : "vvvv"
+    verbose               : "vvvv"
 
 platforms                 :
+
  - name                   : "ubuntu1404-v2.0"
    driver_config          :
      image                : ubuntu:14.04
      platform             : ubuntu
+     provision_command:
+      - test -e /usr/bin/socat  || (apt-get -y update && apt-get install -y iproute2 net-tools netcat socat)
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
 
@@ -31,13 +36,31 @@ platforms                 :
    driver_config          :
      image                : ubuntu:16.04
      platform             : ubuntu
+     provision_command:
+      - test -e /usr/bin/python || (apt-get -y update && apt-get install -y python-minimal)
+      - test -e /usr/bin/socat  || (apt-get -y update && apt-get install -y iproute2 net-tools netcat socat)
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
+
+ - name                   : "alpine3.4-v2.2"
+   driver_config          :
+     image                : harningt/base-alpine-s6-overlay:3.4
+     platform             : alpine
+     provision_command:
+      - apk add python iproute2 net-tools socat
+      - mkdir -p /opt # needs to be in ansible
+
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+     extra_vars           : {consul_service: s6, consul_s6_servicedir: /var/run/s6/services}
 
  - name                   : "ubuntu1404-v2.2"
    driver_config          :
      image                : ubuntu:14.04
      platform             : ubuntu
+     provision_command:
+      - test -e /usr/bin/socat  || (apt-get -y update && apt-get install -y iproute2 net-tools netcat socat)
+
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
 
@@ -45,6 +68,9 @@ platforms                 :
    driver_config          :
      image                : ubuntu:16.04
      platform             : ubuntu
+     provision_command:
+      - test -e /usr/bin/python || (apt-get -y update && apt-get install -y python-minimal)
+      - test -e /usr/bin/socat  || (apt-get -y update && apt-get install -y iproute2 net-tools netcat socat)
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
 

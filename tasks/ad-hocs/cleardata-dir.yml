@@ -4,6 +4,7 @@
   service:
     name="consul"
     state="stopped"
+  when: "consul_service == 'service'"
 
 - name: adhoc | clear data dir | remove consul data dir
   file:
@@ -23,3 +24,4 @@
   service:
     name="consul"
     state="started"
+  when: "consul_service == 'service'"

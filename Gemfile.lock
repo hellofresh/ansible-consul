@@ -1,3 +1,11 @@
+GIT
+  remote: https://github.com/ahelal/kitchen-docker.git
+  revision: 12552cc580393108e67ba9f933a8730b3ab0187f
+  branch: feature/alpine
+  specs:
+    kitchen-docker (2.6.1.pre)
+      test-kitchen (>= 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -5,8 +13,6 @@ GEM
     diff-lcs (1.2.5)
     kitchen-ansiblepush (0.6.1)
       test-kitchen (~> 1.4)
-    kitchen-docker (2.6.0)
-      test-kitchen (>= 1.0.0)
     kitchen-verifier-serverspec (0.6.2)
       net-ssh (~> 3)
       test-kitchen (~> 1.4)
@@ -67,7 +73,7 @@ PLATFORMS
 
 DEPENDENCIES
   kitchen-ansiblepush
-  kitchen-docker
+  kitchen-docker!
   kitchen-verifier-serverspec
   net-ssh
   serverspec

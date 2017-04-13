@@ -1,12 +1,45 @@
 ---
-- name: nginx | install nginx
+
+- name: install nginx ubuntu
   apt:
     name="{{ item }}"
   with_items:
     - "nginx"
+  when: "{{ ansible_distribution == 'Ubuntu' }}"
 
-
-- name: nginx | start nginx
+- name: start nginx
   service:
     name="nginx"
     state="started"
+  when: "consul_service == 'service'"
+- block:
+  - name: install nginx alpine
+    apk:
+      name="{{ item }}"
+      state="latest"
+    with_items:
+      - "nginx"
+    when: "{{ ansible_distribution == 'Alpine' }}"
+
+  - name: nginx s6 service dir
+    file:
+      path="/var/run/s6/services/nginx"
+      state="directory"
+      mode=0755
+
+  - name: nginx s6 service file
+    copy:
+      content="#!/bin/sh\nexec exec nginx -c /etc/nginx/nginx.conf -g 'pid /tmp/nginx.pid; daemon off;'\n"
+      dest="/var/run/s6/services/nginx/run"
+      mode=0755
+
+  - name: Reload s6 service
+    shell: s6-svscanctl -a {{ consul_s6_servicedir }}
+    changed_when: false
+
+  when: "{{ ansible_distribution == 'Alpine' }}"
+
+- name: Pause till every thing is update_cache
+  pause:
+    prompt="Make sure that helth checks pass and our services are part of the game"
+    seconds=20

@@ -18,7 +18,7 @@ RUN_AS_GROUP="{{ consul_group }}"
 BASE_DIR="{{ consul_home_dir }}"
 GREP_NAME="bin/consul-template"
 
-RUN_CMD="{{ consul_bin_dir }}/consul_template_run.sh"
+RUN_CMD="{{ consul_bin_dir }}/consul-template-run.sh"
 #
 STOPCMD="kill -9"
 #How many sec to wait before checking if proc is up

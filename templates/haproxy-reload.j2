@@ -1,0 +1,64 @@
+#!/bin/sh
+
+LOG_FILE="{{ consul_template_log_file }}"
+exec >> "${LOG_FILE}"
+exec 2>&1
+
+## Log to consul template
+log(){
+    echo "$(date) haproxy-reload script: ${1}"
+}
+
+## Run sudo command
+sudo_cmd(){
+    sudo ${*}
+}
+
+## Get current pids
+log "Pre-reload HAproxy $(pidof haproxy)"
+
+## Check HAProxy conig
+HA_PROXY_CONFIG_ERROR=$( haproxy -f /etc/haproxy/haproxy.cfg -c 2>&1 )
+HA_PROXY_RC="$?"
+if [ "${HA_PROXY_RC}" != "0" ]; then
+    log "HAProxy configtest failure"
+    log "${HA_PROXY_CONFIG_ERROR}"
+    exit 1
+fi
+
+## Reload HA Proxy
+#{% if consul_service == "service" %}
+# Service
+HA_PROXY_ERROR=$( sudo /usr/sbin/service haproxy reload 2>&1 )
+HA_PROXY_RC="$?"
+#{% elif consul_service == "s6" %}
+# s6
+# https://www.mail-archive.com/supervision@list.skarnet.org/msg01213.html
+# TODO in s6 we must check config file
+HAPROXY_CURRENT=$(readlink /haproxy-current)
+HAPROXY_ALT=$(readlink /haproxy-alt)
+
+sudo_cmd s6-svc -O "${HAPROXY_CURRENT}"
+sudo_cmd s6-svok "${HAPROXY_CURRENT}"
+HA_PROXY_ERROR_1="$?"
+
+sudo_cmd s6-svc -u "${HAPROXY_ALT}"
+sudo_cmd s6-svok "${HAPROXY_ALT}"
+HA_PROXY_ERROR_2="$?"
+
+HA_PROXY_RC=${HA_PROXY_ERROR_1} || ${HA_PROXY_ERROR_2}
+
+sudo_cmd ln -sfn "${HAPROXY_ALT}" /haproxy-current
+sudo_cmd ln -sfn "${HAPROXY_CURRENT}" /haproxy-alt
+#{% endif %}
+
+if [ "${HA_PROXY_RC}" != "0" ]; then
+    log "HAProxy reload failure"
+    log "${HA_PROXY_ERROR}"
+    exit 1
+fi
+
+log "Post-reload HAproxy $(pidof haproxy)"
+log "HAProxy reloaded successfully"
+
+exit 0

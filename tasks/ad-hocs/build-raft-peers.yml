@@ -20,6 +20,7 @@
   run_once: true
   delegate_to: "{{ item }}"
   with_items: "{{ groups['consul_server'] | default([]) }}"
+  when: "consul_service == 'service'"
 
 - name: adhoc | rebuild peers | copy new peer
   copy:
@@ -40,3 +41,4 @@
   run_once: true
   delegate_to: "{{ item }}"
   with_items: "{{ groups['consul_server'] | default([]) }}"
+  when: "consul_service == 'service'"

@@ -8,18 +8,15 @@ services:
   - docker
 
 env:
-  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1404-v20"
-  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1404-v22"
-  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1604-v20"
-  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1604-v22"
-  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1404-v20"
-  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1404-v22"
-  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1604-v20"
-  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1604-v22"
-  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1404-v20"
-  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1404-v22"
-  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1604-v20"
-  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1604-v22"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-alpine34"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1404"
+  - TEST_COMMAND="bundle exec kitchen test basic-server-ubuntu1604"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-alpine34"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1404"
+  - TEST_COMMAND="bundle exec kitchen test basic-agent-ubuntu1604"
+  - TEST_COMMAND="bundle exec kitchen test tags-alpine34"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1404"
+  - TEST_COMMAND="bundle exec kitchen test tags-ubuntu1604"
   #- TEST_COMMAND="./test/cluster_test.sh"
 
 before_install:

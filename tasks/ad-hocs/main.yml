@@ -5,5 +5,5 @@
   when: consul_adhoc_build_raft_peers
 
 - name: adhocs | include clear data dir
-  include: clear_data_dir.yml
+  include: clear-data-dir.yml
   when: consul_adhoc_clear_data_dir

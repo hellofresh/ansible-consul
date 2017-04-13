@@ -1,0 +1,19 @@
+#!/bin/sh
+#
+# THIS SCRIPT IS NOT intended to run directly. Use service instead
+#
+
+NAME="consul-template"
+CONSUL_LOG_FILE="{{ consul_template_log_file }}"
+CONSUL_BIN="{{ consul_bin_dir }}"
+
+# Make sure to use all available proc
+# https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8
+export GOMAXPROCS="$(grep -c ^processor /proc/cpuinfo)"
+
+# Run
+echo "$(date) **** Consul-template start" >> "${CONSUL_LOG_FILE}"
+exec "${CONSUL_BIN}"/"${NAME}" -config=/etc/consul-template.conf >> "${CONSUL_LOG_FILE}" 2>&1
+RC="$?"
+echo "$(date) **** Consul-template ended with ${RC}" >> "${CONSUL_LOG_FILE}"
+exit "${RC}"

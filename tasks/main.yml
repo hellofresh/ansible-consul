@@ -2,41 +2,82 @@
 
 - name: Include Ad-hoc
   include: ad-hocs/main.yml
-  when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear_data_dir is defined and consul_adhoc_clear_data_dir
+  when: consul_adhoc_build_raft_peers is defined and consul_adhoc_build_raft_peers or consul_adhoc_clear-data-dir is defined and consul_adhoc_clear-data-dir
 
-- name: Ensure prerequisites packages exists
-  apt:
-    name="{{ item }}"
-  with_items:
-    - unzip
+- name: Include Packages
+  include: install/packages.yml
 
 - name: Include IP match
-  include: ip_match.yml
+  include: ip-match.yml
   when: consul_network_autobind is defined and consul_network_autobind
 
 - name: Include install main file
   include: install/main.yml
 
 - name: Include consul service
-  include: consul_services.yml
+  include: consul-services.yml
   when: consul_producer
 
   # At this point we should flush handler
 - meta: flush_handlers
 
-- name: Ensure consul service is running
-  service:
-    name="consul"
-    state="started"
+# block using service service
+- block:
 
-- name: Ensure consul-template service is Enable and Started
-  service:
-    name="consul-template"
-    state="started"
-  when: consul_consumer
+  - name: Ensure consul service is running (service)
+    service:
+      name="consul"
+      state="started"
 
-- name: Ensure haproxy service is Enable and Started
-  service:
-    name="haproxy"
-    state="started"
-  when: consul_consumer
+  - name: Ensure haproxy service is Enable and Started (service)
+    service:
+      name="haproxy"
+      state="started"
+    when: consul_consumer
+
+  - name: Ensure consul-template service is Enable and Started (service)
+    service:
+      name="consul-template"
+      state="started"
+    when: consul_consumer
+
+  when: "consul_service == 'service'"
+# end block using service service
+
+
+# block using service s6
+- block:
+
+  - name: Ensure consul service is running (s6)
+    s6:
+      name="consul"
+      state="started"
+      service_src="{{ consul_s6_servicedir }}"
+      service_dir="{{ consul_s6_servicedir }}"
+
+  - name: Ensure haproxy-current service is Enable and Started (s6)
+    s6:
+      name="haproxy-current"
+      state="started"
+      service_src="/"
+      service_dir="/"
+    when: consul_consumer
+
+  - name: Ensure haproxy-alt service is Disabled (s6)
+    s6:
+      name="haproxy-alt"
+      state="stopped"
+      service_src="/"
+      service_dir="/"
+    when: consul_consumer
+
+  - name: Ensure consul-template service is Enable and Started (s6)
+    s6:
+      name="consul-template"
+      state="started"
+      service_src="{{ consul_s6_servicedir }}"
+      service_dir="{{ consul_s6_servicedir }}"
+    when: consul_consumer
+
+  when: "consul_service == 's6'"
+# end block using service s6

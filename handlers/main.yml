@@ -1,28 +1,92 @@
 ---
 
+  # Place holder to dispatch multi handler
 - name: restart consul service
+  debug:
+    msg="Notifier restart consul service"
+  changed_when: true
+  notify:
+    - restart consul service (service)
+    - Reload s6 service
+    - restart consul service (s6)
+
+- name: restart consul service (service)
   service:
     name="consul"
     state="restarted"
     enabled="yes"
+  when: "consul_service == 'service'"
+
+- name: Reload s6 service
+  shell: s6-svscanctl -a {{ consul_s6_servicedir }}
+  when: "consul_service == 's6'"
+
+- name: restart consul service (s6)
+  s6:
+    name="consul"
+    state="restarted"
+    service_src="{{ consul_s6_servicedir }}"
+    service_dir="{{ consul_s6_servicedir }}"
+  when: "consul_service == 's6'"
+
+- name: reload consul service
+  debug:
+    msg="Notifier reload consul service"
+  changed_when: true
+  notify:
+    - reload consul service (service)
+    - Reload s6 service
+    - restart consul service (s6)
 
   #TODO: At the moment restart and reload do same thing until we fix kill -HUP option
-- name: reload consul service
+- name: reload consul service (service)
   service:
     name="consul"
     state="restarted"
+  when: "consul_service == 'service'"
 
 - name: restart consul-template service
+  debug:
+    msg="Notifier restart consul-template service"
+  changed_when: true
+  notify:
+    - restart consul-template service (service)
+    - restart consul-template service (s6)
+
+- name: restart consul-template service (service)
   service:
     name="consul-template"
     state="restarted"
     enabled="yes"
+  when: "consul_service == 'service'"
+
+- name: restart consul-template service (s6)
+  s6:
+    name="consul-template"
+    state="restarted"
+    service_src="{{ consul_s6_servicedir }}"
+    service_dir="{{ consul_s6_servicedir }}"
+  when: "consul_service == 's6'"
 
 - name: reload haproxy service
+  debug:
+    msg="Notifier reloaded haproxy service"
+  changed_when: true
+  notify:
+    - reload haproxy service (service)
+    - Reload s6 service
+    - reload haproxy service (s6)
+
+- name: reload haproxy service (service)
   service:
     name="haproxy"
     state="reloaded"
     enabled="yes"
+  when: "consul_service == 'service'"
+
+- name: reload haproxy service (s6)
+  shell: "{{ consul_bin_dir }}/haproxy-reload"
+  when: "consul_service == 's6'"
 
 - name: reload consul service config
   command: pkill -1 consul

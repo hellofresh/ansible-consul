@@ -1,24 +1,27 @@
 ---
 
+## Versions to install
 consul_agent_version                : "0.7.5"
 consul_template_version             : "0.18.1"
 
+## Node name
 consul_node_name                    : "{{ inventory_hostname }}"
 
-# Type of installation
+## Type of installation
 consul_server                       : false
 consul_consumer                     : false
 consul_producer                     : false
 consul_ui                           : false
 
-#
+## Services
 consul_consumer_services            : []
 consul_producer_services            : []
 
-# Consul Domain
+## Consul Domain
 consul_datacenter                   : "default"
 consul_domain                       : "consul."
 
+## Consul agent configuration
 #consul_start_join                   : [ "127.0.0.1" ]
 consul_servers_list                 : [ "127.0.0.1" ] # you can use ansible groups "{{ groups['consul_servers'] }}"
 consul_rejoin_after_leave           : true
@@ -73,8 +76,8 @@ consul_template_consul_port         : "8500"
 consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
-                                        command     : "{{ consul_bin_dir }}/haproxy_reload"
-                                        jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+                                        command     : "{{ consul_bin_dir }}/haproxy-reload"
+                                        jtemplate   : "haproxy.ctmp.j2"
 
 consul_template_log_level           : "warn"
 
@@ -126,3 +129,7 @@ consul_haproxy_stats_uri            : "/"
 
 # Ad-hoc commands RUN WITH CARE
 consul_adhoc_build_raft_peers       : False
+
+# Consul supervisor service (service, s6)
+consul_service                      : "service"
+consul_s6_servicedir                : "/var/run/s6/services"

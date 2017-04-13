@@ -1,7 +1,5 @@
 require_relative '../../helper_spec.rb'
 
-
-
 server_port = 8300
 
 describe 'consul server' do
@@ -14,10 +12,11 @@ describe 'consul server' do
       it { should_not be_listening.on('127.0.0.1') }
     end
   end
-
-  describe service('consul') do
-    it { should be_enabled }
-    it { should be_running }
+  if %w(ubuntu).include? os[:family]
+    describe service('consul') do
+      it { should be_enabled }
+      it { should be_running }
+    end
   end
 
   describe user('consul') do

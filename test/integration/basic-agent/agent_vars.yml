@@ -3,6 +3,7 @@ consul_server               : True
 consul_bootstrap_expect     : 1
 
 consul_ui                   : false
+consul_haproxy_stats_add    : "0.0.0.0"
 
 consul_services             :
   # External service i.e. hellofresh

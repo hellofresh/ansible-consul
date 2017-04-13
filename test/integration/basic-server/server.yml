@@ -4,8 +4,6 @@
   hosts: all
   become: True
   gather_facts: false
-  tasks:
-    - include: ../ubuntu-test-tools.yml
 
 - name: Server
   hosts: all
@@ -14,5 +12,6 @@
     consul_server               : True
     consul_bootstrap_expect     : 1
     consul_ui                   : true
+    consul_haproxy_user         : "kitchen"
   roles :
     - ansible-consul

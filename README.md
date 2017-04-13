@@ -96,7 +96,7 @@ consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
                                         command     : "haproxy -f /etc/haproxy/haproxy.cfg -c && sudo service haproxy reload"
-                                        jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+                                        jtemplate   : "haproxy.ctmp.j2"
 
 ## Telemetry
 # Enable telemetry
@@ -178,8 +178,8 @@ consul_template_consul_port         : "8500"
 consul_template_templates           :
                                       - source      : "{{ consul_template_haproxy_file }}"
                                         destination : "/etc/haproxy/haproxy.cfg"
-                                        command     : "{{ consul_bin_dir }}/haproxy_reload"
-                                        jtemplate   : "{{ path_for_template }}haproxy.ctmp.j2"
+                                        command     : "{{ consul_bin_dir }}/haproxy-reload"
+                                        jtemplate   : "haproxy.ctmp.j2"
 
 consul_template_log_level           : "warn"
 

@@ -1,0 +1,24 @@
+# {{ ansible_managed }}
+{% if consul_service == 'service' %}
+{{ consul_user }} ALL=NOPASSWD:/usr/sbin/service haproxy reload
+{% elif consul_service == 's6' %}
+# TODO: Should probably use alaises. Keeping permission it open is not cool :(
+{{ consul_user }} ALL=NOPASSWD:/bin/s6-svc
+{{ consul_user }} ALL=NOPASSWD:/bin/s6-svok
+{{ consul_user }} ALL=NOPASSWD:/bin/ln
+
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svc -O /haproxy-current
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svc -u /haproxy-current
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svok /haproxy-current
+
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svc -O /haproxy-alt
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svc -u /haproxy-alt
+# {{ consul_user }} ALL=NOPASSWD:/bin/s6-svok /haproxy-alt
+
+# {{ consul_user }} ALL=NOPASSWD:/bin/ln -sfn {{ consul_s6_servicedir }}/haproxy1 /haproxy-current
+# {{ consul_user }} ALL=NOPASSWD:/bin/ln -sfn {{ consul_s6_servicedir }}/haproxy2 /haproxy-current
+# {{ consul_user }} ALL=NOPASSWD:/bin/ln -sfn {{ consul_s6_servicedir }}/haproxy1 /haproxy-alt
+# {{ consul_user }} ALL=NOPASSWD:/bin/ln -sfn {{ consul_s6_servicedir }}/haproxy2 /haproxy-alt
+{{ consul_user }} ALL=NOPASSWD:/usr/bin/whoami
+Defaults:{{ consul_user }}        !requiretty
+{% endif %}

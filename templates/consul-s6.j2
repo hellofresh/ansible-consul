@@ -1,0 +1,4 @@
+#!/usr/bin/execlineb -P
+
+s6-setuidgid {{ consul_user }}
+{{ consul_bin_dir }}/consul_agent_run.sh

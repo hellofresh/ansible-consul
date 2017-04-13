@@ -18,7 +18,8 @@ global
     user    {{ consul_haproxy_user }}
     group   {{ consul_haproxy_user }}
     maxconn {{ consul_haproxy_maxconn }}
-{{ flatten_value('log', consul_haproxy_log) }}
+{# TODO: find a way around it. Horrible hack to avoid having alpine install rsyslog #}
+{{ flatten_value('log', consul_haproxy_log) if ansible_distribution == 'Ubuntu' else '' }}
     stats  {{ consul_haproxy_stats_socket }}
 {% if consul_haproxy_extra_global is defined %}
 {% for key, value in consul_haproxy_extra_global.iteritems() %}
