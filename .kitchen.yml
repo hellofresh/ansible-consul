@@ -42,6 +42,17 @@ platforms                 :
    provisioner            :
      ansible_playbook_bin : "$(avm path v2.0)ansible-playbook"
 
+ - name                   : "ubuntuS61604-v2.2"
+   driver_config          :
+     image                : quay.io/hellofresh/ubuntu:16.04
+     platform             : ubuntu
+     provision_command:
+      - test -e /usr/bin/python || (apt-get -y update && apt-get install -y python-minimal)
+      - test -e /usr/bin/socat  || (apt-get -y update && apt-get install -y iproute2 net-tools netcat socat)
+   provisioner            :
+     ansible_playbook_bin : "$(avm path v2.2)ansible-playbook"
+     extra_vars           : {consul_service: s6, consul_s6_servicedir: /var/run/s6/services}
+
  - name                   : "alpine3.4-v2.2"
    driver_config          :
      image                : harningt/base-alpine-s6-overlay:3.4
