@@ -109,6 +109,8 @@ consul_haproxy_default_options      :
                                       - "dontlognull"
                                       - "log-separate-errors"
                                       - "redispatch"
+                                      - "dontlog-normal"
+                                      - "httplog"
 consul_haproxy_default_timeout      :
                                       - "connect 5s"
                                       - "check   5s"
