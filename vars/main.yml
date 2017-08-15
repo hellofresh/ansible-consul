@@ -8,8 +8,6 @@ consul_agent_archive                : "consul_{{ consul_agent_version }}_linux_a
 consul_agent_download_url           : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_agent_archive }}"
 consul_template_archive             : "consul-template_{{ consul_template_version }}_linux_amd64.zip"
 consul_template_download_url        : "https://releases.hashicorp.com/consul-template/{{ consul_template_version }}/{{ consul_template_archive }}"
-consul_ui_archive                   : "consul_{{ consul_agent_version }}_web_ui.zip"
-consul_ui_download_url              : "https://releases.hashicorp.com/consul/{{ consul_agent_version }}/{{ consul_ui_archive }}"
 
 # For adhoc
 consul_list_of_servers_variables    : []

@@ -11,11 +11,8 @@
     consul_datacenter           : "cluster"
     consul_domain               : "cluster.example.com"
     consul_encrypt              : "ZiDakXKv9D3MvL1UKkO1ew=="
-
-
     consul_server_port_server   : 8300
-    consul_rpc_port             : 8400
-    consul_ui_http_port         : 8500
+    consul_http_port            : 8500
   pre_tasks:
     - name: Update apt cache
       apt:

@@ -76,7 +76,6 @@ consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
 consul_data_dir                     : "{{ consul_home_dir }}/data"
 consul_template_dir                 : "{{ consul_home_dir }}/templates"
 consul_log_dir                      : "/var/log/consul"
-consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
 # Consul files
 consul_config_agent_file            : "/etc/consul.conf"
@@ -137,9 +136,8 @@ consul_log_level                    : "INFO"
 consul_log_syslog                   : false
 
 consul_server_port_server           : 8300
-consul_rpc_port                     : 8400
-consul_ui_http_port                 : 8500
-consul_ui_https_port                : -1
+consul_http_port                    : 8500
+consul_https_port                   : -1
 
 # Consul Network                    :
 consul_network_bind                 : "" # "0.0.0.0"
@@ -155,7 +153,6 @@ consul_tmp_dir                      : "{{ consul_home_dir }}/tmp"
 consul_data_dir                     : "{{ consul_home_dir }}/data"
 consul_template_dir                 : "{{ consul_home_dir }}/templates"
 consul_log_dir                      : "/var/log/consul"
-consul_ui_dir                       : "{{ consul_home_dir }}/ui"
 consul_config_dir                   : "/etc/consul.d"
 # if you leave emtpy only "healthy" and passing services will be returned. You can also use "passing,warning" or "all"
 # For more info check https://github.com/hashicorp/consul-template#service
@@ -238,14 +235,12 @@ https://www.consul.io/docs/agent/checks.html
 
 Road map
 -----
-- Support tag filtering on consumer
 - Support agent retry
 - Support template retry
-- Be docker friendly (Alpine)
-
 
 License
 -------
+
 MIT
 
 
