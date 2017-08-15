@@ -42,6 +42,14 @@
   },
 {% endif %}
 
+{# LOGGING #}
+{% if consul_syslog is defined and consul_syslog %}
+  "enable_syslog": true,
+{% endif %}
+{% if consul_syslog_facility is defined and consul_syslog_facility %}
+  "syslog_facility": "{{ consul_syslog_facility}}",
+{% endif %}
+
 {% if consul_encrypt is defined %}
   "encrypt": "{{ consul_encrypt }}",
 {% endif %}
