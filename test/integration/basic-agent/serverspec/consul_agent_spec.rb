@@ -39,10 +39,6 @@ describe 'consul agent' do
     it { should be_listening.with('tcp') }
   end
 
-  describe port(8400) do
-    it { should be_listening.on('127.0.0.1').with('tcp') }
-  end
-
   describe port(8500) do
     it { should be_listening.on('127.0.0.1').with('tcp') }
   end

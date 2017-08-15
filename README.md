@@ -136,7 +136,6 @@ consul_log_level                    : "INFO"
 consul_log_syslog                   : false
 
 consul_server_port_server           : 8300
-consul_rpc_port                     : 8400
 consul_http_port                    : 8500
 consul_https_port                   : -1
 

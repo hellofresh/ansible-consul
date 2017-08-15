@@ -36,16 +36,12 @@ describe 'consul server' do
     it { should be_listening.with('tcp') }
   end
 
-  describe port(8400) do
-    it { should be_listening.on('127.0.0.1').with('tcp') }
-  end
-
   describe port(8500) do
     it { should be_listening.on('127.0.0.1').with('tcp') }
   end
 
   describe 'UI should be disabled' do
-    describe command "curl -s -I http://127.0.0.1:8500/ui/" do 
+    describe command "curl -s -I http://127.0.0.1:8500/ui/" do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain 'HTTP/1.1 404 Not Found' }
     end
