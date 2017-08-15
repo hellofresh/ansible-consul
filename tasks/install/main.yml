@@ -6,10 +6,6 @@
 - name: install | main | include consul agent
   include: consul-agent.yml
 
-- name: install | main | include consul ui
-  include: consul_ui.yml
-  when: consul_ui
-
 - name: install | main | include consul template
   include: consul-template.yml
   when: consul_consumer

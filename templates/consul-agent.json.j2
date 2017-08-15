@@ -9,9 +9,7 @@
   "enable_syslog": {{ consul_log_syslog | to_json  }},
   "rejoin_after_leave": {{ consul_rejoin_after_leave | to_json }},
   "datacenter": "{{ consul_datacenter }}",
-{% if consul_ui == true %}
-  "ui_dir": "{{ consul_ui_dir }}",
-{% endif %}
+  "ui": {{ consul_ui  | to_json }},
 {# Either use consul_start_join or consul_retry_join #}
 {% if consul_retry_join is defined and consul_retry_join %}
   "retry_join": {{ consul_servers_list | to_json }},
@@ -24,8 +22,8 @@
 {# Ports #}
   "ports": {
     "rpc": {{ consul_rpc_port }},
-    "http": {{ consul_ui_http_port }},
-    "https": {{ consul_ui_https_port }},
+    "http": {{ consul_http_port }},
+    "https": {{ consul_https_port }},
     "server": {{ consul_server_port_server }}
   },
 
