@@ -23,7 +23,7 @@
 
 - name: install | consul agent | Download and unpack consul archive (if needed with curl)
   shell: |
-          curl {{ consul_agent_download_url }} -o {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul-template.zip
+          curl {{ consul_agent_download_url }} -o {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul.zip
           unzip {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul.zip -d {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/
   when: agent_download | failed
 
