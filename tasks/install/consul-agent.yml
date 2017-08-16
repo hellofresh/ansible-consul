@@ -17,7 +17,15 @@
     dest="{{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/"
     copy=false
     owner="{{ consul_user }}"
+  register: agent_download
+  ignore_errors: true
   when: not consul_agent_version_binary.stat.exists
+
+- name: install | consul agent | Download and unpack consul archive (if needed with curl)
+  shell: |
+          curl {{ consul_agent_download_url }} -o {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul-template.zip
+          unzip {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul.zip -d {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/
+  when: agent_download | failed
 
 - name: install | consul agent | link binary (if needed)
   command: mv {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul {{ consul_bin_dir }}/consul-{{consul_agent_version}}
