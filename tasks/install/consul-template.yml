@@ -1,25 +1,46 @@
 ---
 
-- name: install | consul template install | Check tempalate archive stat
+- name: install | consul template | Check target file
   stat:
-    path="{{ consul_tmp_dir }}/{{ consul_template_archive }}"
-  register: consul_template_archive_stat
+    path="{{ consul_bin_dir }}/consul-template"
+  register: consul_template_target_link
 
-- name: install | consul template | Download consul template (if needed)
-  get_url:
-    url="{{ consul_template_download_url }}"
-    dest="{{ consul_tmp_dir }}"
-    owner="{{ consul_user }}"
-  register: consul_template_get
-  when: consul_template_archive_stat.stat.exists == False
+- name: install | consul template | Remove target file (if not symlink)
+  file:
+    path="{{ consul_bin_dir }}/consul-template"
+    state="absent"
+  when: not consul_template_target_link.stat.islnk is defined or not consul_template_target_link.stat.islnk
 
-- name: install | consul template | Unpack consul arcive (if needed)
+- name: install | consul template | Check template binary
+  stat:
+    path="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
+  register: consul_template_version_binary
+
+- name: install | consul template | Ensure download directory exists
+  file:
+    path="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
+    state=directory
+    mode=0755
+
+- name: install | consul template | Download and unpack consul--template archive (if needed)
   unarchive:
-    src="{{ consul_tmp_dir }}/{{ consul_template_archive }}"
-    dest="{{ consul_bin_dir }}"
-    copy="no"
+    src="{{ consul_template_download_url }}"
+    dest="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
+    copy=false
     owner="{{ consul_user }}"
-  when: consul_template_get | changed
+  when: not consul_template_version_binary.stat.exists
+
+- name: install | consul template | link binary (if needed)
+  command: mv {{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}/consul-template {{ consul_bin_dir }}/consul-template-{{consul_template_version}}
+  when: not consul_template_version_binary.stat.exists
+  notify:
+    - restart consul service
+
+- name: install | consul template | Consul template link binary
+  file:
+    src="{{ consul_bin_dir }}/consul-template-{{ consul_template_version }}"
+    dest="{{ consul_bin_dir }}/consul-template"
+    state="link"
   notify:
     - restart consul service
 
@@ -102,7 +123,7 @@
     - restart consul-template service
     - reload haproxy service
 
-- name: install | consul template | Ensure HAproxy reload script is deployed
+- name: install | consul template | Ensure HAProxy reload script is deployed
   template:
     src="haproxy-reload.j2"
     dest="{{ consul_bin_dir }}/haproxy-reload"
