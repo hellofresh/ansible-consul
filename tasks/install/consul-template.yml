@@ -1,19 +1,8 @@
 ---
 
-- name: install | consul template | Check target file
-  stat:
-    path="{{ consul_bin_dir }}/consul-template"
-  register: consul_template_target_link
-
-- name: install | consul template | Remove target file (if not symlink)
-  file:
-    path="{{ consul_bin_dir }}/consul-template"
-    state="absent"
-  when: not consul_template_target_link.stat.islnk is defined or not consul_template_target_link.stat.islnk
-
 - name: install | consul template | Check template binary
   stat:
-    path="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
+    path="{{ consul_bin_dir }}/consul-template-{{ consul_template_version }}"
   register: consul_template_version_binary
 
 - name: install | consul template | Ensure download directory exists
@@ -28,13 +17,32 @@
     dest="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
     copy=false
     owner="{{ consul_user }}"
+  register: template_download
+  ignore_errors: true
   when: not consul_template_version_binary.stat.exists
+
+- name: install | consul template | Download and unpack consul archive (if needed with curl)
+  shell: |
+          curl -s {{ consul_template_download_url }} -o {{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}/consul-template.zip
+          unzip {{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}/consul-template.zip -d {{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}/
+  when: template_download | failed
 
 - name: install | consul template | link binary (if needed)
   command: mv {{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}/consul-template {{ consul_bin_dir }}/consul-template-{{consul_template_version}}
   when: not consul_template_version_binary.stat.exists
   notify:
     - restart consul service
+
+- name: install | consul template | Check target file
+  stat:
+    path="{{ consul_bin_dir }}/consul-template"
+  register: consul_template_target_link
+
+- name: install | consul template | Remove target file (if not symlink)
+  file:
+    path="{{ consul_bin_dir }}/consul-template"
+    state="absent"
+  when: not consul_template_target_link.stat.islnk is defined or not consul_template_target_link.stat.islnk
 
 - name: install | consul template | Consul template link binary
   file:
