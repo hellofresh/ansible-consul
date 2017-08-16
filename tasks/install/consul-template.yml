@@ -38,12 +38,11 @@
 
 - name: install | consul template | Consul template link binary
   file:
-    src="{{ consul_bin_dir }}/consul-template"
+    src="{{ consul_bin_dir }}/consul-template-{{ consul_template_version }}"
     dest="{{ consul_bin_dir }}/consul-template"
     state="link"
   notify:
     - restart consul service
-
 
 - name: install | consul template | Ensure consul-template configuration file is deployed
   template:
