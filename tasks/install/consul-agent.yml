@@ -1,16 +1,5 @@
 ---
 
-- name: install | consul agent | Check target file
-  stat:
-    path="{{ consul_bin_dir }}/consul"
-  register: consul_agent_target_link
-
-- name: install | consul agent | Remove target file (if not symlink)
-  file:
-    path="{{ consul_bin_dir }}/consul"
-    state="absent"
-  when: not consul_agent_target_link.stat.islnk is defined or not consul_agent_target_link.stat.islnk
-
 - name: install | consul agent | Check agent binary
   stat:
     path="{{ consul_bin_dir }}/consul-{{consul_agent_version}}"
@@ -35,6 +24,17 @@
   when: not consul_agent_version_binary.stat.exists
   notify:
     - restart consul service
+
+- name: install | consul agent | Check target file
+  stat:
+    path="{{ consul_bin_dir }}/consul"
+  register: consul_agent_target_link
+
+- name: install | consul agent | Remove target file (if not symlink)
+  file:
+    path="{{ consul_bin_dir }}/consul"
+    state="absent"
+  when: not consul_agent_target_link.stat.islnk is defined or not consul_agent_target_link.stat.islnk
 
 - name: install | consul agent | Consul link binary
   file:
