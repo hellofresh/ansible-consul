@@ -13,7 +13,7 @@
 
 - name: install | consul template | Check template binary
   stat:
-    path="{{ consul_tmp_dir }}/consul-template-{{ consul_template_version }}"
+    path="{{ consul_bin_dir }}/consul-template-{{ consul_template_version }}"
   register: consul_template_version_binary
 
 - name: install | consul template | Ensure download directory exists
