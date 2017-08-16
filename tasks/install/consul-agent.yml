@@ -1,25 +1,46 @@
 ---
 
-- name: install | consul agent | Check agent archive stat
+- name: install | consul agent | Check target file
   stat:
-    path="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
-  register: consul_agent_archive_stat
+    path="{{ consul_bin_dir }}/consul"
+  register: consul_agent_target_link
 
-- name: install | consul agent | Download consul agent (if needed)
-  get_url:
-    url="{{ consul_agent_download_url }}"
-    dest="{{ consul_tmp_dir }}"
-    owner="{{ consul_user }}"
-  register: consul_agent_get
-  when: consul_agent_archive_stat.stat.exists == False
+- name: install | consul agent | Remove target file (if not symlink)
+  file:
+    path="{{ consul_bin_dir }}/consul"
+    state="absent"
+  when: not consul_agent_target_link.stat.islnk is defined or not consul_agent_target_link.stat.islnk
 
-- name: install | consul agent | Unpack consul arcive (if needed)
+- name: install | consul agent | Check agent binary
+  stat:
+    path="{{ consul_bin_dir }}/consul-{{consul_agent_version}}"
+  register: consul_agent_version_binary
+
+- name: install | consul agent | Ensure download directory exists
+  file:
+    path="{{ consul_tmp_dir }}/consul-{{ consul_agent_version }}"
+    state=directory
+    mode=0755
+
+- name: install | consul agent | Download and unpack consul archive (if needed)
   unarchive:
-    src="{{ consul_tmp_dir }}/{{ consul_agent_archive }}"
-    dest="{{ consul_bin_dir }}"
-    copy="no"
+    src="{{ consul_agent_download_url }}"
+    dest="{{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/"
+    copy=false
     owner="{{ consul_user }}"
-  when: consul_agent_get | changed
+  when: not consul_agent_version_binary.stat.exists
+
+- name: install | consul agent | link binary (if needed)
+  command: mv {{ consul_tmp_dir }}/consul-{{ consul_agent_version }}/consul {{ consul_bin_dir }}/consul-{{consul_agent_version}}
+  when: not consul_agent_version_binary.stat.exists
+  notify:
+    - restart consul service
+
+- name: install | consul agent | Consul link binary
+  file:
+    src="{{ consul_bin_dir }}/consul-{{consul_agent_version}}"
+    dest="{{ consul_bin_dir }}/consul"
+    state="link"
   notify:
     - restart consul service
 
