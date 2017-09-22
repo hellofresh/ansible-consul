@@ -61,11 +61,18 @@ listen stats
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
+    <% scratch.Set "weightValue" "100" -%>
+    <% range .Tags -%>
+    <% if . | contains "WEIGHT:" -%>
+    <% $weightValue := . | split ":" -%>
+    <% $weightValue := index $weightValue 1 -%>
+    <% scratch.Set "weightValue" $weightValue -%>
+    <% end -%><% end -%>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
 
 {% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
 
-    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
+    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
 {% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
 
@@ -77,7 +84,14 @@ backend {{ consul_services[service_name].name }}
 backend {{ consul_services[service_name].name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
-    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}<%end%>
+    <% scratch.Set "weightValue" "100" -%>
+    <% range .Tags -%>
+    <% if . | contains "WEIGHT:" -%>
+    <% $weightValue := . | split ":" -%>
+    <% $weightValue := index $weightValue 1 -%>
+    <% scratch.Set "weightValue" $weightValue -%>
+    <% end -%><% end -%>
+    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}<%end%>
 {%  endif %}
 
 frontend {{ consul_services[service_name].name }}

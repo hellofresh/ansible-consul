@@ -5,7 +5,7 @@ describe 'superssh service (localport option)' do
     describe command 'curl -s -v http://127.0.0.1:8500/v1/catalog/service/superssh-different-name' do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain '"ServiceName":"superssh-different-name"' }
-      its(:stdout) { should contain '"ServiceTags":\["test"]' }
+      its(:stdout) { should contain '"ServiceTags":\["test","WEIGHT:77"]' }
       its(:stdout) { should contain '"ServicePort":22' }
     end
   end
@@ -112,6 +112,18 @@ describe 'hellofresh service (normal port option)' do
     let(:pre_command) { 'sleep 2' }
     describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep hellofresh,hellofresh | grep UP" do
       its(:exit_status) { should eq 0 }
+    end
+  end
+
+  describe 'hellofresh backend should have default weight' do
+    describe command 'echo "show servers state hellofresh" | socat unix-connect:/var/lib/haproxy/stats.sock stdio | tail -n2 | head -1  | awk \'{print $8 " " $9}\'' do
+      its(:stdout) { should contain '100 100'}
+    end
+  end
+
+  describe 'superssh-different-name backend should have set weight' do
+    describe command 'echo "show servers state superssh-different-name" | socat unix-connect:/var/lib/haproxy/stats.sock stdio | tail -n2 | head -1  | awk \'{print $8 " " $9}\'' do
+      its(:stdout) { should contain '77 77'}
     end
   end
 
