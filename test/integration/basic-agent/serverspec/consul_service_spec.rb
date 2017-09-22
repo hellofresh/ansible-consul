@@ -116,14 +116,14 @@ describe 'hellofresh service (normal port option)' do
   end
 
   describe 'hellofresh backend should have default weight' do
-    describe command 'echo "show servers state hellofresh" | socat unix-connect:/var/lib/haproxy/stats.sock stdio | tail -n2 | head -1  | awk \'{print $8 " " $9}\'' do
-      its(:stdout) { should contain '100 100'}
+    describe command 'echo "get weight hellofresh/`cat /etc/haproxy/haproxy.cfg  | grep "server hellofresh" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 100' do
+      its(:stdout) { should contain '100 \(initial 100\)'}
     end
   end
 
   describe 'superssh-different-name backend should have set weight' do
-    describe command 'echo "show servers state superssh-different-name" | socat unix-connect:/var/lib/haproxy/stats.sock stdio | tail -n2 | head -1  | awk \'{print $8 " " $9}\'' do
-      its(:stdout) { should contain '77 77'}
+    describe command 'echo "get weight superssh-different-name/`cat /etc/haproxy/haproxy.cfg  | grep "server superssh-different-name" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 77' do
+      its(:stdout) { should contain '77 \(initial 77\)'}
     end
   end
 
