@@ -23,6 +23,7 @@ consul_services             :
     name                    : "superssh-different-name"
     tags                    :
                               - "test"
+    weight                  : 77
     port                    : 22
     local_port              : 2222
     check                   :

@@ -13,6 +13,7 @@ consul_services       :
                          - "v1.1.5"
     port              : 80
     address           : "hellofresh.com"
+    weight            : "77"
     check             :
         script        : "curl https://www.hellofresh.com > /dev/null"
         interval      : "120s"

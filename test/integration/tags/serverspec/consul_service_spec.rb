@@ -5,7 +5,7 @@ describe 'hellofresh service' do
   describe command 'curl -s -v http://127.0.0.1:8500/v1/health/service/hellofresh' do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should contain '"ServiceName":"hellofresh"' }
-    its(:stdout) { should contain '"Tags":\["test","v1.1.5"]' }
+    its(:stdout) { should contain '"Tags":\["test","v1.1.5","WEIGHT:77"]' }
     its(:stdout) { should contain '"Port":80' }
     its(:stdout) { should contain '"Status":"passing"' }
   end
