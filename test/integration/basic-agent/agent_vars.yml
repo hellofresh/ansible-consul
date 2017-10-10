@@ -4,6 +4,8 @@ consul_bootstrap_expect     : 1
 
 consul_ui                   : false
 consul_haproxy_stats_add    : "0.0.0.0"
+environment_name            : "testing"
+fallback_envrionment        : "staging"
 
 consul_services             :
   # External service i.e. hellofresh
