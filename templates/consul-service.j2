@@ -7,18 +7,6 @@
     {% endif %}
 {% endif %}
 
-{% if environment_name is defined %}
-    {% set env_name = environment_name %}
-{% else %}
-    {% set env_name = fallback_environment %}
-{% endif %}
-
-{% if 'tags' in consul_services[item] %}
-    {% set _ = consul_services[item]['tags'].append(env_name) %}
-{% else %}
-    {% set _ = consul_services[item].update({'tags': [env_name]}) %}
-{% endif %}
-
 { {{ '' if consul_services[item].pop('haproxy', '') else '' }}
 "service": {{ consul_services[item] | to_nice_json }}
 }

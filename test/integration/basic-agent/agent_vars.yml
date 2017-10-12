@@ -5,7 +5,6 @@ consul_bootstrap_expect     : 1
 consul_ui                   : false
 consul_haproxy_stats_add    : "0.0.0.0"
 environment_name            : "testing"
-fallback_envrionment        : "staging"
 
 consul_services             :
   # External service i.e. hellofresh
@@ -14,6 +13,8 @@ consul_services             :
     port                    : 80
     local_port              : 8080
     address                 : "127.0.0.1"
+    tags                    :
+                               - "env:testing"
     check                   :
         script              : "curl http://127.0.0.1:8080 > /dev/null"
         interval            : "10s"
@@ -25,6 +26,7 @@ consul_services             :
     name                    : "superssh-different-name"
     tags                    :
                               - "test"
+                              - "env:testing"
     weight                  : 77
     port                    : 22
     local_port              : 2222
@@ -40,6 +42,7 @@ consul_services             :
     tags                    :
                                - "userdb"
                                - "v1.2"
+                               - "env:testing"
     port                    : 2122 # failing port :)
     check                   :
         script              : "netstat -ltnp | grep ':2123 ' > /dev/null 2>&1"
@@ -52,6 +55,7 @@ consul_services             :
     name                    : "superapp"
     tags                    :
                               - "v1"
+                              - "env:testing"
     port                    : 9999
     check                   :
         script              : "curl localhost:9999 > /dev/null 2>&1"
