@@ -66,11 +66,11 @@ listen stats
 {% set tags_contains = consumer_service.tags_contains | default(false) %}
 {% set tag_regex = consumer_service.tag_regex | default(false) %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
-# Service Config for {{ service_name  }}
-backend {{ consul_services[service_name].name }}
+# Service Config for {{ service_name }}
+backend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-
-    <% range service "{{ consul_services[service_name].name }}{{ consul_template_service_options_str }}" %>
+    <% scratch.Set "serviceFound" "False" -%>
+    <% range service "{{ service_name }}{{ consul_template_service_options_str }}" %>
     <% scratch.Set "weightValue" "100" -%>
     <% range .Tags -%>
     <% if . | contains "WEIGHT:" -%>
@@ -80,6 +80,7 @@ backend {{ consul_services[service_name].name }}
     <% end -%><% end -%>
 
     <% if .Tags | contains "env:{{ env_name }}" -%> # Match envrionment tag
+    <% scratch.Set "serviceFound" "True" -%>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
 
 {% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
@@ -89,11 +90,34 @@ backend {{ consul_services[service_name].name }}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
     <%end%>
     <% end -%>
+    <% $serviceFound := scratch.Get "serviceFound" -%>
+    <% if eq $serviceFound "False" -%>
+    <% range service "{{ service_name }}-{{ env_name }}{{ consul_template_service_options_str }}" %>
+    <% scratch.Set "weightValue" "100" -%>
+    <% range .Tags -%>
+    <% if . | contains "WEIGHT:" -%>
+    <% $weightValue := . | split ":" -%>
+    <% $weightValue := index $weightValue 1 -%>
+    <% scratch.Set "weightValue" $weightValue -%>
+    <% end -%><% end -%>
 
-frontend {{ consul_services[service_name].name }}
+    <% if .Tags | contains "env:{{ env_name }}" -%> # Match envrionment tag
+    <% scratch.Set "serviceFound" "True" -%>
+{% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
+
+{% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
+
+    server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
+{% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
+{% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
+    <%end%>
+   <% end -%>
+   <% end -%>
+
+frontend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
-    default_backend {{ consul_services[service_name].name }}
+    default_backend {{ service_name }}-{{ env_name }}
 
 {% endfor %}
 {% endif %}
