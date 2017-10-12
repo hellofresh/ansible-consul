@@ -3,6 +3,7 @@ consul_server               : True
 consul_bootstrap_expect     : 1
 consul_ui                   : true # disable
 consul_client_addr          : "0.0.0.0"
+fallback_environment        : "staging"
 consul_services       :
 #curl -s -v http://127.0.0.1:8500/v1/health/service/hellofresh
   # External service i.e. hellofresh
@@ -11,6 +12,7 @@ consul_services       :
     tags              :
                          - "test"
                          - "v1.1.5"
+                         - "env:staging"
     port              : 80
     address           : "hellofresh.com"
     weight            : "77"
@@ -26,6 +28,7 @@ consul_services       :
     tags              :
                          - "test"
                          - "v2.1.2"
+                         - "env:staging"
     port              : 22
     local_port        : 2222
     check             :
@@ -40,6 +43,7 @@ consul_services       :
     tags              :
                          - "test"
                          - "v3.9.2"
+                         - "env:staging"
     port              : 2122 # failing port :)
     check             :
         script        : "netstat -ltnp | grep ':2123 ' > /dev/null 2>&1"
@@ -53,6 +57,7 @@ consul_services       :
     tags              :
                          - "test"
                          - "v0.1.1"
+                         - "env:staging"
     port              : 9999
     check             :
         script        : "curl localhost:9999 > /dev/null 2>&1"

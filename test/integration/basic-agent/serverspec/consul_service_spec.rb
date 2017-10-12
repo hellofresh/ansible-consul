@@ -5,7 +5,9 @@ describe 'superssh service (localport option)' do
     describe command 'curl -s -v http://127.0.0.1:8500/v1/catalog/service/superssh-different-name' do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain '"ServiceName":"superssh-different-name"' }
-      its(:stdout) { should contain '"ServiceTags":\["test","WEIGHT:77"]' }
+      its(:stdout) { should match /"ServiceTags":\[.*"env:testing".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"WEIGHT:77".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"test".*/ }
       its(:stdout) { should contain '"ServicePort":22' }
     end
   end
@@ -43,7 +45,9 @@ describe 'superdb service (A failing service)' do
     describe command 'curl -s -v http://127.0.0.1:8500/v1/catalog/service/superdb' do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain '"ServiceName":"superdb"' }
-      its(:stdout) { should contain '"ServiceTags":\["userdb","v1.2"]' }
+      its(:stdout) { should match /"ServiceTags":\[.*"userdb".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"v1\.2".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"env:testing".*/ }
       its(:stdout) { should contain '"ServicePort":2122' }
     end
   end
