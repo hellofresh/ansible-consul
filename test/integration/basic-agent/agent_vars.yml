@@ -23,7 +23,7 @@ consul_services             :
       service_mode          : "http"
   # A local service superssh that uses localport
   superssh                  :
-    name                    : "superssh-different-name"
+    name                    : "superssh-testing"
     tags                    :
                               - "test"
                               - "env:testing"
