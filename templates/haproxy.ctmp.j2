@@ -101,7 +101,6 @@ backend {{ service_name }}-{{ env_name }}
     <% scratch.Set "weightValue" $weightValue -%>
     <% end -%><% end -%>
 
-    <% if .Tags | contains "env:{{ env_name }}" -%> # Match envrionment tag
     <% scratch.Set "serviceFound" "True" -%>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
 
@@ -111,7 +110,6 @@ backend {{ service_name }}-{{ env_name }}
 {% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
     <%end%>
-   <% end -%>
    <% end -%>
 
 frontend {{ service_name }}-{{ env_name }}
