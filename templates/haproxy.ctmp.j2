@@ -109,8 +109,8 @@ backend {{ service_name }}-{{ env_name }}
     server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
 {% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
-    <%end%>
-   <% end -%>
+    <%- end %>
+    <%- end %>
 
 frontend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
