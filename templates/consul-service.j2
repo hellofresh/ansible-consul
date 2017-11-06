@@ -7,6 +7,18 @@
     {% endif %}
 {% endif %}
 
+{% if 'local_port' in consul_services[item] %}
+    {% set local_port = consul_services[item].pop('local_port') %}
+{% else %}
+    {% set local_port = consul_services[item].get('port') %}
+{% endif %}
+
+{% if 'tags' in consul_services[item] %}
+    {% set _ = consul_services[item]['tags'].append("local_port:" ~ local_port ) %}
+{% else %}
+    {% set _ = consul_services[item].update({'tags': ['local_port:' ~ local_port]}) %}
+{% endif %}
+
 { {{ '' if consul_services[item].pop('haproxy', '') else '' }}
 "service": {{ consul_services[item] | to_nice_json }}
 }
