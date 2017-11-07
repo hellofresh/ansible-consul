@@ -70,7 +70,7 @@ listen stats
 backend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     <% scratch.Set "serviceFound" "False" -%>
-    <% scratch.Set "localPort" "False" -%>
+    <% scratch.Set "localPort" "{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}" -%>
     <% range service "{{ service_name }}{{ consul_template_service_options_str }}" -%>
     <% scratch.Set "weightValue" "100" -%>
     <% range .Tags -%>
@@ -117,12 +117,9 @@ backend {{ service_name }}-{{ env_name }}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
     <%- end %>
     <%- end %>
-<% $localPort := scratch.Get "localPort" -%>
-<% if ne $localPort "False" -%>
 frontend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     bind localhost:<% scratch.Get "localPort" %>
     default_backend {{ service_name }}-{{ env_name }}
-<% end %>
 {% endfor %}
 {% endif %}

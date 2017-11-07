@@ -62,9 +62,9 @@ describe 'superdb service (A failing service)' do
     end
   end
 
-  describe 'localport 2122 is not open by haproxy' do
-    describe command 'curl localhost:2122' do
-      its(:exit_status) { should eq 7 }
+  describe 'localport 2122 is open by haproxy' do
+    describe port(2122) do
+      it { should be_listening.on('127.0.0.1').with('tcp') }
     end
   end
 end
@@ -77,9 +77,9 @@ describe 'superapp service (a non advertised service)' do
     end
   end
 
-  describe 'localport 9999 is not open by haproxy' do
-    describe command 'curl localhost:9999' do
-      its(:exit_status) { should eq 7 }
+  describe 'localport 9999 is open by haproxy' do
+    describe port(9999) do
+      it { should be_listening.on('127.0.0.1').with('tcp') }
     end
   end
 end
@@ -128,15 +128,9 @@ describe 'hellofresh service (normal port option)' do
     end
   end
 
-  describe 'superdb backend should not exist' do
+  describe 'superdb backend should exist' do
     describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep superdb-testing,BACKEND" do
       its(:exit_status) { should eq 0 }
-    end
-  end
-
-  describe 'superdb frontend should not exist' do
-    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep superdb-testing,FRONTEND" do
-      its(:exit_status) { should eq 1 }
     end
   end
 

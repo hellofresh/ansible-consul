@@ -16,7 +16,7 @@ consul_services             :
     tags                    :
                                - "env:testing"
     check                   :
-        script              : "curl http://127.0.0.1:8080 > /dev/null"
+        script              : "curl http://127.0.0.1:80 > /dev/null"
         interval            : "10s"
     haproxy                 :
       server_options        : "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
