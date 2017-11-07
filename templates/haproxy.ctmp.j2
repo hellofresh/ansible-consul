@@ -70,21 +70,25 @@ listen stats
 backend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     <% scratch.Set "serviceFound" "False" -%>
-    <% range service "{{ service_name }}{{ consul_template_service_options_str }}" %>
+    <% scratch.Set "localPort" "{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}" -%>
+    <% range service "{{ service_name }}{{ consul_template_service_options_str }}" -%>
     <% scratch.Set "weightValue" "100" -%>
     <% range .Tags -%>
     <% if . | contains "WEIGHT:" -%>
     <% $weightValue := . | split ":" -%>
     <% $weightValue := index $weightValue 1 -%>
     <% scratch.Set "weightValue" $weightValue -%>
-    <% end -%><% end -%>
-
+    <% end -%>
+    <% if . | contains "local_port:" -%>
+    <% $localPort := . | split ":" -%>
+    <% $localPort := index $localPort 1 -%>
+    <% scratch.Set "localPort" $localPort -%>
+    <% end -%>
+    <% end -%>
     <% if .Tags | contains "env:{{ env_name }}" -%> # Match envrionment tag
     <% scratch.Set "serviceFound" "True" -%>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
-
 {% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
-
     server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
 {% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
@@ -99,23 +103,23 @@ backend {{ service_name }}-{{ env_name }}
     <% $weightValue := . | split ":" -%>
     <% $weightValue := index $weightValue 1 -%>
     <% scratch.Set "weightValue" $weightValue -%>
+    <% end -%>
+    <% if . | contains "local_port:" -%>
+    <% $localPort := . | split ":" -%>
+    <% $localPort := index $localPort 1 -%>
+    <% scratch.Set "localPort" $localPort -%>
     <% end -%><% end -%>
-
     <% scratch.Set "serviceFound" "True" -%>
 {% if tags_contains %}<%if .Tags | contains "{{ tags_contains}}"%> # Match tags_contains {{ tags_contains }}{% endif %}
-
 {% if tag_regex %}<%if .Tags | join " "  | regexMatch "{{ tag_regex }}"%> # Match tag_regex {{ tag_regex }}{% endif %}
-
     server <%.ID%>_<%.Address%>:<%.Port%> <%.Address%>:<%.Port%> {% if consul_haproxy_default_balance == 'roundrobin' %}weight <% scratch.Get "weightValue" %> {% endif %} {{ haproxy_setting.server_options | default(consul_haproxy_default_server_options) }}
 {% if tag_regex %}<%else%> # Did not match tag_regex {{ tag_regex }}<%end%>{% endif %}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
     <%- end %>
     <%- end %>
-
 frontend {{ service_name }}-{{ env_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
-    bind localhost:{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}
+    bind localhost:<% scratch.Get "localPort" %>
     default_backend {{ service_name }}-{{ env_name }}
-
 {% endfor %}
 {% endif %}

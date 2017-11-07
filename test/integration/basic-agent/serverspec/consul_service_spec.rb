@@ -8,6 +8,7 @@ describe 'superssh service (localport option)' do
       its(:stdout) { should match /"ServiceTags":\[.*"env:testing".*/ }
       its(:stdout) { should match /"ServiceTags":\[.*"WEIGHT:77".*/ }
       its(:stdout) { should match /"ServiceTags":\[.*"test".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"local_port:2222".*/ }
       its(:stdout) { should contain '"ServicePort":22' }
     end
   end
@@ -48,6 +49,7 @@ describe 'superdb service (A failing service)' do
       its(:stdout) { should match /"ServiceTags":\[.*"userdb".*/ }
       its(:stdout) { should match /"ServiceTags":\[.*"v1\.2".*/ }
       its(:stdout) { should match /"ServiceTags":\[.*"env:testing".*/ }
+      its(:stdout) { should match /"ServiceTags":\[.*"local_port:2122".*/ }
       its(:stdout) { should contain '"ServicePort":2122' }
     end
   end
@@ -88,6 +90,7 @@ describe 'hellofresh service (normal port option)' do
       its(:exit_status) { should eq 0 }
       its(:stdout) { should contain '"ServiceName":"hellofresh"' }
       its(:stdout) { should contain '"ServiceAddress":"127.0.0.1"' }
+      its(:stdout) { should match /"ServiceTags":\[.*"local_port:8080".*/ }
       its(:stdout) { should contain '"ServicePort":80' }
     end
   end
@@ -122,6 +125,12 @@ describe 'hellofresh service (normal port option)' do
   describe 'hellofresh backend should have default weight' do
     describe command 'echo "get weight hellofresh-testing/`cat /etc/haproxy/haproxy.cfg  | grep "server hellofresh" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 100' do
       its(:stdout) { should contain '100 \(initial 100\)'}
+    end
+  end
+
+  describe 'superdb backend should exist' do
+    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep superdb-testing,BACKEND" do
+      its(:exit_status) { should eq 0 }
     end
   end
 
