@@ -48,12 +48,6 @@ listen stats
     stats uri {{ consul_haproxy_stats_uri }}
 {% endif %}
 
-{% if environment_name is defined %}
-    {% set env_name = environment_name %}
-{% else %}
-    {% set env_name = fallback_environment %}
-{% endif %}
-
 # consul_services
 {% if consul_consumer_services is defined %}
 {% for consumer_service in consul_consumer_services %}
@@ -63,6 +57,17 @@ listen stats
 {% else %}
 {% set service_name = consumer_service %}
 {% endif %}
+
+{% set env_name = consumer_service.environment_override | default(false) %}
+
+{% if not env_name %}
+{% if environment_name is defined %}
+    {% set env_name = environment_name %}
+{% else %}
+    {% set env_name = fallback_environment %}
+{% endif %}
+{% endif %}
+
 {% set tags_contains = consumer_service.tags_contains | default(false) %}
 {% set tag_regex = consumer_service.tag_regex | default(false) %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
