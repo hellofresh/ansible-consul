@@ -48,12 +48,6 @@ listen stats
     stats uri {{ consul_haproxy_stats_uri }}
 {% endif %}
 
-{% if environment_name is defined %}
-    {% set env_name = environment_name %}
-{% else %}
-    {% set env_name = fallback_environment %}
-{% endif %}
-
 # consul_services
 {% if consul_consumer_services is defined %}
 {% for consumer_service in consul_consumer_services %}
@@ -63,11 +57,22 @@ listen stats
 {% else %}
 {% set service_name = consumer_service %}
 {% endif %}
+
+{% set env_name = consumer_service.environment_override | default(false) %}
+
+{% if not env_name %}
+{% if environment_name is defined %}
+    {% set env_name = environment_name %}
+{% else %}
+    {% set env_name = fallback_environment %}
+{% endif %}
+{% endif %}
+
 {% set tags_contains = consumer_service.tags_contains | default(false) %}
 {% set tag_regex = consumer_service.tag_regex | default(false) %}
 {% set haproxy_setting = consul_services[service_name].haproxy | default({}) %}
 # Service Config for {{ service_name }}
-backend {{ service_name }}-{{ env_name }}
+backend {{ service_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     <% scratch.Set "serviceFound" "False" -%>
     <% scratch.Set "localPort" "{{ consul_services[service_name].local_port | default(consul_services[service_name].port) }}" -%>
@@ -117,9 +122,9 @@ backend {{ service_name }}-{{ env_name }}
 {% if tags_contains %}<%else%> # Did not match tags_contains {{ tags_contains }}<%end%>{% endif %}
     <%- end %>
     <%- end %>
-frontend {{ service_name }}-{{ env_name }}
+frontend {{ service_name }}
     mode {{ haproxy_setting.service_mode | default('http') }}
     bind localhost:<% scratch.Get "localPort" %>
-    default_backend {{ service_name }}-{{ env_name }}
+    default_backend {{ service_name }}
 {% endfor %}
 {% endif %}

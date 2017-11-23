@@ -117,25 +117,25 @@ describe 'hellofresh service (normal port option)' do
 
   describe 'HAProxy server backend should be listed and up' do
     let(:pre_command) { 'sleep 2' }
-    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep hellofresh-testing,hellofresh | grep UP" do
+    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep hellofresh,hellofresh | grep UP" do
       its(:exit_status) { should eq 0 }
     end
   end
 
   describe 'hellofresh backend should have default weight' do
-    describe command 'echo "get weight hellofresh-testing/`cat /etc/haproxy/haproxy.cfg  | grep "server hellofresh" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 100' do
+    describe command 'echo "get weight hellofresh/`cat /etc/haproxy/haproxy.cfg  | grep "server hellofresh" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 100' do
       its(:stdout) { should contain '100 \(initial 100\)'}
     end
   end
 
   describe 'superdb backend should exist' do
-    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep superdb-testing,BACKEND" do
+    describe command "echo 'show stat' | socat unix-connect:/var/lib/haproxy/stats.sock stdio | grep superdb,BACKEND" do
       its(:exit_status) { should eq 0 }
     end
   end
 
   describe 'superssh-testing backend should have set weight' do
-    describe command 'echo "get weight superssh-testing/`cat /etc/haproxy/haproxy.cfg  | grep "server superssh-testing" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 77' do
+    describe command 'echo "get weight superssh/`cat /etc/haproxy/haproxy.cfg  | grep "server superssh-testing" | awk \'{print $2}\'`" | socat unix-connect:/var/lib/haproxy/stats.sock stdio  | grep 77' do
       its(:stdout) { should contain '77 \(initial 77\)'}
     end
   end
