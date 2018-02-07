@@ -7,9 +7,18 @@
     chdir: "{{ consul_config_dir }}"
   register: registered_consul_services
 
+- name: consul services | Initialize a flat list
+  set_fact:
+    consul_producer_services_flat: []
+
+- name: consul services | Populate a flat list
+  set_fact:
+    consul_producer_services_flat: "{{ consul_producer_services_flat + [ item.name if item is mapping else item ] }}"
+  with_items: "{{ consul_producer_services }}"
+
 - name: consul services | Check if any services are old
   set_fact:
-    old_services: "{{ registered_consul_services.stdout_lines | difference(consul_producer_services) }}"
+    old_services: "{{ registered_consul_services.stdout_lines | difference(consul_producer_services_flat) }}"
 
 - name: consul services | Ensure old consul services JSON (if any) are deregister
   file:
@@ -22,7 +31,7 @@
 - name: consul services | Ensure consul services JSON are registered
   template:
     src="consul-service.j2"
-    dest="{{ consul_config_dir }}/sv_{{ item }}.json"
+    dest="{{ consul_config_dir }}/sv_{{ item.name if item is mapping else item }}.json"
   with_items:  "{{ consul_producer_services }}"
   notify:
     - reload consul service
