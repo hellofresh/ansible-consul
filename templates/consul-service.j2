@@ -1,3 +1,38 @@
+{% if item is mapping %}
+
+{% if 'weight' in consul_services[item.name] %}
+    {% set weight_value = consul_services[item.name].pop('weight') %}
+    {% if 'tags' in consul_services[item.name] %}
+        {% set _ = consul_services[item.name]['tags'].append("WEIGHT:" ~ weight_value ) %}
+    {% else %}
+        {% set _ = consul_services[item.name].update({'tags': ['WEIGHT:' ~ weight_value]}) %}
+    {% endif %}
+{% endif %}
+
+{% if 'local_port' in consul_services[item.name] %}
+    {% set local_port = consul_services[item.name].pop('local_port') %}
+{% else %}
+    {% set local_port = consul_services[item.name].get('port') %}
+{% endif %}
+
+{% if 'tags' in consul_services[item.name] %}
+    {% set _ = consul_services[item.name]['tags'].append("local_port:" ~ local_port ) %}
+{% else %}
+    {% set _ = consul_services[item.name].update({'tags': ['local_port:' ~ local_port]}) %}
+{% endif %}
+
+{% if 'tags' in consul_services[item.name] %}
+    {% set _ = consul_services[item.name]['tags'].extend(item.add_tags) %}
+{% else %}
+    {% set _ = consul_services[item.name].update({'tags': item.add_tags}) %}
+{% endif %}
+
+{ {{ '' if consul_services[item.name].pop('haproxy', '') else '' }}
+"service": {{ consul_services[item.name] | to_nice_json }}
+}
+
+{% else %}
+
 {% if 'weight' in consul_services[item] %}
     {% set weight_value = consul_services[item].pop('weight') %}
     {% if 'tags' in consul_services[item] %}
@@ -22,3 +57,5 @@
 { {{ '' if consul_services[item].pop('haproxy', '') else '' }}
 "service": {{ consul_services[item] | to_nice_json }}
 }
+
+{% endif %}
