@@ -37,3 +37,16 @@ describe 'superdb' do
     its(:stdout) { should contain '"Status":"(warning|critical)"' }
   end
 end
+
+describe 'supertaggedapp' do
+  describe command 'curl -s -v http://127.0.0.1:8500/v1/health/service/supertaggedapp' do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should contain '"Service":"supertaggedapp"' }
+    its(:stdout) { should match /"Tags":\[.*"env:staging".*/ }
+    its(:stdout) { should match /"Tags":\[.*"test".*/ }
+    its(:stdout) { should match /"Tags":\[.*"v0\.1\.1".*/ }
+    its(:stdout) { should match /"Tags":\[.*"from:producer".*/ }
+    its(:stdout) { should contain '"Port":9998' }
+    its(:stdout) { should contain '"Status":"(warning|critical)"' }
+  end
+end

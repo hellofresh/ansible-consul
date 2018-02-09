@@ -229,9 +229,139 @@ consul_haproxy_stats_uri            : "/"
 # Ad-hoc commands RUN WITH CARE
 consul_adhoc_build_raft_peers       : False
 ```
-service definition
+
+
+## Usage
+
+Service definition
 ----
-https://www.consul.io/docs/agent/checks.html
+The role expects all services to be listed in `consul_services` dictionary:
+
+```yaml
+consul_services:
+  hello-app:
+    name: "hello-app"
+    tags:
+      - "env:live"
+    port: 80
+    local_port: 8032
+    check:
+      script: "curl localhost:80 > /dev/null 2>&1"
+      interval: "10s"
+    haproxy:
+      server_options: "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+
+  hello-db:
+    name: "hello-db"
+    tags:
+      - "env:live"
+    port: 3306
+    check:
+      script: "netstat -ant | grep 3306 | grep -v grep > /dev/null 2>&1"
+      interval: "10s"
+    haproxy:
+      server_options: "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+```
+
+Service example
+---------------
+```yaml
+  hello-app:
+    name: "hello-app"
+    tags:
+      - "env:live"
+    port: 80
+    local_port: 8032
+    check:
+      script: "curl localhost:80 > /dev/null 2>&1"
+      interval: "10s"
+    haproxy:
+      server_options: "check inter 10s fastinter 5s downinter 8s rise 3 fall 2"
+```
+`hello-app`:
+
+`name`: service name to announce
+
+`tags`: list of tags to filter by (see tags section)
+
+`port`: port number server part listens on
+
+`local_port`: port number CSLB agent (haproxy) will listen on, if absent equals `port`
+
+`check`: healthcheck script and interval; most of the times as simple as in this example
+
+`haproxy`: haproxy server check definition (https://cbonte.github.io/haproxy-dconv/1.7/configuration.html#5.2-check)
+
+
+### Producer configuration
+Define list of services you produce (offer to connect to)
+```yaml
+consul_producer: True
+consul_producer_services:
+  - hello-app
+  - other-service
+```
+Role will install consul agent and configure it to announce specified services.
+
+### Consumer configuration
+Define list of services you consume (want to connect to)
+```yaml
+consul_consumer: True
+consul_consumer_services:
+  - hello-app
+  - hello-db
+```
+Role will configure consul agent, consul template and haproxy. Haproxy will listen on specified ports, so you would be able to connect to specific service using `127.0.0.1:port`.
+
+### Extended syntax
+If you want to specify additional parameters you should use extended syntax:
+```yaml
+---
+consul_producer: True
+consul_producer_services:
+  # simple syntax
+  - hello-app
+  # extended syntax
+  - name: hello-app
+    add_tags: ['host-specific-tag']
+```
+
+
+```yaml
+---
+consul_consumer: True
+consul_consumer_services:
+  # simple syntax
+  - hello-app
+  # extended syntax
+  - name: hello-app
+    tags_contains: "test"
+```
+
+
+### Using tags
+
+#### Producer
+You can specify additional tags for group/host. These tags will be added to a set of tags globally defined to this service.
+
+```yaml
+consul_producer: True
+consul_producer_services:
+  - name: hello-app
+    add_tags: ['host-specific-tag']
+```
+
+#### Consumer
+On consumer side, you can user additional parameters to filter services/nodes by tags.
+
+```yaml
+consul_consumer: True
+consul_consumer_services:
+  - name: hello-app
+    tags_contains: "test"
+    tag_regex: "v1.1.*"
+```
+
 
 Road map
 -----
@@ -261,5 +391,3 @@ Some snippets of code was taken from various sources. We will try our best to li
   </a><br>
   HelloFresh - More Than Food.
 </p>
-
-
