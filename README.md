@@ -29,7 +29,7 @@ This is an opinionated setup of consul. That manages services discovery and clie
 Using with AMI
 --------------
 
-When the role is used to provision AMI image, ensure following variables are set to this specific values
+When the role is used to provision AMI image, ensure the following variables are set to these specific values
 
 ```yaml
 consul_start_service: false         # Required: Prevent consul from starting at provision time
