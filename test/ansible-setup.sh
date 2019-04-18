@@ -6,17 +6,13 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 SETUP_VERSION="v0.0.3"
 #SETUP_VERBOSITY="vv"
 
-## Install Ansible 2.0
-ANSIBLE_VERSIONS[0]="2.0.2.0"
+## Install Ansible 2.3
+ANSIBLE_VERSIONS[0]="2.3.2.0"
 INSTALL_TYPE[0]="pip"
-ANSIBLE_LABEL[0]="v2.0"
-
-ANSIBLE_VERSIONS[1]="2.2.0.0"
-INSTALL_TYPE[1]="pip"
-ANSIBLE_LABEL[1]="v2.2"
+ANSIBLE_LABEL[0]="v2.3"
 
 # Whats the default version
-ANSIBLE_DEFAULT_VERSION="v2.0"
+ANSIBLE_DEFAULT_VERSION="v2.3"
 
 ## Create a temp dir
 filename=$( echo ${0} | sed 's|/||g' )
