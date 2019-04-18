@@ -4,19 +4,22 @@
 #
 
 NAME="consul"
+LOCAL_IP="$(curl http://169.254.169.254/latest/meta-data/local-ipv4)"
+LOCAL_HOSTNAME="$(curl -s http://169.254.169.254/latest/meta-data/local-hostname | cut -d "." -f 1)"
 CONSUL_CONFIG_DIR="{{ consul_config_dir }}"
 CONSUL_DATA_DIR="{{ consul_data_dir }}"
 CONSUL_LOG_FILE="{{ consul_agent_log_file }}"
 CONSUL_CONFIG_FILE="{{ consul_config_agent_file }}"
 CONSUL_BIN="{{ consul_bin_dir }}"
-CONSUL_BIND="{{ consul_network_bind }}"
+CONSUL_BIND="{{ '${LOCAL_IP}' if consul_network_bind == 'auto' else consul_network_bind }}"
+CONSUL_NODE="{{ (consul_node_name_prefix if consul_node_name_prefix is defined else '') + '${LOCAL_HOSTNAME}' if consul_node_name == 'auto' else consul_node_name }}"
 
 # Make sure to use all available proc
 # https://groups.google.com/forum/#!topic/consul-tool/qewFEqgAoF8
 export GOMAXPROCS="$(grep -c ^processor /proc/cpuinfo)"
 
 echo "$(date) **** Consul agent start ****" >> "${CONSUL_LOG_FILE}"
-exec "${CONSUL_BIN}"/"${NAME}" agent -config-dir="${CONSUL_CONFIG_DIR}" -config-file="${CONSUL_CONFIG_FILE}" -data-dir="${CONSUL_DATA_DIR}" -bind="${CONSUL_BIND}" >> "${CONSUL_LOG_FILE}" 2>&1
+exec "${CONSUL_BIN}"/"${NAME}" agent -config-dir="${CONSUL_CONFIG_DIR}" -config-file="${CONSUL_CONFIG_FILE}" -data-dir="${CONSUL_DATA_DIR}" -bind="${CONSUL_BIND}" -node="${CONSUL_NODE}" >> "${CONSUL_LOG_FILE}" 2>&1
 RC="$?"
 echo "$(date) **** Consul-agent ended with ${RC} ****" >> "${CONSUL_LOG_FILE}"
 exit "${RC}"

@@ -26,6 +26,18 @@ This is an opinionated setup of consul. That manages services discovery and clie
     (Consumer)                    (Producer)
 ```
 
+Using with AMI
+--------------
+
+When the role is used to provision AMI image, ensure following variables are set to this specific values
+
+```yaml
+consul_start_service: false         # Required: Prevent consul from starting at provision time
+consul_node_name: auto              # Required: read node name from cloud meta-data
+consul_network_bind: auto           # Required: read private IP from cloud meta-data
+consul_network_autobind: false      # Required: disable provision time IP address discovery
+consul_node_name_prefix: "service-" # Optional: node name prefix
+```
 
 Requirements
 ------------

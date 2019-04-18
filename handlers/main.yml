@@ -6,16 +6,22 @@
     msg="Notifier restart consul service"
   changed_when: true
   notify:
+    - enable consul service (service)
     - restart consul service (service)
     - Reload s6 service
     - restart consul service (s6)
+
+- name: enable consul service (service)
+  service:
+    name="consul"
+    enabled="yes"
+  when: "consul_service == 'service'"
 
 - name: restart consul service (service)
   service:
     name="consul"
     state="restarted"
-    enabled="yes"
-  when: "consul_service == 'service'"
+  when: "consul_service == 'service' and consul_start_service"
 
 - name: Reload s6 service
   shell: s6-svscanctl -a {{ consul_s6_servicedir }}
@@ -43,7 +49,7 @@
   service:
     name="consul"
     state="restarted"
-  when: "consul_service == 'service'"
+  when: "consul_service == 'service' and consul_start_service"
 
 - name: restart consul-template service
   debug:
