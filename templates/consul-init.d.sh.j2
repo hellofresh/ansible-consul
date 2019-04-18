@@ -64,7 +64,7 @@ stop() {
     PID=$(PROG_PID)
     if [ -n "$PID" ]; then
         echo -n  "Stoping $NAME "
-        kill -9 $PID
+        kill -INT $PID
         [ "$?" -ne 0 ] && echo "[ FAILED ]" && exit 1
 
         let kwait=$SLEEP_FOR
