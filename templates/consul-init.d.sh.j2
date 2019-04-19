@@ -19,10 +19,9 @@ BASE_DIR="{{ consul_home_dir }}"
 GREP_NAME="consul agent"
 
 RUN_CMD="{{ consul_bin_dir }}/consul_agent_run.sh"
-#
-STOPCMD="kill -9"
 #How many sec to wait before checking if proc is up
 SLEEP_FOR=1
+STOP_TIMEOUT=10
 
 IGNORE_PLAY_PID=1
 
@@ -64,26 +63,10 @@ stop() {
     PID=$(PROG_PID)
     if [ -n "$PID" ]; then
         echo -n  "Stoping $NAME "
-        kill -9 $PID
+        kill -INT $PID
+        timeout $STOP_TIMEOUT tail --pid=$PID -f /dev/null
         [ "$?" -ne 0 ] && echo "[ FAILED ]" && exit 1
-
-        let kwait=$SLEEP_FOR
-        count=0;
-        until [ $count -gt $kwait ]
-        do
-          echo -n ".";
-          sleep 1
-          let count=$count+1;
-        done
-        PID=$(PROG_PID)
-        if [ -n "$PID" ]; then
-            echo "[ FAILED ]"
-            exit 1
-        else
-            echo "[ OK ]"
-        fi
-    else
-        echo "$NAME not running."
+        echo "[ OK ]"
     fi
 }
 

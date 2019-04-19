@@ -3,6 +3,9 @@
 consul_agent_version                : "0.9.2"
 consul_template_version             : "0.19.0"
 
+## Start service right away, during provision
+consul_start_service: true
+
 ## Node name
 consul_node_name                    : "{{ inventory_hostname }}"
 
